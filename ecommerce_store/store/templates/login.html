@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">login</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Welcome to Vinlys...!</p>
+                </div>
+            </div>
+        </header>
+
+<!-- Section -->
+        <section>
+            <div class="container">
+                <div class="row">
+                    <center>
+                        <div class='col-8'>
+                           <form method="POST" action="{%url 'login' %}">
+                            {% csrf_token %}
+                            
+                                <div class="mb-3">
+                                    <label for="username" class="form-label" placeholder="Enter your usersname">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label" placeholder="">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">login</button>
+                            </form> 
+                        </div>
+                    </center>
+                </div>
+            </div>
+        </section>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">{{store}}</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Welcome to {{store}}...!</p>
+                </div>
+            </div>
+        </header>
+
+<!-- Section -->
+       <section>
+            <div class="container">
+                <div class="row">
+                    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+
+{% if products %}
+{% for product in store.products.all %}
+                        <div class='col-12'>
+                            <div class="card mb-9" style="#">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                    <div class="card-body">
+
+                                        <h5 class="card-title">{{ store.id.product.vinyl_name}}</h5>
+
+                                        <p class="card-text">{{product.artist_name}}</p>
+                                        <p class="card-text"><small class="text-body-secondary">{{product.category}}</p>
+                                        <p class="card-text">{{product.description}}</p>
+                                        <div class="card-text">Tracklist:
+                                            <ol>
+                                                {%for track in tracklist%}
+                                                <li>
+                                                    {{track}}
+                                                </li>
+                                                {% endfor %}
+                                            </ol>
+                                        </div>
+                                        <p class="card-text">${{product.price}}</p>
+                                        <br></br>
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-2">Quantity:</div>
+                                                <div class="col-md-2">
+                                                <select class="form-select form-select-sm" id="qty-cart">
+                                                    <option selected></option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <br></br>
+                                        
+                                        <p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
+                                        <br></br>
+                                        <button type="button" value="{{ product.id }}" id="add-cart" class="btn btn-secondary">Add to cart</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+{%endfor%}
+{% endif%}
+                        </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

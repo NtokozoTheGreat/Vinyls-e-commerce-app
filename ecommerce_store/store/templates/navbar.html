@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="{% url 'home'%}">Vinyls</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'search' %}">search</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Record stores</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'record_store_summary' %}">All Stores</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#!">Popular Stores</a></li>
+                                <li><a class="dropdown-item" href="#!">New Stores</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Record collection</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'record_collection_summary' %}">All Records</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#!">Popular Vinlys</a></li>
+                                <li><a class="dropdown-item" href="#!">fresh Arrivals</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Genre</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'genre_summary' %}">All Genres</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="{% url 'category' 'jazz' %}">Jazz</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category' 'blues' %}">Blues</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category' 'classical'%}">Classical</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category' 'rock'%}">Rock</a></li>
+                                <li><a class="dropdown-item" href="{%url 'category' 'hip-hop-rap'%}">Hip-Hop &amp; Rap</a></li>
+                                <li><a class="dropdown-item" href="{%url 'category' 'pop'%}">Pop</a></li>
+                                <li><a class="dropdown-item" href="{%url 'category' 'soul-rb'%}">Soul &amp; R&amp;B</a></li>
+                                <li><a class="dropdown-item" href="{%url 'category' 'electronic-edm'%}">Electronic &#47 EDM</a></li>
+                                <li><a class="dropdown-item" href="{%url 'category' 'reggae'%}">Reggae</a></li>
+                                <li><a class="dropdown-item" href="{%url 'category' 'country'%}">Country</a></li>
+                            </ul>
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'aboutus'%}">About Us</a></li>
+                            
+                            {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'logout'%}">Logout</a></li>
+                                <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#!" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'update_user'%}">User Profile</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="{% url 'update_info'%}">User Info</a></li>
+                                </ul>
+                                </li>
+                            {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login'%}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register'%}">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'registervendor'%}">Register as Vendor</a></li>
+                            {% endif%}
+
+                        </ul>
+
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <a href="{% url 'cart_summary' %}" class="btn btn-outline-dark">
+                            <i class="bi-cart-fill me-1"></i>
+                            Cart
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </nav>
