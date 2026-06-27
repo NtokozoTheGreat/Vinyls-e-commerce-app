@@ -5,7 +5,7 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Checkout</h1>
+                    <h1 class="display-4 fw-bolder">Billing_info</h1>
                     <p class="lead fw-normal text-white-50 mb-0">Review your order</p>
                 </div>
             </div>
@@ -65,15 +65,34 @@
                     Shipping info
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{% url 'billing_info'%}">
-                            {% csrf_token %}
-                    {{ shipping_form.as_p}}
+
+                    Name: {{ shipping_info.shipping_full_name}}<br>
+                    Email: {{ shipping_info.shipping_email}}<br>
+                    Address 1: {{ shipping_info.shipping_address_1}}<br>
+                    Address 2: {{ shipping_info.shipping_address_2}}<br>
+                    City: {{ shipping_info.shipping_city}}<br>
+                    Province: {{ shipping_info.shipping_province}}<br>
+                    Zipcode: {{ shipping_info.shipping_zipcode}}<br>
+                    Country: {{ shipping_info.shipping_country}}<br>
                     <br>
-                    <button type="submit" class="btn btn-secondary">continue to billing</button>
-                        </form>
+                    <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">update shipping info</a>
                     </div>
                 </div>
-                <br>
+                <br></br>
+
+                   <div class="card">
+                    <div class="card-header">
+                    Billing info
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{billing_form.as_p}}                    
+                    <br>
+                    <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">update shipping info</a>
+                    </div>
+                </div>
+                <br></br>
+            <a href="#" class="btn btn-secondary">Pay Now</a>
         </section>
 
 {% endblock %}
