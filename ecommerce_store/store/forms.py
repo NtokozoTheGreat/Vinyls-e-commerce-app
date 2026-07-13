@@ -30,37 +30,30 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].label = ''
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
-        
-        
-class VendorSignUpForm(UserCreationForm):
-    email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
-    first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
-    last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
-    store_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Store Name'}))
-    phone_number = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}))
-    store_description = forms.CharField(label="", widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Store Description'}))
+
+
+class VendorProfileForm(forms.ModelForm):
 
     class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'phone_number','email', 'store_name', 'store_description', 'password1', 'password2')
+        model = Vendor
+        fields = ['store_name', 'store_description', 'phone_number', 'email', 'image']
+        widgets = {
+            'store_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Store Name'}),
+            'store_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Store Description'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        }
+        
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        qs = Vendor.objects.filter(email=email)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("A store with this email already exists.")
+        return email
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        
-        user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        
-        if commit:
-            user.save()
-            Vendor.objects.create(
-                user=user, 
-                store_name=self.cleaned_data['store_name'],
-                phone_number=self.cleaned_data['phone_number'],
-                store_description=self.cleaned_data['store_description'],
-                email=self.cleaned_data['email'],
-                )
-        return user 
+
 
 class UpdateUserForm(UserChangeForm):
     

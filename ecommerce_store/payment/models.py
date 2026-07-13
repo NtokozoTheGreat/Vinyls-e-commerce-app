@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from store.models import Product
 from django.utils import timezone
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+import datetime
 
 
 # Create your models here.
@@ -36,13 +39,33 @@ class Order(models.Model):
     email = models.EmailField(max_length=250)
     shipping_address = models.TextField(default="")
     phone = models.CharField(max_length=20, default="", blank=False)
-    date = models.DateTimeField(default=timezone.now)
+    date_ordered = models.DateTimeField(default=timezone.now)
     amount_paid = models.DecimalField(max_digits=7, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    date_shipped = models.DateTimeField(blank=True, null=True)
+    date_delivered = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return f"Order {self.id} : {self.customer.username}"
+        return f"Order {self.id}"
 
+
+@receiver(pre_save, sender=Order)
+def set_shipped_date_on_update(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    
+    try:
+        old = sender._defualt_manager>get(pk=instance.pk)
+    except sender.DoesNotExist: 
+        return
+
+    now = timezone.now()
+
+    if instance.status == "shipped" and old.status != "shipped":
+        instance.date_shipped = now
+    
+    if instance.status == "delivered" and old.status != "deliverd":
+        instance.date_shipped = now
 
 # order item
 class OrderItem(models.Model):
@@ -54,3 +77,4 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.vinyl_name} : {self.quantity}"
+

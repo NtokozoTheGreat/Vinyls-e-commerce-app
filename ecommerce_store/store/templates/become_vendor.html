@@ -17,7 +17,7 @@
             <div class="container">
                 <div class="row">
                         <div class='col-8'>
-                           <form method="POST" action="{%url 'registervendor' %}">
+                           <form method="POST" enctype=" multipart/form-data">
                             {% csrf_token %}
                             <br/><br/>
                             {{form.as_p}}

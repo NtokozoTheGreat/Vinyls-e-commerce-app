@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import ProductForm, SignUpForm, VendorSignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
+from .forms import ProductForm, SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm, VendorProfileForm
 from django.contrib.auth.decorators import login_required
 from .models import Vendor, Product, Category, CustomerProfile
 from django.contrib.auth.forms import AuthenticationForm, forms
@@ -37,6 +37,10 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
+            
+            if hasattr(user, 'vendor'):
+                messages.success(request, "You've logged in successfully.")
+                return redirect('vendor_dashboard')
             
             current_user = CustomerProfile.objects.get(user__id=request.user.id)
             
@@ -88,35 +92,28 @@ def register_user(request):
     else:
         return render(request, "register.html", {'form': form})
 
-def register_as_vendor(request):
+
+@login_required
+def become_vendor(request):
+    if hasattr(request.user, 'vendor'):
+        messages.info(request, "You've already registered as a vendor.")
+        return redirect('vendor_dashboard')
+
     if request.method == "POST":
-        form = VendorSignUpForm(request.POST)
+        form = VendorProfileForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
+            vendor = form.save(commit=False)
+            vendor.user = request.user
+            vendor.save()
+            messages.success(request, f"Your store {vendor.store_name.title()} was successfully registered") 
+            return redirect('vendor_dashboard')
 
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-
-                login(request, user)
-                messages.success(request, (f"Your store {form.cleaned_data['store_name'].title()} was successfully registered"))
-                return redirect('vendor_dashboard')
-            
-            else:
-                print(user)
-                print(form.errors)  # debug
-        
         else:
-            messages.error(request, ("there was an error registering your store..."))
-            return redirect('registervendor')
-        
+            messages.error(request, 'There was an error registering your store. PLease check the form below.')
     else:
-        form = VendorSignUpForm()
-        return render(request, "registervendor.html", {'form': form})
+        form = VendorProfileForm()
 
-
+    return render(request, "become_vendor.html", {'form': form})
 
 @login_required
 def add_product(request):
@@ -129,7 +126,7 @@ def add_product(request):
             product = form.save(commit=False)
             product.vendor = request.user.vendor
             product.save()
-            return redirect("vendor_dashboard")
+            return render("vendor_dashboard.html")
         else:
             messages.error(request, ("there was an error adding your product..."))
             return redirect('add_product')

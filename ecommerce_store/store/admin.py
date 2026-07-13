@@ -25,3 +25,18 @@ class UserAdmin (admin.ModelAdmin):
 admin.site.unregister(User)
 
 admin.site.register(User, UserAdmin)
+
+
+class OrderItemInline(admin.StackedInline):
+    model = OrderItem
+    extra = 0
+
+
+class OrderAdmin(admin.ModelAdmin):
+    model = Order
+    inlines = [OrderItemInline]
+
+
+admin.site.unregister(Order)
+
+admin.site.register(Order, OrderAdmin)

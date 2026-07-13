@@ -53,10 +53,23 @@
                                     <li><a class="dropdown-item" href="{% url 'update_info'%}">User Info</a></li>
                                 </ul>
                                 </li>
+                                {% if not request.user.vendor %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'become_vendor' %}">Create your store</a></li>
+                                {% else %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'vendor_dashboard' %}">My Store</a></li>
+                                {% endif %}
+                                {% if user.is_superuser %}
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#!" role="button" data-bs-toggle="dropdown" aria-expanded="false">dashbord</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'shipped_dash'%}">shipped dashboard</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="{% url 'not_shipped_dash'%}">unshipped dashboard</a></li>
+                                </ul>
+                                </li>
+                                {% endif %}
                             {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'login'%}">Login</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'register'%}">Register</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'registervendor'%}">Register as Vendor</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register'%}">Sign up</a></li>
                             {% endif%}
 
                         </ul>
