@@ -1,18 +1,20 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
-from .forms import ProductForm, SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm, VendorProfileForm
+from .forms import ProductForm, SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm, VendorProfileForm, RatingForm
 from django.contrib.auth.decorators import login_required
 from .models import Vendor, Product, Category, CustomerProfile
-from django.contrib.auth.forms import AuthenticationForm, forms
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
 import json
 from cart.cart import Cart
 from payment.forms import ShippingForm
-from payment.models import ShippingAddress
+from payment.models import ShippingAddress, OrderItem
+from .models import Ratings
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
 
 # Create your views here.
 
@@ -117,8 +119,9 @@ def become_vendor(request):
 
 @login_required
 def add_product(request):
-    if not hasattr(request.user, "vendor"):
-        return redirect("home")  # only vendors allowed
+    if not hasattr(request.user, "vendor") and not request.user.is_staff:
+        messages.error(request, "Only vendors or admins can add products.")
+        return redirect("home")
 
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
@@ -126,10 +129,11 @@ def add_product(request):
             product = form.save(commit=False)
             product.vendor = request.user.vendor
             product.save()
-            return render("vendor_dashboard.html")
+            messages.success(request, "Product added successfully")
+            return redirect('vendor_dashboard')
         else:
-            messages.error(request, ("there was an error adding your product..."))
-            return redirect('add_product')
+            print(form.errors)
+            messages.error(request, "There was an error adding your product...")
     else:
         form = ProductForm()
 
@@ -137,13 +141,68 @@ def add_product(request):
 
 
 def vendor_dashboard(request):
-    return render(request, "vendor_dashboard.html")
+    if not hasattr(request.user, 'vendor'):
+        messages.error(request, "You don't have a vendor account.")
+        return redirect('home')
+    
+    store = request.user.vendor
+    products = store.products.all().order_by('-added_at')
+    
+    return render(request, "vendor_dashboard.html", {
+        'store': store,
+        'products': products,
+    })
 
 
 def product_detail(request, pk):
     product = Product.objects.get(id=pk)
     tracklist = product.track_list.splitlines()
-    return render (request, "product.html", {"product": product, "tracklist": tracklist})
+    reviews = product.ratings.select_related("user").order_by("-created_at")
+
+    user_can_review = False
+    already_reviewed = False
+
+    if request.user.is_authenticated:
+        user_can_review = OrderItem.objects.filter(
+            order__customer=request.user,
+            product=product,
+            order__status="delivered",
+        ).exists()
+
+        already_reviewed = Ratings.objects.filter(
+            user=request.user,
+            product=product,
+        ).exists()
+
+    return render(request, "product.html", {
+        "product": product,
+        "reviews": reviews,
+        "user_can_review": user_can_review,
+        "already_reviewed": already_reviewed,
+        "tracklist": tracklist,
+    })
+
+
+def store_detail(request, pk):
+    stores = Vendor.objects.get(id=pk)
+    description = stores.store_description
+    reviews = stores.ratings.select_related("user").order_by("-created_at")
+    
+    user_can_review = False
+    already_reviewed = False
+
+    if request.user.is_authenticated:
+        already_reviewed = reviews.filter(user=request.user).exists()
+        user_can_review = not already_reviewed
+
+    return render(request, "store.html", {   # <-- changed from "product.html"
+        "stores": stores,
+        "reviews": reviews,
+        "user_can_review": user_can_review,
+        "already_reviewed": already_reviewed,
+        "description": description,
+    })
+
 
 def category(request, slug):
     
@@ -169,12 +228,6 @@ def record_collection_summary(request):
     vinyls = Product.objects.all()
 
     return render(request, 'record_collection_summary.html', {'vinyls': vinyls})
-
-
-def store_detail(request, pk):
-    store = Vendor.objects.get(id=pk)
-    products = Product.objects.filter(vendor_id=pk)
-    return render(request, "store_detail.html", {"store": store, "products": products})
 
 
 def record_store_summary(request):
@@ -264,3 +317,108 @@ def search(request):
             return render(request, "search.html", {'searched': searched, 'products': products})
     else:
         return render(request, "search.html", {})
+
+
+def popular_store(request):
+
+    stores = Vendor.objects.all().order_by('-ratings_count', '-average_rating')
+    
+    return render(request, 'popular_store.html', {'stores': stores})
+
+
+def new_store(request):
+
+    stores = Vendor.objects.all().order_by('-added_at')
+
+    return render(request, 'new_store.html', {'stores': stores})
+
+
+def popular_vinyls(request):
+
+    vinyls = Product.objects.all().order_by('-ratings_count', '-average_rating')
+    return render(request, 'popular_vinyls.html', {'vinyls': vinyls})
+
+
+def fresh_arrivals(request):
+
+    vinyls = Product.objects.all().order_by('-added_at')
+    return render(request, 'fresh_arrivals.html', {'vinyls': vinyls})
+
+
+#for vinyl stores put image in a vinyl template that will change based on the color of the photo uploaded
+
+@login_required
+def rate_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    has_delivered_order = OrderItem.objects.filter(
+        order__customer=request.user,
+        product=product,
+        order__status="delivered",
+    ).exists()
+
+    if not has_delivered_order:
+        messages.error(request, "You can only review products after they've been delivered.")
+        return redirect('productdetail', pk=product.id)
+
+    already_reviewed = Ratings.objects.filter(user=request.user, product=product).exists()
+    if already_reviewed:
+        messages.error(request, "You've already reviewed this product.")
+        return redirect('productdetail', pk=product.id)
+
+    if request.method == "POST":
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating = form.save(commit=False)
+            rating.user = request.user
+            rating.product = product
+            rating.save()
+            messages.success(request, "Your review has been uploaded")
+            return redirect('productdetail', pk=product.id)
+    else:
+        form = RatingForm()
+
+    return render(request, 'ratings.html', {"product": product, "form": form})
+
+@login_required
+def rate_vendor(request, vendor_id):
+    vendor = get_object_or_404(Vendor, id=vendor_id)
+    
+    has_delivered_order = OrderItem.objects.filter(
+        order__customer=request.user,
+        order__status="delivered",
+        product__vendor=vendor,
+    ).exists()
+        
+    if not has_delivered_order:
+        messages.error(request, "You can only review stores after you've made a purchase.")
+        return redirect('product_detail', pk=vendor.id)
+    
+    if request.method == "POST":
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating = form.save(commit=False)
+            rating.user = request.user
+            rating.vendor = vendor
+            rating.save()
+            messages.success(request, "Your review has been uploaded")
+            return redirect('vendor_detail', pk=vendor.id)
+    else:
+        form = RatingForm()
+    return render(request, 'ratings.html', {"vendor": vendor, "form": form})
+
+@receiver([post_save, post_delete], sender=Ratings)
+def update_rating_aggregates(sender, instance, **kwargs):
+    if instance.product:
+        agg = instance.product.ratings.aggregate(avg=Avg("score"), count=Count("id"))
+        instance.product.average_rating = agg["avg"] or 0
+        instance.product.ratings_count = agg["count"]
+        instance.product.save(update_fields=["average_rating", "ratings_count"])
+
+    elif instance.vendor:
+        agg = instance.vendor.ratings.aggregate(avg=Avg("score"), count=Count("id"))
+        instance.vendor.average_rating = agg["avg"] or 0
+        instance.vendor.ratings_count = agg["count"]
+        instance.vendor.save(update_fields=["average_rating", "ratings_count"])
+        
+

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <h4 class="mb-4">Messages for {{ vendor.store_name }}</h4>
+    <div class="list-group">
+        {% for conversation in conversations %}
+        <a href="{% url 'conversation_detail' conversation.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between">
+                <strong>{{ conversation.buyer }}</strong>
+                <small class="text-body-secondary">{{ conversation.updated_at|date:"M d, H:i" }}</small>
+            </div>
+            <small class="text-body-secondary">
+                {% if conversation.product %}
+                    {{ conversation.product.vinyl_name }}
+                {% elif conversation.product_name_snapshot %}
+                    {{ conversation.product_name_snapshot }} (removed)
+                {% else %}
+                    General inquiry
+                {% endif %}
+            </small>
+        </a>
+        {% empty %}
+            <p class="text-body-secondary">No messages yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

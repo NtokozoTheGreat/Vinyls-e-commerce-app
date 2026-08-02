@@ -53,19 +53,18 @@ class Order(models.Model):
 def set_shipped_date_on_update(sender, instance, **kwargs):
     if not instance.pk:
         return
-    
     try:
-        old = sender._defualt_manager>get(pk=instance.pk)
-    except sender.DoesNotExist: 
+        old = sender._default_manager.get(pk=instance.pk)
+    except sender.DoesNotExist:
         return
 
     now = timezone.now()
 
     if instance.status == "shipped" and old.status != "shipped":
         instance.date_shipped = now
-    
-    if instance.status == "delivered" and old.status != "deliverd":
-        instance.date_shipped = now
+
+    if instance.status == "delivered" and old.status != "delivered":
+        instance.date_delivered = now
 
 # order item
 class OrderItem(models.Model):

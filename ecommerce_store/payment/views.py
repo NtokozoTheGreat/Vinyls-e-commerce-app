@@ -6,6 +6,8 @@ from django.shortcuts import redirect
 from payment.models import Order, OrderItem
 from django.contrib.auth.models import User
 from store.models import Product
+from django.utils import timezone
+from store.models import CustomerProfile
 # Create your views here.
 
 
@@ -126,6 +128,9 @@ def process_order(request):
                     
                     del request.session[key]
                 
+                current_user = CustomerProfile.objects.filter(user__id=request.user.id)
+                current_user.update(old_cart="")
+                
             messages.success(request, "Order Placed")
             return redirect('home')
             
@@ -156,24 +161,106 @@ def process_order(request):
             
     else:
         messages.success(request, 'Access denied' )
-        return redirect('home')   
+        return redirect('home')
+
 
 def not_shipped_dash(request):
-    if request.user.is_authenticated and request.user.is_authenticated:
-        orders = Order.objects.filter(status=("pending", "Pending"))
-        return render(request, 'payment/not_shipped_dash.html', {'orders': orders})
-    else:
-        messages.success(request, "Access denied")
+    if not (request.user.is_authenticated and request.user.is_superuser):
+        messages.error(request, "Access denied")
+        return redirect('home')
 
-    messages.success(request, "Order Placed")
-    return redirect('home')
+    orders = Order.objects.filter(status="pending")
+
+    if request.method == "POST":
+        new_status = request.POST.get('shipping_status')
+        num = request.POST.get('num')
+
+        if not num:
+            messages.error(request, "No order specified")
+            return redirect("not_shipped_dash")
+
+        try:
+            order = Order.objects.get(id=num)
+        except Order.DoesNotExist:
+            messages.error(request, "Order not found")
+            return redirect("not_shipped_dash")
+
+        if new_status in dict(Order.STATUS_CHOICES):
+            order.status = new_status
+            if new_status == "shipped" and not order.date_shipped:
+                order.date_shipped = timezone.now()
+            elif new_status == "delivered" and not order.date_delivered:
+                order.date_delivered = timezone.now()
+            order.save()
+            messages.success(request, "Shipping status updated")
+        else:
+            messages.error(request, "Invalid status")
+
+        return redirect("not_shipped_dash")
+
+    return render(request, 'payment/not_shipped_dash.html', {'orders': orders})
+
 
 def shipped_dash(request):
-    if request.user.is_authenticated and request.user.is_authenticated:
-        orders = Order.objects.filter(status=("shipped", "Shipped"))
-        return render(request, 'payment/shipped_dash.html', {'orders': orders})
-    else:
-        messages.success(request, "Access denied")
-        
-    messages.success(request, "Order Placed")
-    return redirect('home')
+    if not (request.user.is_authenticated and request.user.is_superuser):
+        messages.error(request, "Access denied")
+        return redirect('home')
+
+    orders = Order.objects.filter(status="shipped")
+
+    if request.method == "POST":
+        new_status = request.POST.get('shipping_status')
+        num = request.POST.get('num')
+
+        if not num:
+            messages.error(request, "No order specified")
+            return redirect("shipped_dash")
+
+        try:
+            order = Order.objects.get(id=num)
+        except Order.DoesNotExist:
+            messages.error(request, "Order not found")
+            return redirect("shipped_dash")
+
+        if new_status in dict(Order.STATUS_CHOICES):
+            order.status = new_status
+            if new_status == "shipped" and not order.date_shipped:
+                order.date_shipped = timezone.now()
+            elif new_status == "delivered" and not order.date_delivered:
+                order.date_delivered = timezone.now()
+            order.save()
+            messages.success(request, "Shipping status updated")
+        else:
+            messages.error(request, "Invalid status")
+
+        return redirect("home")
+
+    return render(request, 'payment/shipped_dash.html', {'orders': orders})
+
+def orders(request, pk):
+    if not (request.user.is_authenticated and request.user.is_superuser):
+        return redirect("home")
+
+    order = Order.objects.get(id=pk)
+    order_items = OrderItem.objects.filter(order=pk)
+
+    if request.method == "POST":
+        new_status = request.POST.get('shipping_status')
+
+        if new_status in dict(Order.STATUS_CHOICES):
+            order.status = new_status
+            if new_status == "shipped" and not order.date_shipped:
+                order.date_shipped = timezone.now()
+            elif new_status == "delivered" and not order.date_delivered:
+                order.date_delivered = timezone.now()
+            order.save()
+            messages.success(request, "Shipping status updated")
+        else:
+            messages.error(request, "Invalid status")
+
+        return redirect("home")
+
+    return render(request, 'payment/orders.html', {
+        "order": order,
+        "order_items": order_items,
+    })

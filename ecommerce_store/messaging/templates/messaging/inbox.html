@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <h4 class="mb-4">Your Messages</h4>
+
+    <div class="list-group">
+        {% for conversation in conversations %}
+        <a href="{% url 'conversation_detail' conversation.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between">
+                <strong>
+                    {% if request.user == conversation.buyer %}{{ conversation.vendor.store_name }}{% else %}{{ conversation.buyer }}{% endif %}
+                </strong>
+                <small class="text-body-secondary">{{ conversation.updated_at|date:"M d, H:i" }}</small>
+            </div>
+            <small class="text-body-secondary">
+                {% if conversation.product %}
+                    {{ conversation.product.vinyl_name }}
+                {% elif conversation.product_name_snapshot %}
+                    {{ conversation.product_name_snapshot }} (removed)
+                {% else %}
+                    General inquiry
+                {% endif %}
+            </small>
+        </a>
+        {% empty %}
+            <!-- empty runs only if the conversations queryset has zero items -->
+            <p class="text-body-secondary">No conversations yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

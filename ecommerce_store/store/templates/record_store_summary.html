@@ -20,7 +20,7 @@
                         <div class="card h-100">
                             <!-- Product image-->
                              {%if store.image %}
-                            <img class="card-img-top" src="{{ store.image.url}}" alt="..." />
+                            <img class="card-img-top" src="{{ store.image.url}}" alt="{{ store.image.url}}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #eee;"/>
                             {% else %}
                             <img class="card-img-top" src="/static/default-store.jpg" alt="..." />
                             {% endif %}

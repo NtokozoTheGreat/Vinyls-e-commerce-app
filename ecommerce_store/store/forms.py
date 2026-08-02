@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django import forms
-from .models import Category, Product, Vendor, CustomerProfile
+from .models import Category, Product, Vendor, CustomerProfile, Ratings
 
 
 class SignUpForm(UserCreationForm):
@@ -94,15 +94,14 @@ class ChangePasswordForm(SetPasswordForm):
         self.fields['new_password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
             
 
-
 class ProductForm(forms.ModelForm):
     vinyl_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Vinyl Name'}))
     artist_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Artist Name'}))
     stock = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Stock'}))
     price = forms.DecimalField(widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Price'}))
-    description = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Description'}))
-    track_list = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Track List'}))
-    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control'}))
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Description'}))
+    track_list = forms.CharField(required=False, widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Track List'}))
+    image = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class':'form-control'}))
     on_sale = forms.BooleanField(required=False)
     sale_price = forms.DecimalField(widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Sale Price'}), required=False)
     category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=forms.Select(attrs={'class':'form-control'}))
@@ -110,10 +109,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-                'vinyl_name', 'artist_name', 'stock', 'price',
-                'category', 'description', 'track_list', 'image',
-                'on_sale', 'sale_price'
-                ]
+            'vinyl_name', 'artist_name', 'stock', 'price',
+            'category', 'description', 'track_list', 'image',
+            'on_sale', 'sale_price'
+        ]
         
     def clean(self):
         cleaned_data = super().clean()
@@ -122,9 +121,9 @@ class ProductForm(forms.ModelForm):
 
         if on_sale and not sale_price:
             raise forms.ValidationError('Sale price is required when the product is on sale.')
-        elif not on_sale and sale_price:
-            raise forms.ValidationError('Sale price should be empty when the product is not on sale.')
-        
+        elif not on_sale:
+            cleaned_data['sale_price'] = 0
+
         return cleaned_data
 
 
@@ -141,3 +140,17 @@ class UserInfoForm(forms.ModelForm):
     class Meta:
         model = CustomerProfile
         fields = ['phone', 'address1', 'address2', 'city', 'province', 'zipcode', 'country']
+
+
+class RatingForm(forms.ModelForm):
+    
+    title = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'title'}), required=False)
+    review = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'review'}), required=False)
+
+    class Meta:
+        model = Ratings
+        fields = ["score", "title", "review"]
+        widgets = {
+            "score": forms.RadioSelect(choices=[(i, i ) for i in range(1,6)])
+        }
+

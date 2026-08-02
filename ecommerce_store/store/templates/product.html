@@ -2,84 +2,136 @@
 {% block content %}
 
 <!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
+<section>
+<div class="container">
+<div class="row">
 
-                        <div class='col-12'>
-                            <div class="card mb-9" style="#">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ product.vinyl_name}}</h5>
+<div class='col-12'>
+<div class="card mb-9" style="#">
+<div class="row g-0">
+<div class="col-md-4">
+<img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<h5 class="card-title">{{ product.vinyl_name}}</h5>
 
-                                        <p class="card-text">{{product.artist_name}}</p>
-                                        <p class="card-text"><small class="text-body-secondary">{{product.category}}</p>
-                                        <p class="card-text">{{product.description}}</p>
-                                        <div class="card-text">Tracklist:
-                                            <ol>
-                                                {%for track in tracklist%}
-                                                <li>
-                                                    {{track}}
-                                                </li>
-                                                {% endfor %}
-                                            </ol>
-                                        </div>
-                                        <p class="card-text">${{product.price}}</p>
-                                        <br></br>
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-2">Quantity:</div>
-                                                <div class="col-md-2">
-                                                <select class="form-select form-select-sm" id="qty-cart">
-                                                    <option selected></option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <br></br>
-                                        
-                                        <p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
-                                        <br></br>
-                                        <button type="button" value="{{ product.id }}" id="add-cart" class="btn btn-secondary">Add to cart</button>
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                </div>
-            </div>
-        </section>
+<p class="card-text">{{product.artist_name}}</p>
+<p class="card-text"><small class="text-body-secondary">{{product.category}}</p>
+
+<!-- Rating summary -->
+<p class="card-text">
+{% if product.ratings_count > 0 %}
+    <strong>{{ product.average_rating }}★</strong> ({{ product.ratings_count }} review{{ product.ratings_count|pluralize }})
+{% else %}
+    <span class="text-body-secondary">No reviews yet</span>
+{% endif %}
+</p>
+
+<p class="card-text">{{product.description}}</p>
+<div class="card">
+    <div class="card-text">Tracklist:
+        <ol>
+        {%for track in tracklist%}
+            <li>
+            {{track}}
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+</div>
+
+<p class="card-text">${{product.price}}</p>
+<br></br>
+<div class="row justify-content-center">
+<div class="col-md-2">Quantity:</div>
+<div class="col-md-2">
+<select class="form-select form-select-sm" id="qty-cart">
+<option selected></option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+</div>
+</div>
+<br></br>
+<p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
+<br></br>
+<button type="button" value="{{ product.id }}" id="add-cart" class="btn btn-secondary">Add to cart</button>
+<!-- Message vendor about this product -->
+{% if user.is_authenticated %}
+    {% if user != product.vendor.user %}
+        <a href="{% url 'start_conversation_product' product.vendor.id product.id %}" class="btn btn-outline-dark">
+            Ask about this product
+        </a>
+    {% endif %}
+{% else %}
+    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-dark">Log in to ask about this product</a>
+{% endif %}
+
+</div>
+</div>
+</div>
+</div>
+
+<!-- Reviews -->
+<div class='col-12 mt-4'>
+<h4>Reviews ({{ reviews.count }})</h4>
+
+{% if user.is_authenticated %}
+    {% if already_reviewed %}
+        <p class="text-body-secondary">You've already reviewed this product.</p>
+    {% elif user_can_review %}
+        <a href="{% url 'rate_product' product.id %}" class="btn btn-outline-secondary btn-sm mb-3">Write a review</a>
+    {% else %}
+        <p class="text-body-secondary">You can review this product once your order has been delivered.</p>
+    {% endif %}
+{% else %}
+    <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
+{% endif %}
+
+{% for review in reviews %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <h6 class="card-title">{{ review.title }} — {{ review.score }}★</h6>
+            <p class="card-text">{{ review.review }}</p>
+            <small class="text-body-secondary">by {{ review.user.username }} on {{ review.created_at|date:"M d, Y" }}</small>
+        </div>
+    </div>
+{% empty %}
+    <p class="text-body-secondary">No reviews yet.</p>
+{% endfor %}
+</div>
+
+
+</div>
+</div>
+</section>
 <script>
 $(document).on("click", "#add-cart", function(e){
     e.preventDefault();
     $.ajax({
-        type: "POST",
-        url: '{% url "cart_add" %}',
-        data: {
-            product_id: $(this).val(),
-            product_qty: $('#qty-cart option:selected').text(),
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            action: "post",
+type: "POST",
+url: '{% url "cart_add" %}',
+data: {
+product_id: $(this).val(),
+product_qty: $('#qty-cart option:selected').text(),
+csrfmiddlewaretoken: '{{ csrf_token }}',
+action: "post",
         },
-        success: function(json){
-            //console.log(json)
+success: function(json){
+//console.log(json)
             document.getElementById("cart_quantity").textContent = json.qty;
 
         },
-        error: function(xhr,errmsg,err){
+error: function(xhr,errmsg,err){
             console.log(errmsg);
         }
     });
 });
- </script> 
+</script> 
 
 {% endblock %}

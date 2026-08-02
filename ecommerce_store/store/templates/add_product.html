@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Add a Vinyl</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Please fill in the following information.</p>
+                </div>
+            </div>
+        </header>
+
+<!-- Section -->
+        <section>
+            <div class="container">
+                <div class="row">
+                        <div class='col-8'>
+                           <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <br/><br/>
+                            {{form.as_p}}
+                            <br/><br/>
+                                <button type="submit" class="btn btn-secondary">add product</button>
+                            </form> 
+                        </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

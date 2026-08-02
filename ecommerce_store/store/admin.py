@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, CustomerProfile, Vendor, Product
+from .models import Category, CustomerProfile, Vendor, Product, Ratings
 from django.contrib.auth.models import User
 from payment.models import Order, OrderItem
 # Register your models here.
@@ -40,3 +40,11 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.unregister(Order)
 
 admin.site.register(Order, OrderAdmin)
+
+class RatingAdmin(admin.ModelAdmin):
+    model = Ratings
+    fields = ["title", "score", "vendor", "product", "user", "review",]
+    readonly_fields = ["created_at", "updated_at"]
+
+admin.site.register(Ratings, RatingAdmin)
+    

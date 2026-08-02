@@ -1,27 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">{{category}}</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Genre</p>
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">{{ category }}</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Genre</p>
+        </div>
+    </div>
+</header>
+
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for category in categories %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category }}" style="height: 220px; object-fit: cover;">
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5 class="card-title mb-0">
+                            <a href="{% url 'category' category.slug %}" class="text-decoration-none">{{ category }}</a>
+                        </h5>
+                    </div>
                 </div>
             </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-
-            
-
-                {% for category in categories %}
-                <h3><a href="{% url 'category' category.slug %}">{{category}}</a></h3>
-                {% endfor %}
-                
-            </div>
-                
-        </section>
-
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

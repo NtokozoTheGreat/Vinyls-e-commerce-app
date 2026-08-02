@@ -1,0 +1,38 @@
+{% extends base.html%}
+
+{% block content%}
+
+<!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Review</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Take time a share your expirience</p>
+                </div>
+            </div>
+        </header>
+
+    <!-- Section -->
+        <section>
+            <div class="container">
+                <div class="row">
+                    <center>
+                        <div class='col-8'>
+                        <h2>
+                            {% if product %}
+                                Rate: {{ product.vinyl_name }} - {{ product.artist_name }}
+                            {% elif vendor %}
+                                Rate: {{ vendor.store_name }}
+                            {% endif %}
+                        </h2>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit">Submit Review</button>
+                        </form>
+                    </center>
+                </div>
+            </div>
+        </section>
+{% endblock %}

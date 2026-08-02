@@ -1,80 +1,93 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">{{store}}</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome to {{store}}...!</p>
-                </div>
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">{{ stores.store_name }}</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Welcome to {{ stores.store_name }}...!</p>
+        </div>
+    </div>
+</header>
+
+<!-- Store info -->
+<section class="py-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                {% if stores.image %}
+                <img class="img-fluid rounded" src="{{ stores.image.url }}" alt="{{ stores.store_name }}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #eee;" />
+                {% else %}
+                <img class="img-fluid rounded" src="{% static 'images/placeholder.png' %}" alt="No image available" />
+                {% endif %}
             </div>
-        </header>
+            <div class="col-md-8">
+                <p>{{ description }}</p>
+                <p><small class="text-body-secondary">Contact: {{ stores.email }} | {{ stores.phone_number }}</small></p>
 
-<!-- Section -->
-       <section>
-            <div class="container">
-                <div class="row">
-                    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% if stores.ratings_count > 0 %}
+                    <p><strong>{{ stores.average_rating }}★</strong> ({{ stores.ratings_count }} review{{ stores.ratings_count|pluralize }})</p>
+                {% else %}
+                    <p class="text-body-secondary">No reviews yet</p>
+                {% endif %}
 
+                {% if user.is_authenticated %}
+                    {% if already_reviewed %}
+                        <p class="text-body-secondary">You've already reviewed this store.</p>
+                    {% else %}
+                        <a href="{% url 'rate_vendor' stores.id %}" class="btn btn-outline-dark btn-sm">Write a review</a>
+                    {% endif %}
+                {% else %}
+                    <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
 
-{% if products %}
-{% for product in store.products.all %}
-                        <div class='col-12'>
-                            <div class="card mb-9" style="#">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
-                                    </div>
-                                    
-                                    <div class="col-md-8">
-                                    <div class="card-body">
+<!-- Store's products -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h4 class="mb-4">Products from {{ stores.store_name }}</h4>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
-                                        <h5 class="card-title">{{ store.id.product.vinyl_name}}</h5>
-
-                                        <p class="card-text">{{product.artist_name}}</p>
-                                        <p class="card-text"><small class="text-body-secondary">{{product.category}}</p>
-                                        <p class="card-text">{{product.description}}</p>
-                                        <div class="card-text">Tracklist:
-                                            <ol>
-                                                {%for track in tracklist%}
-                                                <li>
-                                                    {{track}}
-                                                </li>
-                                                {% endfor %}
-                                            </ol>
-                                        </div>
-                                        <p class="card-text">${{product.price}}</p>
-                                        <br></br>
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-2">Quantity:</div>
-                                                <div class="col-md-2">
-                                                <select class="form-select form-select-sm" id="qty-cart">
-                                                    <option selected></option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <br></br>
-                                        
-                                        <p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
-                                        <br></br>
-                                        <button type="button" value="{{ product.id }}" id="add-cart" class="btn btn-secondary">Add to cart</button>
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
+            {% if products %}
+                {% for product in products %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.vinyl_name }}" style="height: 240px; object-fit: cover;" />
+                        {% else %}
+                        <img class="card-img-top" src="{% static 'images/placeholder.png' %}" alt="No image available" style="height: 240px; object-fit: cover;" />
+                        {% endif %}
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{ product.vinyl_name }}</h5>
+                                <p class="mb-1">{{ product.artist_name }}</p>
+                                <p class="mb-1">${{ product.price }}</p>
+                                {% if product.ratings_count > 0 %}
+                                    <small class="text-body-secondary">{{ product.average_rating }}★ ({{ product.ratings_count }})</small>
+                                {% else %}
+                                    <small class="text-body-secondary">No reviews yet</small>
+                                {% endif %}
                             </div>
-{%endfor%}
-{% endif%}
                         </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" href="{% url 'productdetail' product.id %}">View product</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </section>
+                {% endfor %}
+            {% else %}
+                <p class="text-body-secondary">This store has no products yet.</p>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
 {% endblock %}
