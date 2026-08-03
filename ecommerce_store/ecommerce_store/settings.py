@@ -32,7 +32,8 @@ SECRET_KEY = "django-insecure-487&$g0km=zqn@l!2lwngfws8y6i*r#sxsmmj60+i+@*14p9l2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vinyls-e-commerce-app-production.up.railway.app', 'https://vinyls-e-commerce-app-production.up.railway.app']
+ALLOWED_HOSTS = ['vinyls-e-commerce-app-production.up.railway.app',
+                 ]
 CSRF_TRUSTED_ORIGINS = ['https://vinyls-e-commerce-app-production.up.railway.app']
 
 
