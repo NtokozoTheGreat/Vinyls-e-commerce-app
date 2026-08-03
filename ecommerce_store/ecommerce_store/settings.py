@@ -96,8 +96,8 @@ DATABASES = {
         #"NAME": BASE_DIR / "db.sqlite3",
 
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "railway",
-        "USER": "postgres",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ["DB_PASSWORD_YO"],
         "HOST": os.environ.get("DB_HOST"),
         "PORT": os.environ.get("DB_PORT"),
