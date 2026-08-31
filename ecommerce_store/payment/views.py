@@ -10,13 +10,31 @@ from django.utils import timezone
 from store.models import CustomerProfile
 # Create your views here.
 
+"""
+Views responsible for the checkout and order workflow.
+
+Provides functionality for checkout, billing,
+order creation, payment confirmation,
+and order management for administrators.
+"""
+
 
 def payment_success(request):
+    """
+    Display the payment confirmation page after a
+    successful order.
+    """
 
     return render(request, 'payment/payment_success.html', {})
 
 
 def checkout(request):
+    """
+    Display the checkout page.
+
+    Loads the current shopping cart and pre-populates
+    the shipping form for authenticated users.
+    """
 
     cart = Cart(request)
     cart_products = cart.get_product()
@@ -52,6 +70,13 @@ def cart_summary(request):
 
 
 def billing_info(request):
+    """
+    Collect billing information before an order
+    is processed.
+
+    Shipping details are temporarily stored in the
+    user's session for use during checkout.
+    """
     
     if request.POST:
     
@@ -89,6 +114,13 @@ def billing_info(request):
 
 
 def process_order(request):
+    """
+    Create an order from the current shopping cart.
+
+    Creates the order record, stores each purchased
+    item, clears the user's cart, and redirects
+    to the home page after completion.
+    """
     
     if request.POST:
         payment_form = PaymentForm(request.POST or None)
@@ -101,7 +133,7 @@ def process_order(request):
         
         full_name = my_shipping['shipping_full_name']
         email = my_shipping['shipping_email']
-        shipping_address= f"{my_shipping['shipping_address_1']}\n{my_shipping['shipping_address_2']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_province']}\n{my_shipping['shipping_country']}\n{my_shipping['shipping_zipcode']}"
+        shipping_address = f"{my_shipping['shipping_address_1']}\n{my_shipping['shipping_address_2']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_province']}\n{my_shipping['shipping_country']}\n{my_shipping['shipping_zipcode']}"
         amount_paid = totals
 
         if request.user.is_authenticated:
@@ -165,6 +197,12 @@ def process_order(request):
 
 
 def not_shipped_dash(request):
+    """
+    Display all pending orders.
+
+    Administrators can update the status of
+    orders awaiting shipment.
+    """
     if not (request.user.is_authenticated and request.user.is_superuser):
         messages.error(request, "Access denied")
         return redirect('home')
@@ -202,6 +240,12 @@ def not_shipped_dash(request):
 
 
 def shipped_dash(request):
+    """
+    Display all shipped orders.
+
+    Administrators can update the status of
+    orders that are currently in transit.
+    """
     if not (request.user.is_authenticated and request.user.is_superuser):
         messages.error(request, "Access denied")
         return redirect('home')
@@ -238,6 +282,12 @@ def shipped_dash(request):
     return render(request, 'payment/shipped_dash.html', {'orders': orders})
 
 def orders(request, pk):
+    """
+    Display the details of an individual order.
+
+    Administrators can review purchased items
+    and update the order status.
+    """
     if not (request.user.is_authenticated and request.user.is_superuser):
         return redirect("home")
 

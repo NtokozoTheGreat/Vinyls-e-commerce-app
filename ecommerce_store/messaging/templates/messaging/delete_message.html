@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container py-5" style="max-width: 500px;">
-    <h4>Delete this message?</h4>
-    <p class="text-body-secondary">"{{ message.body }}"</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <!-- this button submits a POST, which is what actually triggers deletion in the view -->
-        <a href="{% url 'conversation_detail' message.conversation.id %}" class="btn btn-outline-secondary">Cancel</a>
-    </form>
+<div class="container message-form-page">
+    <div class="message-form-card">
+        <span class="message-form-label">Delete Message</span>
+        <h1>Delete this message?</h1>
+
+        <p class="message-preview">"{{ message.body }}"</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="message-form-actions">
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <!-- this button submits a POST, which is what actually triggers deletion in the view -->
+                <a href="{% url 'conversation_detail' message.conversation.id %}" class="btn btn-outline-dark">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

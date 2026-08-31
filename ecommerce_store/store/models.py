@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
 from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -9,24 +8,45 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # catergory
 class Category(models.Model):
+
+    """
+    Represents a product category within the marketplace.
+
+    Categories are used to organize products and improve
+    browsing and search functionality.
+    """
+
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to="uploads/category/", blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        """
+        Automatically generate a URL-friendly slug from the
+        category name if one has not already been provided.
+        """
+
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
-        verbose_name_plural = "catagories"
+        # catagoies wont have an added s at the end in the control panel  
+        verbose_name_plural = "categories"
 
 
 # customer
 class CustomerProfile(models.Model):
+    """
+    Stores additional information for marketplace customers.
+
+    A CustomerProfile is automatically created whenever
+    a new Django User account is registered.
+    """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20, blank=True)
     address1 = models.CharField(max_length=255, blank=True)
@@ -35,6 +55,9 @@ class CustomerProfile(models.Model):
     province = models.CharField(max_length=255, blank=True)
     country = models.CharField(max_length=255, blank=True)
     zipcode = models.CharField(max_length=255, blank=True)
+
+    # Stores a serialized copy of the user's previous cart
+    # so it can be restored after login.
     old_cart = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
@@ -42,6 +65,7 @@ class CustomerProfile(models.Model):
 
 
 def create_customer_profile(sender, instance, created, **kwargs):
+    
     if created:
         user_profile = CustomerProfile(user=instance) 
         user_profile.save()
@@ -52,12 +76,23 @@ post_save.connect(create_customer_profile, sender=User)
 
 # vendors
 class Vendor(models.Model):
+
+    """
+    Represents a marketplace vendor.
+
+    Each vendor owns a single storefront and can create
+    and manage multiple product listings.
+    """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     store_name = models.CharField(max_length=100)
     store_description = models.TextField()
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(max_length=254, unique=True, blank=False)
     image = models.ImageField(upload_to="uploads/vendor/", blank=True, null=True)
+
+    # Cached rating statistics used to improve performance
+    # by avoiding repeated aggregation queries.
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     ratings_count = models.PositiveIntegerField(default=0)
     added_at = models.DateTimeField(auto_now_add=True)
@@ -68,6 +103,13 @@ class Vendor(models.Model):
 
 # products
 class Product(models.Model):
+    """
+    Represents a product listed for sale.
+
+    The name 'Product' allows the marketplace
+    to support additional music-related merchandise
+    beyond vinyl records in the future.
+    """
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name="products")
     vinyl_name = models.CharField(max_length=100)
     artist_name = models.CharField(max_length=100)
@@ -76,10 +118,13 @@ class Product(models.Model):
     price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(default="", blank=True, null=True)
-    track_list= models.TextField(default="", blank=True, null=True)
+    track_list = models.TextField(default="", blank=True, null=True)
     image = models.ImageField(upload_to="uploads/product/", blank=True, null=True)
     on_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+
+    # Cached rating statistics to improve performance by
+    # avoiding repeated aggregation queries.
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     ratings_count = models.PositiveIntegerField(default=0)
 
@@ -88,6 +133,14 @@ class Product(models.Model):
 
 
 class Ratings(models.Model):
+    
+    """
+    Represents a user-submitted review and rating.
+
+    A rating may be associated with either a product
+    or a vendor, but never both.
+    """
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ratings")
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name="ratings", null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings", null=True, blank=True)
@@ -100,8 +153,17 @@ class Ratings(models.Model):
 
     class Meta:
 
+        # ratingss wont have an added s at the end in the control panel 
         verbose_name_plural = "ratings"
 
+        # Database constraints enforce business rules by ensuring:
+        #
+        # - A rating belongs to either a product or a vendor.
+        # - A user may rate a specific product only once.
+        # - A user may rate a specific vendor only once.
+        #
+        # These rules are enforced at the database level to
+        # preserve data integrity.
         constraints = [
             models.CheckConstraint(
                 condition=(
@@ -125,4 +187,3 @@ class Ratings(models.Model):
     def __str__(self):
         target = self.vendor or self.product
         return f"{self.score} by {self.user.username} on {target}"
-

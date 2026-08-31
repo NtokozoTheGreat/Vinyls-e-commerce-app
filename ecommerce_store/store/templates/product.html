@@ -1,137 +1,452 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
-<!-- Section -->
-<section>
-<div class="container">
-<div class="row">
+<section class="product-page">
 
-<div class='col-12'>
-<div class="card mb-9" style="#">
-<div class="row g-0">
-<div class="col-md-4">
-<img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
-</div>
-<div class="col-md-8">
-<div class="card-body">
-<h5 class="card-title">{{ product.vinyl_name}}</h5>
+    <div class="container-fluid">
 
-<p class="card-text">{{product.artist_name}}</p>
-<p class="card-text"><small class="text-body-secondary">{{product.category}}</p>
+        <!-- =====================================================
+             PRODUCT HEADER
+             ===================================================== -->
 
-<!-- Rating summary -->
-<p class="card-text">
-{% if product.ratings_count > 0 %}
-    <strong>{{ product.average_rating }}★</strong> ({{ product.ratings_count }} review{{ product.ratings_count|pluralize }})
-{% else %}
-    <span class="text-body-secondary">No reviews yet</span>
-{% endif %}
-</p>
+        <div class="product-topbar">
 
-<p class="card-text">{{product.description}}</p>
-<div class="card">
-    <div class="card-text">Tracklist:
-        <ol>
-        {%for track in tracklist%}
-            <li>
-            {{track}}
-            </li>
-        {% endfor %}
-        </ol>
-    </div>
-</div>
+            <span>
+                VINYLS / RECORD / {{ product.id|stringformat:"03d" }}
+            </span>
 
-<p class="card-text">${{product.price}}</p>
-<br></br>
-<div class="row justify-content-center">
-<div class="col-md-2">Quantity:</div>
-<div class="col-md-2">
-<select class="form-select form-select-sm" id="qty-cart">
-<option selected></option>
-<option value="1">1</option>
-<option value="2">2</option>
-<option value="3">3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-</select>
-</div>
-</div>
-</div>
-<br></br>
-<p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
-<br></br>
-<button type="button" value="{{ product.id }}" id="add-cart" class="btn btn-secondary">Add to cart</button>
-<!-- Message vendor about this product -->
-{% if user.is_authenticated %}
-    {% if user != product.vendor.user %}
-        <a href="{% url 'start_conversation_product' product.vendor.id product.id %}" class="btn btn-outline-dark">
-            Ask about this product
-        </a>
-    {% endif %}
-{% else %}
-    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-dark">Log in to ask about this product</a>
-{% endif %}
+            <span>
+                AVAILABLE NOW
+            </span>
 
-</div>
-</div>
-</div>
-</div>
-
-<!-- Reviews -->
-<div class='col-12 mt-4'>
-<h4>Reviews ({{ reviews.count }})</h4>
-
-{% if user.is_authenticated %}
-    {% if already_reviewed %}
-        <p class="text-body-secondary">You've already reviewed this product.</p>
-    {% elif user_can_review %}
-        <a href="{% url 'rate_product' product.id %}" class="btn btn-outline-secondary btn-sm mb-3">Write a review</a>
-    {% else %}
-        <p class="text-body-secondary">You can review this product once your order has been delivered.</p>
-    {% endif %}
-{% else %}
-    <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
-{% endif %}
-
-{% for review in reviews %}
-    <div class="card mb-2">
-        <div class="card-body">
-            <h6 class="card-title">{{ review.title }} — {{ review.score }}★</h6>
-            <p class="card-text">{{ review.review }}</p>
-            <small class="text-body-secondary">by {{ review.user.username }} on {{ review.created_at|date:"M d, Y" }}</small>
         </div>
+
+
+        <!-- =====================================================
+             PRODUCT MAIN
+             ===================================================== -->
+
+        <div class="product-main">
+
+            <!-- RECORD IMAGE -->
+
+            <div class="product-art">
+
+                <div class="product-art-label">
+                    RECORD
+                </div>
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.vinyl_name }}"
+                    >
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="product-information">
+
+                <span class="product-category">
+                    {{ product.category }}
+                </span>
+
+                <h1 class="product-title">
+                    {{ product.vinyl_name }}
+                </h1>
+
+                <p class="product-artist">
+                    {{ product.artist_name }}
+                </p>
+
+
+                <!-- Rating -->
+
+                <div class="product-rating">
+
+                    {% if product.ratings_count > 0 %}
+
+                        <strong>
+                            {{ product.average_rating }}★
+                        </strong>
+
+                        <span>
+                            {{ product.ratings_count }}
+                            review{{ product.ratings_count|pluralize }}
+                        </span>
+
+                    {% else %}
+
+                        <span>
+                            NO REVIEWS YET
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="product-description">
+
+                    <span class="product-section-label">
+                        ABOUT THE RECORD
+                    </span>
+
+                    <p>
+                        {{ product.description }}
+                    </p>
+
+                </div>
+
+
+                <!-- Price -->
+
+                <div class="product-price-block">
+
+                    <span>
+                        PRICE
+                    </span>
+
+                    <strong>
+                        ${{ product.price }}
+                    </strong>
+
+                </div>
+
+
+                <!-- Quantity -->
+
+                <div class="product-purchase">
+
+                    <div class="quantity-control">
+
+                        <label for="qty-cart">
+                            QUANTITY
+                        </label>
+
+                        <select
+                            class="product-quantity"
+                            id="qty-cart"
+                        >
+                            <option selected>1</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        value="{{ product.id }}"
+                        id="add-cart"
+                        class="product-cart-button"
+                    >
+                        ADD TO CART
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                </div>
+
+
+                <!-- Vendor -->
+
+                <div class="product-vendor">
+
+                    <span>
+                        SOLD BY
+                    </span>
+
+                    <strong>
+                        {{ product.vendor|title }}
+                    </strong>
+
+                </div>
+
+
+                <!-- Message vendor -->
+
+                <div class="product-contact">
+
+                    {% if user.is_authenticated %}
+
+                        {% if user != product.vendor.user %}
+
+                            <a
+                                href="{% url 'start_conversation_product' product.vendor.id product.id %}"
+                            >
+                                ASK ABOUT THIS RECORD
+                                <i class="bi bi-arrow-up-right"></i>
+                            </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'login' %}?next={{ request.path }}"
+                        >
+                            LOG IN TO CONTACT SELLER
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TRACKLIST
+             ===================================================== -->
+
+        <section class="product-tracklist">
+
+            <div class="tracklist-heading">
+
+                <span>
+                    RECORD / TRACKLIST
+                </span>
+
+                <strong>
+                    {{ tracklist|length|stringformat:"02d" }}
+                </strong>
+
+            </div>
+
+
+            <div class="tracklist-content">
+
+                {% for track in tracklist %}
+
+                    <div class="track">
+
+                        <span class="track-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </span>
+
+                        <span class="track-name">
+                            {{ track }}
+                        </span>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="track-empty">
+                        NO TRACKLIST AVAILABLE
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             REVIEWS
+             ===================================================== -->
+
+        <section class="product-reviews">
+
+            <div class="reviews-header">
+
+                <div>
+
+                    <span>
+                        COMMUNITY / FEEDBACK
+                    </span>
+
+                    <h2>
+                        Reviews.
+                    </h2>
+
+                </div>
+
+                <strong>
+                    {{ reviews.count|stringformat:"02d" }}
+                </strong>
+
+            </div>
+
+
+            <!-- Review action -->
+
+            <div class="review-action">
+
+                {% if user.is_authenticated %}
+
+                    {% if already_reviewed %}
+
+                        <span>
+                            YOU'VE ALREADY REVIEWED THIS RECORD.
+                        </span>
+
+                    {% elif user_can_review %}
+
+                        <a
+                            href="{% url 'rate_product' product.id %}"
+                            class="review-button"
+                        >
+                            WRITE A REVIEW
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    {% else %}
+
+                        <span>
+                            YOU CAN REVIEW THIS RECORD ONCE YOUR
+                            ORDER HAS BEEN DELIVERED.
+                        </span>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <span>
+                        <a href="{% url 'login' %}?next={{ request.path }}">
+                            LOG IN
+                        </a>
+                        TO WRITE A REVIEW.
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Reviews -->
+
+            <div class="reviews-list">
+
+                {% for review in reviews %}
+
+                    <article class="review-item">
+
+                        <div class="review-meta">
+
+                            <span>
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+
+                            <span>
+                                {{ review.created_at|date:"M d, Y" }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="review-content">
+
+                            <div class="review-title-row">
+
+                                <h3>
+                                    {{ review.title }}
+                                </h3>
+
+                                <strong>
+                                    {{ review.score }}★
+                                </strong>
+
+                            </div>
+
+                            <p>
+                                {{ review.review }}
+                            </p>
+
+                            <small>
+                                BY {{ review.user.username|upper }}
+                            </small>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="reviews-empty">
+
+                        <span>
+                            404 / EMPTY
+                        </span>
+
+                        <h3>
+                            NO REVIEWS<br>
+                            YET.
+                        </h3>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
     </div>
-{% empty %}
-    <p class="text-body-secondary">No reviews yet.</p>
-{% endfor %}
-</div>
 
-
-</div>
-</div>
 </section>
+
+
+<!-- =========================================================
+     CART AJAX
+     ========================================================= -->
+
 <script>
+
 $(document).on("click", "#add-cart", function(e){
+
     e.preventDefault();
+
     $.ajax({
-type: "POST",
-url: '{% url "cart_add" %}',
-data: {
-product_id: $(this).val(),
-product_qty: $('#qty-cart option:selected').text(),
-csrfmiddlewaretoken: '{{ csrf_token }}',
-action: "post",
+
+        type: "POST",
+
+        url: '{% url "cart_add" %}',
+
+        data: {
+
+            product_id: $(this).val(),
+
+            product_qty: $('#qty-cart option:selected').text(),
+
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            action: "post",
+
         },
-success: function(json){
-//console.log(json)
+
+        success: function(json){
+
             document.getElementById("cart_quantity").textContent = json.qty;
 
         },
-error: function(xhr,errmsg,err){
+
+        error: function(xhr, errmsg, err){
+
             console.log(errmsg);
+
         }
+
     });
+
 });
-</script> 
+
+</script>
 
 {% endblock %}

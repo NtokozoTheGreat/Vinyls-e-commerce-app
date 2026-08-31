@@ -1,0 +1,19 @@
+/* fonts.css*/
+
+@font-face {
+    font-family: 'Akira-Expanded-Bold';
+    src: url('../fonts/Akira-Expanded-Bold.otf') format('opentype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Barber-Complete';
+    src: url('../fonts/Barber-Complete.otf') format('opentype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TheNeue-Black';
+    src: url('../fonts/TheNeue-Black.otf') format('opentype');
+    font-display: swap;
+}

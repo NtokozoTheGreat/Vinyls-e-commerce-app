@@ -1,79 +1,158 @@
 {% extends 'base.html' %}
 
 {% block content %}
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Checkout</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Review your order</p>
-                </div>
+
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Checkout</h1>
+            <p class="lead fw-normal text-white-50 mb-0">
+                Review your order
+            </p>
+        </div>
+    </div>
+</header>
+
+
+<!-- Checkout Section -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5">
+
+        <!-- Order Summary -->
+        <div class="checkout-card mb-4">
+
+            <div class="checkout-card-header">
+                <h5 class="mb-0">Order Summary</h5>
             </div>
-        </header>
-        <!-- Section-->
-         
-        <section >
-            <br></br>
-            <div class="container" >
-                <div class="col-md-6 offest-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            Order summary
-                        </div>
-                        <div class="card-body">
-                            {% for product in cart_products %}
-                            <div class="card mb-3" style="max-width: 540px;">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                    <img src="{{product.image.url}}" class="img-fluid rounded-start" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{product.vinyl_name}}:{{product.artist_name}}</h5>
-                                        <p class="card-text"> Quantity:
-                                            {%for key,value in quantities.items %}
-                                                         {% if key == product.id|slugify %}
-                                                            {{ value }}
-                                                         {%endif%}
-                                            {%endfor%}            
-                                        </p>
-                                        <p class="card-text">Price:
-                                            {% if product.on_sale %}
-                                                {{product.sale_price}}
-                                            {% else %}
-                                                {{product.price}}
-                                            {% endif %}
-                                        </p>
-                                        <p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
+
+            <div class="checkout-card-body">
+
+                {% for product in cart_products %}
+
+                <div class="order-product mb-3">
+
+                    <!-- Product Image -->
+                    <div class="order-product-image">
+
+                        {% if product.image %}
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.vinyl_name }}"
+                            >
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Product Information -->
+                    <div class="order-product-info">
+
+                        <h5 class="fw-bold mb-1">
+                            {{ product.vinyl_name }}
+                        </h5>
+
+                        <p class="text-body-secondary mb-2">
+                            {{ product.artist_name }}
+                        </p>
+
+                        <p class="mb-1">
+                            <strong>Quantity:</strong>
+
+                            {% for key, value in quantities.items %}
+                                {% if key == product.id|slugify %}
+                                    {{ value }}
+                                {% endif %}
                             {% endfor %}
-                            <strong>Total: {{totals}}</strong>
-                            <br></br>
-                            <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update items</a>
-                        </div>
-                        </div>
+
+                        </p>
+
+                        <p class="mb-1">
+
+                            <strong>Price:</strong>
+
+                            {% if product.on_sale %}
+                                ${{ product.sale_price }}
+                            {% else %}
+                                ${{ product.price }}
+                            {% endif %}
+
+                        </p>
+
+                        <p class="mb-0 text-body-secondary">
+                            <small>
+                                Store: {{ product.vendor|title }}
+                            </small>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+
+                <!-- Order Total -->
+                <div class="order-total">
+
+                    <span>Total</span>
+
+                    <strong>
+                        {{ totals }}
+                    </strong>
+
+                </div>
+
+
+                <!-- Update Cart -->
+                <div class="mt-3">
+
+                    <a
+                        href="{% url 'cart_summary' %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Update Items
+                    </a>
 
                 </div>
 
             </div>
-            <br></br>
-                <div class="card">
-                    <div class="card-header">
-                    Shipping info
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{% url 'billing_info'%}">
-                            {% csrf_token %}
-                    {{ shipping_form.as_p}}
-                    <br>
-                    <button type="submit" class="btn btn-secondary">continue to billing</button>
-                        </form>
-                    </div>
-                </div>
-                <br>
-        </section>
+
+        </div>
+
+
+        <!-- Shipping Information -->
+        <div class="checkout-card mb-4">
+
+            <div class="checkout-card-header">
+                <h5 class="mb-0">Shipping Information</h5>
+            </div>
+
+            <div class="checkout-card-body">
+
+                <form
+                    method="POST"
+                    action="{% url 'billing_info' %}"
+                >
+
+                    {% csrf_token %}
+
+                    {{ shipping_form.as_p }}
+
+                    <button
+                        type="submit"
+                        class="btn btn-secondary checkout-pay-button"
+                    >
+                        Continue to Billing
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
 
 {% endblock %}

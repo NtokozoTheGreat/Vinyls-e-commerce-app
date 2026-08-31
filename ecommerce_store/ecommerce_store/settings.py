@@ -32,7 +32,8 @@ SECRET_KEY = "django-insecure-487&$g0km=zqn@l!2lwngfws8y6i*r#sxsmmj60+i+@*14p9l2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vinyls-e-commerce-app-production.up.railway.app',
+ALLOWED_HOSTS = ['vinyls-e-commerce-app-production.up.railway.app', '127.0.0.1',
+                 'localhost', "vinyls-e-commerce-app.onrender.com",
                  ]
 CSRF_TRUSTED_ORIGINS = ['https://vinyls-e-commerce-app-production.up.railway.app']
 
@@ -40,6 +41,7 @@ CSRF_TRUSTED_ORIGINS = ['https://vinyls-e-commerce-app-production.up.railway.app
 # Application definition
 
 INSTALLED_APPS = [
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -70,7 +72,7 @@ ROOT_URLCONF = "ecommerce_store.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -79,6 +81,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "cart.context_processors.cart",
                 'messaging.context_processors.unread_messages',
+                'store.context_processors.vendor_store'
             ],
         },
     },
@@ -150,3 +153,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.resend.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "resend"
+EMAIL_HOST_PASSWORD = os.environ.get("RESEND_API_KEY")
+DEFAULT_FROM_EMAIL = "onboarding@resend.dev"

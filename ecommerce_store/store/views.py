@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django import forms
 from .forms import ProductForm, SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm, VendorProfileForm, RatingForm
 from django.contrib.auth.decorators import login_required
 from .models import Vendor, Product, Category, CustomerProfile
@@ -15,21 +13,52 @@ from payment.models import ShippingAddress, OrderItem
 from .models import Ratings
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from django.core.mail import EmailMessage
 
 # Create your views here.
 
+"""
+Views for the Vinyls marketplace application.
+
+Provides functionality for:
+
+- User registration and authentication
+- Vendor registration and dashboard management
+- Product and store browsing
+- Product search and category browsing
+- Customer profile management
+- Product and vendor review system
+- Rating aggregation and cache updates
+"""
+
 
 def home(request):
+    """
+    Display the marketplace homepage.
+
+    Retrieves all available products and
+    renders the main storefront.
+    """
     products = Product.objects.all()
     
     return render(request, 'home.html', {'products': products})
 
 
 def about_us(request):
+    """
+    Display the marketplace About Us page.
+    """
     return render(request, 'aboutus.html', {})
 
 
 def login_user(request):
+    """
+    Authenticate a user and restore their session.
+
+    Customer shopping carts are restored from the
+    stored CustomerProfile when available. Vendors
+    are redirected to their dashboard after login.
+    """
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -74,6 +103,12 @@ def logout_user(request):
 
 
 def register_user(request):
+    """
+    Register a new customer account.
+
+    Creates a new user, authenticates them,
+    and starts their first session.
+    """
     form = SignUpForm()
     if request.method == "POST":
         form = SignUpForm(request.POST)
@@ -97,6 +132,12 @@ def register_user(request):
 
 @login_required
 def become_vendor(request):
+    """
+    Register the authenticated user as a vendor.
+
+    Creates a storefront that allows the user
+    to manage and sell products.
+    """
     if hasattr(request.user, 'vendor'):
         messages.info(request, "You've already registered as a vendor.")
         return redirect('vendor_dashboard')
@@ -119,6 +160,12 @@ def become_vendor(request):
 
 @login_required
 def add_product(request):
+    """
+    Create a new product listing.
+
+    Only authenticated vendors or administrators
+    are permitted to add products.
+    """
     if not hasattr(request.user, "vendor") and not request.user.is_staff:
         messages.error(request, "Only vendors or admins can add products.")
         return redirect("home")
@@ -137,10 +184,17 @@ def add_product(request):
     else:
         form = ProductForm()
 
-    return render(request, "add_product.html", {"form": form})
+    return render(request, "add_product.html", {"form": form,
+                                                "store": request.user.vendor,})
 
 
 def vendor_dashboard(request):
+    """
+    Display the authenticated vendor dashboard.
+
+    Shows the vendor's storefront information
+    and all products they currently manage.
+    """
     if not hasattr(request.user, 'vendor'):
         messages.error(request, "You don't have a vendor account.")
         return redirect('home')
@@ -155,6 +209,13 @@ def vendor_dashboard(request):
 
 
 def product_detail(request, pk):
+    """
+    Display a product and its reviews.
+
+    Determines whether the current user is
+    eligible to submit a review based on
+    completed purchases.
+    """
     product = Product.objects.get(id=pk)
     tracklist = product.track_list.splitlines()
     reviews = product.ratings.select_related("user").order_by("-created_at")
@@ -184,6 +245,13 @@ def product_detail(request, pk):
 
 
 def store_detail(request, pk):
+    """
+    Display a vendor storefront.
+
+    Shows store information, customer reviews,
+    and determines whether the current user
+    may submit a review.
+    """
     stores = Vendor.objects.get(id=pk)
     description = stores.store_description
     reviews = stores.ratings.select_related("user").order_by("-created_at")
@@ -205,7 +273,12 @@ def store_detail(request, pk):
 
 
 def category(request, slug):
-    
+    """
+    Display all products within a category.
+
+    Retrieves the requested category using its
+    slug and displays all associated products.
+    """
     try:
         category = Category.objects.get(slug=slug)
         products = Product.objects.filter(category=category)
@@ -217,28 +290,48 @@ def category(request, slug):
     
     
 def genre_summary(request):
-    
+    """
+    Display all available music genres.
+
+    Used to help customers browse products
+    by category.
+    """
     categories = Category.objects.all()
     
     return render(request, 'genre_summary.html', {'categories': categories})
 
 
 def record_collection_summary(request):
+    """
+    Display all available vinyl records.
 
+    Lists every product currently available
+    in the marketplace.
+    """
     vinyls = Product.objects.all()
 
     return render(request, 'record_collection_summary.html', {'vinyls': vinyls})
 
 
 def record_store_summary(request):
+    """
+    Display all registered record stores.
 
+    Lists every vendor currently available
+    on the marketplace.
+    """
     stores = Vendor.objects.all()
 
     return render(request, 'record_store_summary.html', {'stores': stores})
 
 
 def update_user(request):
+    """
+    Update the authenticated user's account information.
 
+    Allows users to modify their profile
+    details stored in the User model.
+    """
     if request.user.is_authenticated:
         current_user = User.objects.get(id=request.user.id)
         user_form = UpdateUserForm(request.POST or None, instance=current_user)
@@ -256,7 +349,12 @@ def update_user(request):
         return redirect('home')
 
 def update_password(request):
+    """
+    Update the authenticated user's password.
 
+    Re-authenticates the user after a
+    successful password change.
+    """
     if request.user.is_authenticated:
         current_user = request.user
         
@@ -283,7 +381,12 @@ def update_password(request):
 
 
 def update_info(request):
+    """
+    Update customer profile and shipping information.
 
+    Saves both the customer profile and
+    shipping address in a single request.
+    """
     if request.user.is_authenticated:
         current_user = CustomerProfile.objects.get(user__id=request.user.id)
         form = UserInfoForm(request.POST or None, instance=current_user)
@@ -304,6 +407,10 @@ def update_info(request):
 
 
 def search(request):
+    """
+    Search products by vinyl title,
+    artist name, or description.
+    """
 
     if request.method == 'POST':
         searched = request.POST['searched']
@@ -320,6 +427,12 @@ def search(request):
 
 
 def popular_store(request):
+    """
+    Display vendors ordered by popularity.
+
+    Stores are ranked using cached rating
+    statistics.
+    """
 
     stores = Vendor.objects.all().order_by('-ratings_count', '-average_rating')
     
@@ -327,28 +440,42 @@ def popular_store(request):
 
 
 def new_store(request):
-
+    """
+        Displays the most recently added stores.
+    """
     stores = Vendor.objects.all().order_by('-added_at')
 
     return render(request, 'new_store.html', {'stores': stores})
 
 
 def popular_vinyls(request):
+    """
+    Display products ranked by popularity.
 
+    Products are ordered using their cached
+    average rating and review count.
+    """
     vinyls = Product.objects.all().order_by('-ratings_count', '-average_rating')
     return render(request, 'popular_vinyls.html', {'vinyls': vinyls})
 
 
 def fresh_arrivals(request):
-
+    """
+    Display the most recently added products.
+    """
     vinyls = Product.objects.all().order_by('-added_at')
     return render(request, 'fresh_arrivals.html', {'vinyls': vinyls})
 
 
-#for vinyl stores put image in a vinyl template that will change based on the color of the photo uploaded
-
 @login_required
 def rate_product(request, product_id):
+    """
+    Submit a review for a purchased product.
+
+    Users may review a product only after
+    their order has been delivered and may
+    submit only one review per product.
+    """
     product = get_object_or_404(Product, id=product_id)
 
     has_delivered_order = OrderItem.objects.filter(
@@ -382,6 +509,12 @@ def rate_product(request, product_id):
 
 @login_required
 def rate_vendor(request, vendor_id):
+    """
+    Submit a review for a vendor.
+
+    Users may review a vendor only after
+    completing a purchase from that store.
+    """
     vendor = get_object_or_404(Vendor, id=vendor_id)
     
     has_delivered_order = OrderItem.objects.filter(
@@ -396,6 +529,7 @@ def rate_vendor(request, vendor_id):
     
     if request.method == "POST":
         form = RatingForm(request.POST)
+        
         if form.is_valid():
             rating = form.save(commit=False)
             rating.user = request.user
@@ -409,16 +543,24 @@ def rate_vendor(request, vendor_id):
 
 @receiver([post_save, post_delete], sender=Ratings)
 def update_rating_aggregates(sender, instance, **kwargs):
+    """
+    Maintain cached rating statistics.
+
+    Recalculates the average rating and
+    review count whenever a rating is
+    created, updated, or deleted.
+    """
     if instance.product:
+        
         agg = instance.product.ratings.aggregate(avg=Avg("score"), count=Count("id"))
         instance.product.average_rating = agg["avg"] or 0
         instance.product.ratings_count = agg["count"]
         instance.product.save(update_fields=["average_rating", "ratings_count"])
 
     elif instance.vendor:
+        
         agg = instance.vendor.ratings.aggregate(avg=Avg("score"), count=Count("id"))
         instance.vendor.average_rating = agg["avg"] or 0
         instance.vendor.ratings_count = agg["count"]
         instance.vendor.save(update_fields=["average_rating", "ratings_count"])
         
-

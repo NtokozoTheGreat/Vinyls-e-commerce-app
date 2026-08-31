@@ -1,37 +1,65 @@
-
 {% extends 'base.html' %}
+
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Update info</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Update your profile...!</p>
-                </div>
-            </div>
-        </header>
+<!-- Page Header -->
+<header class="brutalist-page-header">
+    <div class="container">
+        <div class="brutalist-header-content">
+            <span class="brutalist-label">ACCOUNT / SETTINGS</span>
+            <h1>UPDATE INFO</h1>
+            <p>Update your profile and shipping information.</p>
+        </div>
+    </div>
+</header>
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                        <div class='col-md-6 offset-md-3'>
-                            <br></br>
-                            <strong>Billing Information</strong>
-                           <form method="POST" action="{%url 'update_info' %}">
-                            {% csrf_token %}
-                            <br/><br/>
-                            {{form.as_p}}
-                            <br/><br/>
-                            <strong>Shipping Infromation</strong>
-                            <br></br>
-                            {{shipping_form.as_p}}
-                                <button type="submit" class="btn btn-secondary">update info</button>
-                            </form> 
-                            <br></br>
-                        </div>
+
+<!-- Update Information -->
+<section class="brutalist-section">
+    <div class="container">
+        <div class="update-info-wrapper">
+
+            <form method="POST" action="{% url 'update_info' %}" class="brutalist-form">
+                {% csrf_token %}
+
+                <!-- Billing Information -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="section-number">01</span>
+                        <h2>BILLING INFORMATION</h2>
+                    </div>
+
+                    <div class="form-fields">
+                        {{ form.as_p }}
+                    </div>
                 </div>
-            </div>
-        </section>
+
+
+                <!-- Shipping Information -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="section-number">02</span>
+                        <h2>SHIPPING INFORMATION</h2>
+                    </div>
+
+                    <div class="form-fields">
+                        {{ shipping_form.as_p }}
+                    </div>
+                </div>
+
+
+                <!-- Submit -->
+                <div class="form-submit">
+                    <button type="submit" class="brutalist-button">
+                        SAVE CHANGES
+                        <span>→</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</section>
+
 {% endblock %}

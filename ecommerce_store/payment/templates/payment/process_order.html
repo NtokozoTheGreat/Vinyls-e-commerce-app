@@ -1,99 +1,226 @@
 {% extends 'base.html' %}
 
 {% block content %}
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Processing Order</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Your order is being processed</p>
+
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Order Details</h1>
+            <p class="lead fw-normal text-white-50 mb-0">
+                Review order information
+            </p>
+        </div>
+    </div>
+</header>
+
+
+<!-- Order Details -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5">
+
+        <div class="order-details-card">
+
+            <!-- Card Header -->
+            <div class="order-details-header">
+                <div>
+                    <h5 class="mb-1">Order #{{ order.id }}</h5>
+                    <small class="text-body-secondary">
+                        {{ order.date_ordered }}
+                    </small>
                 </div>
+
+                <span class="order-status">
+                    {{ order.status|title }}
+                </span>
             </div>
-        </header>
-        <!-- Section-->
-         
-        <section >
-            <br></br>
-            <div class="container" >
-                <div class="col-md-6 offest-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            Order summary
+
+
+            <!-- Card Body -->
+            <div class="order-details-body">
+
+                <!-- Customer Information -->
+                <div class="order-section">
+
+                    <h5 class="order-section-title">
+                        Customer Information
+                    </h5>
+
+                    <div class="order-info-grid">
+
+                        <div>
+                            <span class="order-label">Name</span>
+                            <p>{{ order.full_name }}</p>
                         </div>
-                        <div class="card-body">
-                            {% for product in cart_products %}
-                            <div class="card mb-3" style="max-width: 540px;">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                    <img src="{{product.image.url}}" class="img-fluid rounded-start" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{product.vinyl_name}}:{{product.artist_name}}</h5>
-                                        <p class="card-text"> Quantity:
-                                            {%for key,value in quantities.items %}
-                                                         {% if key == product.id|slugify %}
-                                                            {{ value }}
-                                                         {%endif%}
-                                            {%endfor%}            
-                                        </p>
-                                        <p class="card-text">Price:
-                                            {% if product.on_sale %}
-                                                {{product.sale_price}}
-                                            {% else %}
-                                                {{product.price}}
-                                            {% endif %}
-                                        </p>
-                                        <p class="card-text"><small class="text-body-secondary">Store: {{product.vendor|title}}</small></p>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                            <strong>Total: {{totals}}</strong>
-                            <br></br>
-                            <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update items</a>
+
+                        <div>
+                            <span class="order-label">Email</span>
+                            <p>{{ order.email }}</p>
                         </div>
+
+                        <div>
+                            <span class="order-label">Phone</span>
+                            <p>{{ order.phone }}</p>
                         </div>
+
+                        <div>
+                            <span class="order-label">Date Ordered</span>
+                            <p>{{ order.date_ordered }}</p>
+                        </div>
+
+                    </div>
 
                 </div>
 
-            </div>
-            <br></br>
-                <div class="card">
-                    <div class="card-header">
-                    Shipping info
-                    </div>
-                    <div class="card-body">
 
-                    Name: {{ shipping_info.shipping_full_name}}<br>
-                    Email: {{ shipping_info.shipping_email}}<br>
-                    Address 1: {{ shipping_info.shipping_address_1}}<br>
-                    Address 2: {{ shipping_info.shipping_address_2}}<br>
-                    City: {{ shipping_info.shipping_city}}<br>
-                    Province: {{ shipping_info.shipping_province}}<br>
-                    Zipcode: {{ shipping_info.shipping_zipcode}}<br>
-                    Country: {{ shipping_info.shipping_country}}<br>
-                    <br>
-                    <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">update shipping info</a>
+                <!-- Shipping Address -->
+                <div class="order-section">
+
+                    <h5 class="order-section-title">
+                        Shipping Address
+                    </h5>
+
+                    <div class="shipping-address">
+                        {{ order.shipping_address|linebreaksbr }}
                     </div>
+
                 </div>
-                <br></br>
 
-                   <div class="card">
-                    <div class="card-header">
-                    Billing info
+
+                <!-- Payment -->
+                <div class="order-section">
+
+                    <h5 class="order-section-title">
+                        Payment
+                    </h5>
+
+                    <div class="order-total">
+                        <span>Amount Paid</span>
+                        <strong>${{ order.amount_paid }}</strong>
                     </div>
-                    <div class="card-body">
-                        <form method="POST" action="{% url 'process_order' %}">
-                        {% csrf_token %}
-                        {{billing_form.as_p}}                    
-                    <br>
-                    <button type="submit" class="btn btn-secondary">Pay Now</button>
+
+                </div>
+
+
+                <!-- Vinyls -->
+                <div class="order-section">
+
+                    <h5 class="order-section-title">
+                        Vinyls
+                    </h5>
+
+                    {% for item in order_items %}
+
+                    <div class="order-item">
+
+                        <div class="order-item-info">
+
+                            <h6>
+                                {{ item.product }}
+                            </h6>
+
+                            <small class="text-body-secondary">
+                                Quantity: {{ item.quantity }}
+                            </small>
+
+                        </div>
+
+                        <strong>
+                            ${{ item.price }}
+                        </strong>
+
+                    </div>
+
+                    {% empty %}
+
+                    <p class="text-body-secondary">
+                        No items found for this order.
+                    </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- Shipping Status -->
+                <div class="order-section">
+
+                    <h5 class="order-section-title">
+                        Shipping Status
+                    </h5>
+
+                    {% if order.status == "shipped" or order.status == "delivered" %}
+
+                        <div class="status-message">
+                            This order has been marked as shipped.
+                        </div>
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="shipping_status"
+                                value="pending"
+                            >
+
+                            <button
+                                type="submit"
+                                class="btn btn-secondary"
+                            >
+                                Mark as Not Shipped
+                            </button>
+
                         </form>
-                    </div>
+
+                    {% else %}
+
+                        <div class="status-message">
+                            This order is currently waiting to be shipped.
+                        </div>
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="shipping_status"
+                                value="shipped"
+                            >
+
+                            <button
+                                type="submit"
+                                class="btn btn-secondary"
+                            >
+                                Mark as Shipped
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
                 </div>
-                <br></br>
-        </section>
+
+            </div>
+
+
+            <!-- Card Footer -->
+            <div class="order-details-footer">
+
+                <a
+                    href="{% url 'vendor_dashboard' %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
 
 {% endblock %}

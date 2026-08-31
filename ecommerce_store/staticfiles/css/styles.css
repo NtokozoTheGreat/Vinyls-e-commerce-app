@@ -10,6 +10,18 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+
+ #myfont1{
+  font-family: 'Akira-Expanded';
+ }
+ #myfont2{
+  font-family: 'Barber-Complete';
+ }
+
+ #myfont3{
+  font-family: 'TheNeue-Black';
+ }
+
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -93,7 +105,6 @@
 
 body {
   margin: 0;
-  font-family: var(--bs-body-font-family);
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
@@ -3605,6 +3616,7 @@ textarea.form-control-lg {
 }
 
 .nav {
+  font-family: 'TheNeue-Black';
   --bs-nav-link-padding-x: 1rem;
   --bs-nav-link-padding-y: 0.5rem;
   --bs-nav-link-font-weight: ;

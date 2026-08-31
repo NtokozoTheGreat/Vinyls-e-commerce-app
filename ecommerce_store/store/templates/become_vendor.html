@@ -1,31 +1,95 @@
-
 {% extends 'base.html' %}
+
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Register as a Vendor</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome to Vinlys...!</p>
-                </div>
-            </div>
-        </header>
+<!-- Page Header -->
+<header class="brutalist-page-header">
+    <div class="container">
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                        <div class='col-8'>
-                           <form method="POST" enctype=" multipart/form-data">
-                            {% csrf_token %}
-                            <br/><br/>
-                            {{form.as_p}}
-                            <br/><br/>
-                                <button type="submit" class="btn btn-secondary">Register</button>
-                            </form> 
-                        </div>
+        <p class="brutalist-eyebrow">
+            VINYLS / SELLER PROGRAM
+        </p>
+
+        <h1>
+            BECOME<br>
+            A VENDOR.
+        </h1>
+
+        <p class="brutalist-subtitle">
+            Open your own record store and start selling
+            vinyl to collectors on Vinyls.
+        </p>
+
+    </div>
+</header>
+
+
+<!-- Vendor Registration -->
+<section class="brutalist-form-section">
+
+    <div class="container">
+
+        <div class="brutalist-form-layout">
+
+            <!-- Information -->
+            <aside class="brutalist-form-sidebar">
+
+                <div class="brutalist-form-index">
+                    01
                 </div>
+
+                <h2>
+                    OPEN YOUR<br>
+                    STORE.
+                </h2>
+
+                <p>
+                    Tell us about your record store. Once registered,
+                    you'll be able to create listings and manage your
+                    vinyl collection.
+                </p>
+
+                <div class="brutalist-form-note">
+                    <span>*</span>
+                    Make sure your store information is accurate.
+                </div>
+
+            </aside>
+
+
+            <!-- Registration Form -->
+            <div class="brutalist-form-container">
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="brutalist-form"
+                >
+
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <div class="brutalist-form-actions">
+
+                        <button
+                            type="submit"
+                            class="brutalist-submit"
+                        >
+                            CREATE STORE
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
+                </form>
+
             </div>
-        </section>
+
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}

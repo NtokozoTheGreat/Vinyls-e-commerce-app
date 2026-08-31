@@ -3,8 +3,24 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPassw
 from django import forms
 from .models import Category, Product, Vendor, CustomerProfile, Ratings
 
+"""
+Forms for the Vinyls marketplace application.
+
+Provides forms for user authentication,
+vendor registration, product management,
+customer profiles, and the review system.
+"""
+
 
 class SignUpForm(UserCreationForm):
+    """
+    Form for registering a new customer account.
+
+    Extends Django's UserCreationForm by
+    providing Bootstrap styling and
+    additional profile fields.
+    """
+    
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
     first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
     last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
@@ -33,6 +49,12 @@ class SignUpForm(UserCreationForm):
 
 
 class VendorProfileForm(forms.ModelForm):
+    """
+    Form for creating and updating vendor profiles.
+
+    Includes validation to ensure each
+    store email address is unique.
+    """
 
     class Meta:
         model = Vendor
@@ -45,6 +67,10 @@ class VendorProfileForm(forms.ModelForm):
         }
         
     def clean_email(self):
+        """
+        Validate that the vendor email address
+        is unique across all stores.
+        """
         email = self.cleaned_data['email']
         qs = Vendor.objects.filter(email=email)
         if self.instance.pk:
@@ -56,7 +82,14 @@ class VendorProfileForm(forms.ModelForm):
 
 
 class UpdateUserForm(UserChangeForm):
-    
+    """
+    Form for updating basic user account
+    information.
+
+    Excludes password management, which
+    is handled separately.
+    """
+ 
     password = None
     
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}),required=False)
@@ -76,6 +109,13 @@ class UpdateUserForm(UserChangeForm):
         self.fields['username'].help_text = '<span class="form-text text-muted"><small>Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small></span>'
         
 class ChangePasswordForm(SetPasswordForm):
+    """
+    Form for securely updating a user's
+    password.
+
+    Applies Bootstrap styling to Django's
+    default password fields.
+    """
     class Meta:
         model = User
         fields = ['new_password1', 'new_password2']
@@ -95,6 +135,14 @@ class ChangePasswordForm(SetPasswordForm):
             
 
 class ProductForm(forms.ModelForm):
+    """
+    Form for creating and updating
+    marketplace product listings.
+
+    Validates product details, including
+    sale pricing rules.
+    """
+    
     vinyl_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Vinyl Name'}))
     artist_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Artist Name'}))
     stock = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Stock'}))
@@ -115,6 +163,13 @@ class ProductForm(forms.ModelForm):
         ]
         
     def clean(self):
+        """
+        Validate sale pricing.
+    
+        Requires a sale price whenever a
+        product is marked as on sale.
+        """
+            
         cleaned_data = super().clean()
         on_sale = cleaned_data.get('on_sale')
         sale_price = cleaned_data.get('sale_price')
@@ -128,14 +183,21 @@ class ProductForm(forms.ModelForm):
 
 
 class UserInfoForm(forms.ModelForm):
+    """
+    Form for updating customer profile
+    information.
+
+    Stores contact details and default
+    shipping information.
+    """
 
     phone = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}), required=False)
-    address1 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address1'}), required=False)
-    address2 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address2'}), required=False)
-    city = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'city'}), required=False)
-    province = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'province'}), required=False)
-    country = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'country'}), required=False)
-    zipcode = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'zipcode'}), required=False)
+    address1 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 1'}), required=False)
+    address2 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 2'}), required=False)
+    city = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}), required=False)
+    province = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Province'}), required=False)
+    country = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}), required=False)
+    zipcode = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Postal Code'}), required=False)
 
     class Meta:
         model = CustomerProfile
@@ -143,14 +205,39 @@ class UserInfoForm(forms.ModelForm):
 
 
 class RatingForm(forms.ModelForm):
-    
-    title = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'title'}), required=False)
-    review = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'review'}), required=False)
+    """
+    Form for submitting product and
+    vendor reviews.
+
+    Allows customers to provide a rating,
+    review title, and written feedback.
+    """
+    title = forms.CharField(
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Review title'
+            }
+        ),
+        required=False
+    )
+
+    review = forms.CharField(
+        label='',
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Tell us what you think...',
+                'rows': 6
+            }
+        ),
+        required=False
+    )
 
     class Meta:
         model = Ratings
         fields = ["score", "title", "review"]
         widgets = {
-            "score": forms.RadioSelect(choices=[(i, i ) for i in range(1,6)])
+            "score": forms.RadioSelect(choices=[(i, i) for i in range(1,6)])
         }
-

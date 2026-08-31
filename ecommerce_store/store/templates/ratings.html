@@ -1,38 +1,154 @@
-{% extends base.html%}
+{% extends 'base.html' %}
 
-{% block content%}
+{% block content %}
 
-<!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Review</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Take time a share your expirience</p>
+<section class="rating-page">
+
+    <div class="container-fluid">
+
+        <div class="rating-layout">
+
+            <!-- =================================================
+                 LEFT: INTRODUCTION
+                 ================================================= -->
+
+            <div class="rating-intro">
+
+                <div>
+
+                    <span class="rating-kicker">
+                        VINYLS / COMMUNITY / REVIEW
+                    </span>
+
+                    <h1>
+                        RATE<br>
+                        <span>IT.</span>
+                    </h1>
+
                 </div>
-            </div>
-        </header>
 
-    <!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                    <center>
-                        <div class='col-8'>
-                        <h2>
-                            {% if product %}
-                                Rate: {{ product.vinyl_name }} - {{ product.artist_name }}
-                            {% elif vendor %}
-                                Rate: {{ vendor.store_name }}
-                            {% endif %}
-                        </h2>
 
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit">Submit Review</button>
-                        </form>
-                    </center>
+                <div class="rating-intro-footer">
+
+                    <span>
+                        YOUR OPINION
+                    </span>
+
+                    <strong>
+                        MATTERS.
+                    </strong>
+
                 </div>
+
             </div>
-        </section>
+
+
+            <!-- =================================================
+                 RIGHT: REVIEW FORM
+                 ================================================= -->
+
+            <div class="rating-form-panel">
+
+                <div class="rating-form-header">
+
+                    <span>
+                        WRITE A REVIEW
+                    </span>
+
+                    <strong>
+                        07
+                    </strong>
+
+                </div>
+
+
+                <!-- Product / Vendor -->
+
+                <div class="rating-subject">
+
+                    <span>
+                        {% if product %}
+                            RECORD
+                        {% elif vendor %}
+                            RECORD OUTLET
+                        {% endif %}
+                    </span>
+
+
+                    <h2>
+
+                        {% if product %}
+
+                            {{ product.vinyl_name }}
+
+                        {% elif vendor %}
+
+                            {{ vendor.store_name }}
+
+                        {% endif %}
+
+                    </h2>
+
+
+                    {% if product %}
+
+                        <p>
+                            {{ product.artist_name }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Review form -->
+
+                <form method="post" class="rating-form">
+
+                    {% csrf_token %}
+
+
+                    <div class="rating-fields">
+
+                        {{ form.as_p }}
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="rating-submit"
+                    >
+
+                        <span>
+                            SUBMIT REVIEW
+                        </span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <div class="rating-form-footer">
+
+                    <span>
+                        VINYLS / USER FEEDBACK
+                    </span>
+
+                    <span>
+                        BE HONEST. BE FAIR.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}

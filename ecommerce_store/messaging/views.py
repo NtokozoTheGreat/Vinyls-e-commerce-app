@@ -6,11 +6,27 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.db.models import Q 
 from django.contrib import messages
+from django.contrib import messages as django_messages
 # Create your views here.
+
+"""
+View is responsible for marketplace messaging.
+
+Provides functionality for creating conversations,
+exchanging messages, managing inboxes, editing
+messages, and retrieving unread message counts.
+"""
 
 
 @login_required
 def start_conversation(request, vendor_id, product_id=None):
+    """
+    Create or retrieve a conversation between a buyer and a vendor.
+
+    If a product is provided, the conversation is associated
+    with that product and stores a snapshot of the product
+    name for historical reference.
+    """
     
     vendor = get_object_or_404(Vendor, id=vendor_id)
     product = get_object_or_404(Product, id=product_id) if product_id else None
@@ -23,6 +39,9 @@ def start_conversation(request, vendor_id, product_id=None):
     conversation, created = Conversation.objects.get_or_create(buyer=request.user, vendor=vendor, product=product)
     
     if created and product:
+        # Preserve the original product name so the
+        # conversation remains meaningful even if the
+        # product is later removed.
         conversation.product_name_snapshot = product.vinyl_name
         conversation.save()
         
@@ -30,7 +49,13 @@ def start_conversation(request, vendor_id, product_id=None):
 
 @login_required
 def conversation_detail(request, pk):
-    
+    """
+    Display a conversation and handle message submissions.
+
+    Only participants in the conversation are permitted
+    to view or send messages.
+    """
+
     conversation = get_object_or_404(Conversation, pk=pk)
     
     if request.user != conversation.buyer and request.user != getattr(conversation.vendor, 'user', None):
@@ -43,7 +68,9 @@ def conversation_detail(request, pk):
             Message.objects.create(conversation=conversation, sender=request.user, body=body)
             conversation.save()
             
-            recipient_email= conversation.vendor.email if request.user == conversation.buyer else conversation.buyer.email
+            # Notify the other participant whenever a new
+            # message is posted.
+            recipient_email = conversation.vendor.email if request.user == conversation.buyer else conversation.buyer.email
             send_mail(subject=f"New message from {request.user}",
                       message=body,
                       from_email=None,
@@ -51,13 +78,18 @@ def conversation_detail(request, pk):
                       fail_silently=True,
                       )
             
-        return redirect('conversation_detail', pk=pk)  # fixed — was 'messaging/conversation_detail'
+        return redirect('conversation_detail', pk=pk)
     
     return render(request, 'messaging/conversation_detail.html', {'conversation': conversation, 'messages': conversation.messages.all()})
 
 
 @login_required
 def inbox(request):
+    """
+    Display all conversations involving the authenticated user.
+
+    Conversations are ordered by the most recent activity.
+    """
     
     conversation = Conversation.objects.filter(
         buyer=request.user
@@ -69,16 +101,23 @@ def inbox(request):
     
     return render(request, 'messaging/inbox.html', {'conversations': conversations})  # fixed — was 'inbox.html'
 
+
 @login_required
 def poll_messages(request, pk):
+    """
+    Return new messages for a conversation as JSON.
+
+    Used by the client to periodically retrieve
+    messages sent by the other participant.
+    """
     
     conversation = get_object_or_404(Conversation, pk=pk)
     since_id = request.GET.get('since', 0)
     new_messages = conversation.messages.filter(id__gt=since_id).exclude(sender=request.user)
     data = [{'id': message.id,
              'sender': str(message.sender),
-             'body' : message.body,
-             'created_at':message.created_at.strftime('%H:%M'),
+             'body': message.body,
+             'created_at': message.created_at.strftime('%H:%M'),
              }
             for message in new_messages]
     
@@ -87,6 +126,10 @@ def poll_messages(request, pk):
 
 @login_required
 def unread_count(request):
+    """
+    Return the number of unread messages for the
+    authenticated user.
+    """
     
     conversations = Conversation.objects.filter(Q(buyer=request.user) | Q(vendor__user=request.user))
     count = Message.objects.filter(conversation__in=conversations,
@@ -96,6 +139,11 @@ def unread_count(request):
 
 @login_required
 def edit_message(request, pk):
+    """
+    Allow the sender of a message to edit its content.
+
+    Only the original sender may modify a message.
+    """
     
     message = get_object_or_404(Message, pk=pk)
     
@@ -116,15 +164,24 @@ def edit_message(request, pk):
 
 @login_required
 def delete_message(request, pk):
-    message = get_object_or_404(Message, pk=pk)
-    
+    """
+    Delete a message from a conversation.
+
+    Only the original sender may delete their message.
+    """
+    try:
+        message = Message.objects.get(pk=pk)
+    except Message.DoesNotExist:
+        django_messages.error(request, "That message no longer exists.")
+        return redirect('inbox')
+
     if message.sender != request.user:
-        return redirect('conversation_detail', pk=message.conversation.id) 
-    
+        return redirect('conversation_detail', pk=message.conversation.id)
+
     conversation_id = message.conversation.id
-    
+
     if request.method == 'POST':
         message.delete()
-        return redirect('conversation_detail', pk=conversation_id)  # fixed
-    
-    return render(request, 'messaging/delete_message.html', {'message': message})  
+        return redirect('conversation_detail', pk=conversation_id)
+
+    return render(request, 'messaging/delete_message.html', {'message': message})

@@ -1,71 +1,221 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">search</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">find what your looking for...!</p>
-                </div>
-            </div>
-        </header>
+<section class="search-page">
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                    <center>
-                        <div class='col-10'>
-                            <div class="card">
-  <div class="card-header">
-    search
-  </div>
-  <div class="card-body">
-    <form method='POST' action='{% url 'search' %}'>
-        {% csrf_token %}
+    <!-- =====================================================
+         SEARCH HEADER
+         ===================================================== -->
 
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">search</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="search for what you want" name='searched'>
+    <header class="search-header">
+
+        <div class="search-header-main">
+
+            <span class="search-kicker">
+                VINYLS / SEARCH / 004
+            </span>
+
+            <h1>
+                FIND<br>
+                <span>RECORDS.</span>
+            </h1>
+
         </div>
-        <button type='submit' class='btn btn-secondary'>search</button>
-    </form>
-  </div>
-</div>
-
-<div class='row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 rows-cols-xl-4 justify-content-center'>
-{% if products %}
-{% for product in products%}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="{{ product.image.url}}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ product.vinyl_name}}</h5>
-                                    <!-- Product price-->
-                                     {{ product.artist_name}}
-                                        <br></br>
-                                    ${{ product.price}}
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'productdetail' product.id %}">View product</a></div>
-                            </div>
-                        </div>
-                    </div>
-{% endfor %}
 
 
-{% endif %}
-</div>
-                        </div>
-                    </center>
-                </div>
+        <div class="search-header-meta">
+
+            <span>
+                SEARCH
+            </span>
+
+            <strong>
+                →
+            </strong>
+
+            <span>
+                DISCOVER
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         SEARCH FORM
+         ===================================================== -->
+
+    <section class="search-interface">
+
+        <div class="search-intro">
+
+            <span>
+                // SEARCH THE COLLECTION
+            </span>
+
+            <p>
+                Search by record name, artist, or anything
+                you're looking for.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{% url 'search' %}"
+            class="brutalist-search-form"
+        >
+
+            {% csrf_token %}
+
+            <label for="search-input">
+                SEARCH QUERY
+            </label>
+
+            <div class="search-input-row">
+
+                <input
+                    type="text"
+                    id="search-input"
+                    name="searched"
+                    placeholder="TYPE SOMETHING..."
+                    autocomplete="off"
+                    value="{{ request.POST.searched|default:'' }}"
+                >
+
+                <button type="submit">
+                    SEARCH
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+
             </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         SEARCH RESULTS
+         ===================================================== -->
+
+    {% if products %}
+
+        <section class="search-results">
+
+            <div class="search-results-header">
+
+                <span>
+                    RESULTS / FOUND
+                </span>
+
+                <strong>
+                    {{ products|length|stringformat:"02d" }}
+                </strong>
+
+            </div>
+
+
+            <div class="search-results-grid">
+
+                {% for product in products %}
+
+                    <article class="search-product-card">
+
+                        <!-- Number -->
+
+                        <div class="search-product-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+
+                        <!-- Image -->
+
+                        <div class="search-product-image">
+
+                            {% if product.image %}
+
+                                <img
+                                    src="{{ product.image.url }}"
+                                    alt="{{ product.vinyl_name }}"
+                                >
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Details -->
+
+                        <div class="search-product-info">
+
+                            <span>
+                                RECORD
+                            </span>
+
+                            <h2>
+                                {{ product.vinyl_name }}
+                            </h2>
+
+                            <p>
+                                {{ product.artist_name }}
+                            </p>
+
+
+                            <div class="search-product-bottom">
+
+                                <strong>
+                                    ${{ product.price }}
+                                </strong>
+
+                                <a
+                                    href="{% url 'productdetail' product.id %}"
+                                >
+                                    VIEW
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
         </section>
+
+    {% elif request.POST.searched %}
+
+        <!-- =================================================
+             NO RESULTS
+             ================================================= -->
+
+        <section class="search-no-results">
+
+            <span>
+                404 / NO MATCH
+            </span>
+
+            <h2>
+                NOTHING<br>
+                FOUND.
+            </h2>
+
+            <p>
+                Try searching for another record,
+                artist, or genre.
+            </p>
+
+        </section>
+
+    {% endif %}
+
+</section>
+
 {% endblock %}

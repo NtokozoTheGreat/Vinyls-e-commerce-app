@@ -1,8 +1,22 @@
 from .models import ShippingAddress
 from django import forms
 
-class ShippingForm(forms.ModelForm):
+"""
+Form for collecting billing and
+payment details during checkout.
 
+Used to gather payment information
+before order confirmation.
+"""
+
+class ShippingForm(forms.ModelForm):
+    """
+    Forms for the checkout process.
+
+    Provides forms for collecting shipping
+    details and payment information during
+    the order workflow.
+    """
     shipping_full_name = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}), required=True)
     shipping_email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}), required=True)
     shipping_address_1 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address_1'}), required=True)
@@ -21,8 +35,15 @@ class ShippingForm(forms.ModelForm):
 
         exclude = ['user',]
 
+
 class PaymentForm(forms.Form):
-    
+    """
+    Forms for the checkout process.
+
+    Provides forms for collecting shipping
+    details and payment information during
+    the order workflow.
+    """
     card_name = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Name on Card'}), required=True)
     card_number = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Card number'}), required=True)
     card_exp_date = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Card Exp Date'}), required=True)

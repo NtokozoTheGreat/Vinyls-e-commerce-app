@@ -1,118 +1,381 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
 
-<!-- Section -->
-<section>
-<div class="container">
-<div class="row">
+<div class="store-page">
 
-<div class='col-12'>
-<div class="card mb-9" style="#">
-<div class="row g-0 align-items-center">
-<div class="col-md-4 d-flex align-items-center justify-content-center p-4">
-{% if stores.image %}
-<img src="{{ stores.image.url }}" alt="{{ stores.store_name }}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #eee;">
-{% endif %}
-</div>
-<div class="col-md-8">
-<div class="card-body">
-<h5 class="card-title">{{ stores.store_name }}</h5>
+    <!-- =====================================================
+         STORE HERO
+         ===================================================== -->
+    <section class="store-hero">
 
-<!-- Rating summary -->
-<p class="card-text">
-{% if stores.ratings_count > 0 %}
-<strong>{{ stores.average_rating }}★</strong> ({{ stores.ratings_count }} review{{ stores.ratings_count|pluralize }})
-{% else %}
-<span class="text-body-secondary">No reviews yet</span>
-{% endif %}
-</p>
+        <div class="store-hero-main">
 
-<p class="card-text">{{ description }}</p>
-</div>
-</div>
-</div>
-</div>
-</div>
+            <span class="store-label">RECORD STORE / {{ stores.id }}</span>
 
-<!-- Products from this store -->
-<div class='col-12 mt-4'>
-<h4>Vinyls from: {{ stores.store_name }}</h4>
-<div class="row">
-{% for product in stores.products.all %}
-<div class="col-md-3 mb-3">
-<div class="card h-100">
-{% if product.image %}
-<img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.vinyl_name }}" style="height: 200px; object-fit: cover;">
-{% endif %}
-<div class="card-body">
-<h6 class="card-title">{{ product.vinyl_name }}</h6>
-<p class="card-text"><small class="text-body-secondary">{{ product.artist_name }}</small></p>
-<p class="card-text">${{ product.price }}</p>
-<a href="{% url 'productdetail' product.id %}" class="btn btn-sm btn-secondary">View</a>
-</div>
-</div>
-</div>
-{% empty %}
-<p class="text-body-secondary">No products listed yet.</p>
-{% endfor %}
-</div>
-</div>
+            <h1>{{ stores.store_name }}</h1>
 
-<!-- Reviews -->
-<div class='col-12 mt-4'>
-<h4>Reviews ({{ reviews.count }})</h4>
+            <div class="store-hero-line">
+                <span>VINYL MARKETPLACE</span>
+                <span>/</span>
+                <span>{{ stores.products.count }} RECORDS</span>
+            </div>
 
-{% if user.is_authenticated %}
-{% if already_reviewed %}
-<p class="text-body-secondary">You've already reviewed this store.</p>
-{% elif user_can_review %}
-<a href="{% url 'rate_vendor' stores.id %}" class="btn btn-outline-secondary btn-sm mb-3">Write a review</a>
-{% else %}
-<p class="text-body-secondary">You can review this store once you've made a purchase.</p>
-{% endif %}
-{% else %}
-<p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
-{% endif %}
+        </div>
 
-{% for review in reviews %}
-<div class="card mb-2">
-<div class="card-body">
-<h6 class="card-title">{{ review.title }} — {{ review.score }}★</h6>
-<p class="card-text">{{ review.review }}</p>
-<small class="text-body-secondary">by {{ review.user.username }} on {{ review.created_at|date:"M d, Y" }}</small>
+        <div class="store-hero-number">
+            {{ stores.id|stringformat:"02d" }}
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STORE INFORMATION
+         ===================================================== -->
+    <section class="store-information">
+
+        <div class="store-information-image">
+
+            {% if stores.image %}
+                <img
+                    src="{{ stores.image.url }}"
+                    alt="{{ stores.store_name }}"
+                >
+            {% else %}
+                <img
+                    src="{% static 'images/placeholder.png' %}"
+                    alt="No image available"
+                >
+            {% endif %}
+
+        </div>
+
+
+        <div class="store-information-content">
+
+            <span class="store-section-label">
+                ABOUT THE STORE
+            </span>
+
+            <p class="store-description">
+                {{ description }}
+            </p>
+
+
+            <!-- Contact -->
+            <div class="store-contact">
+
+                <div>
+                    <span>EMAIL</span>
+                    <strong>{{ stores.email }}</strong>
+                </div>
+
+                <div>
+                    <span>PHONE</span>
+                    <strong>{{ stores.phone_number }}</strong>
+                </div>
+
+            </div>
+
+
+            <!-- Rating -->
+            <div class="store-rating">
+
+                <span>RATING</span>
+
+                {% if stores.ratings_count > 0 %}
+
+                    <strong>
+                        {{ stores.average_rating }}★
+                    </strong>
+
+                    <small>
+                        {{ stores.ratings_count }}
+                        review{{ stores.ratings_count|pluralize }}
+                    </small>
+
+                {% else %}
+
+                    <strong>—</strong>
+
+                    <small>No reviews yet</small>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Actions -->
+            <div class="store-actions">
+
+                {% if user.is_authenticated %}
+
+                    {% if already_reviewed %}
+
+                        <span class="store-action-message">
+                            You've already reviewed this store.
+                        </span>
+
+                    {% elif user_can_review %}
+
+                        <a
+                            href="{% url 'rate_vendor' stores.id %}"
+                            class="brutalist-button"
+                        >
+                            Write a review
+                            <span>→</span>
+                        </a>
+
+                    {% else %}
+
+                        <span class="store-action-message">
+                            You can review this store once you've made a purchase.
+                        </span>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{% url 'start_conversation' stores.id %}"
+                        class="brutalist-button store-message-button"
+                    >
+                        Message {{ stores.store_name }}
+                        <span>→</span>
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'login' %}?next={{ request.path }}"
+                        class="brutalist-button"
+                    >
+                        Log in to review
+                        <span>→</span>
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PRODUCTS
+         ===================================================== -->
+    <section class="store-products">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-number">01</span>
+
+                <h2>
+                    Vinyls
+                </h2>
+            </div>
+
+            <span class="section-meta">
+                {{ stores.products.count }} RECORDS
+            </span>
+
+        </div>
+
+
+        <div class="store-product-grid">
+
+            {% for product in stores.products.all %}
+
+                <article class="store-product-card">
+
+                    <!-- Product number -->
+                    <div class="store-product-number">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </div>
+
+
+                    <!-- Product image -->
+                    <div class="store-product-image">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.vinyl_name }}"
+                            >
+
+                        {% else %}
+
+                            <img
+                                src="{% static 'images/placeholder.png' %}"
+                                alt="No image available"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Product information -->
+                    <div class="store-product-info">
+
+                        <span>
+                            {{ product.category }}
+                        </span>
+
+                        <h3>
+                            {{ product.vinyl_name }}
+                        </h3>
+
+                        <p>
+                            {{ product.artist_name }}
+                        </p>
+
+
+                        <div class="store-product-meta">
+
+                            <strong>
+                                ${{ product.price }}
+                            </strong>
+
+                            {% if product.ratings_count > 0 %}
+
+                                <span>
+                                    {{ product.average_rating }}★
+                                    / {{ product.ratings_count }}
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    NO REVIEWS
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'productdetail' product.id %}"
+                            class="store-product-link"
+                        >
+                            <span>VIEW RECORD</span>
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="store-empty">
+                    <span>02</span>
+
+                    <h3>
+                        NO RECORDS LISTED
+                    </h3>
+
+                    <p>
+                        This store has no products yet.
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         REVIEWS
+         ===================================================== -->
+    <section class="store-reviews">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-number">02</span>
+
+                <h2>
+                    Reviews
+                </h2>
+            </div>
+
+            <span class="section-meta">
+                {{ reviews.count }} REVIEWS
+            </span>
+
+        </div>
+
+
+        <div class="reviews-content">
+
+            {% for review in reviews %}
+
+                <article class="review-card">
+
+                    <div class="review-header">
+
+                        <span>
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </span>
+
+                        <strong>
+                            {{ review.score }}★
+                        </strong>
+
+                    </div>
+
+
+                    <h3>
+                        {{ review.title }}
+                    </h3>
+
+
+                    <p>
+                        {{ review.review }}
+                    </p>
+
+
+                    <div class="review-meta">
+
+                        <span>
+                            BY {{ review.user.username|upper }}
+                        </span>
+
+                        <span>
+                            {{ review.created_at|date:"M d, Y"|upper }}
+                        </span>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="reviews-empty">
+
+                    <span>NO REVIEWS</span>
+
+                    <h3>
+                        BE THE FIRST TO REVIEW
+                    </h3>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
 </div>
-</div>
-{% empty %}
-<p class="text-body-secondary">No reviews yet.</p>
-{% endfor %}
-</div>
-
-</div>
-</div>
-<!-- messeages -->
- <div class="col-md-8">
-    <p><small class="text-body-secondary">Contact: {{ stores.email }} | {{ stores.phone_number }}</small></p>
-
-    {% if stores.ratings_count > 0 %}
-        <p><strong>{{ stores.average_rating }}★</strong> ({{ stores.ratings_count }} review{{ stores.ratings_count|pluralize }})</p>
-    {% else %}
-        <p class="text-body-secondary">No reviews yet</p>
-    {% endif %}
-
-    {% if user.is_authenticated %}
-        {% if already_reviewed %}
-            <p class="text-body-secondary">You've already reviewed this store.</p>
-        {% else %}
-            <a href="{% url 'rate_vendor' stores.id %}" class="btn btn-outline-dark btn-sm">Write a review</a>
-        {% endif %}
-
-        <!-- new: message vendor button -->
-        <a href="{% url 'start_conversation' stores.id %}" class="btn btn-dark btn-sm">Message {{ stores.store_name }}</a>
-
-    {% else %}
-        <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
-    {% endif %}
-</div>
-</section>
 
 {% endblock %}

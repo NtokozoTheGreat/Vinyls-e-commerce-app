@@ -1,55 +1,157 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
-<!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">{{ store.store_name }}</h1>
-      <p class="lead fw-normal text-white-50 mb-0">Manage your store</p>
+<!-- Dashboard Header -->
+<header class="brutalist-page-header vendor-header">
+    <div class="container">
+        <div class="brutalist-header-content">
+
+            <span class="brutalist-label">VENDOR / DASHBOARD</span>
+
+            <h1>{{ store.store_name }}</h1>
+
+            <p>Manage your store and product collection.</p>
+
+        </div>
     </div>
-  </div>
 </header>
 
-<!-- Section-->
-<section class="py-5">
-  <div class="container px-4 px-lg-5 mt-5">
-    <div class="text-end mb-4">
-      <a href="{% url 'add_product' %}" class="btn btn-primary">Add Product</a>
-    </div>
 
-    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-      {% for product in products %}
-      <div class="col mb-5">
-        <div class="card h-100">
-          <img class="card-img-top" src="{{ product.image.url }}" alt="..." />
-          <div class="card-body p-4">
-            <div class="text-center">
-              <h5 class="fw-bolder">{{ product.vinyl_name }}</h5>
-              {{ product.artist_name }}
-              <br>
-              {% if product.on_sale %}
-                <div class='d-flex justify-content-center small text-warning mb-2'>
-                  <div class="bi-star-fill"></div>&nbsp;&nbsp;Sale&nbsp;&nbsp;<div class="bi-star-fill"></div>
-                </div>
-                <strike>${{ product.price }}</strike>&nbsp;${{ product.sale_price }}
-              {% else %}
-                ${{ product.price }}
-              {% endif %}
+<!-- Dashboard -->
+<section class="brutalist-section">
+    <div class="container">
+
+        <!-- Dashboard Controls -->
+        <div class="vendor-dashboard-top">
+
+            <div>
+                <span class="dashboard-label">YOUR INVENTORY</span>
+
+                <h2>PRODUCTS</h2>
+
+                <p>
+                    Manage the records currently listed in your store.
+                </p>
             </div>
-          </div>
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <a class="btn btn-outline-dark mt-auto" href="{% url 'productdetail' product.id %}">View product</a>
-            </div>
-          </div>
+
+            <a href="{% url 'add_product' %}" class="brutalist-primary-button">
+                + ADD PRODUCT
+            </a>
+
         </div>
-      </div>
-      {% empty %}
-      <p class="text-body-secondary">You haven't added any products yet. Click "Add Product" to get started.</p>
-      {% endfor %}
+
+
+        <!-- Products -->
+        <div class="vendor-product-grid">
+
+            {% for product in products %}
+
+            <article class="vendor-product-card">
+
+                <!-- Product Image -->
+                <div class="vendor-product-image">
+
+                    {% if product.image %}
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.vinyl_name }}"
+                        >
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Product Information -->
+                <div class="vendor-product-info">
+
+                    <span class="product-type">
+                        VINYL RECORD
+                    </span>
+
+                    <h3>
+                        {{ product.vinyl_name }}
+                    </h3>
+
+                    <p class="product-artist">
+                        {{ product.artist_name }}
+                    </p>
+
+
+                    <!-- Price -->
+                    <div class="vendor-product-price">
+
+                        {% if product.on_sale %}
+
+                            <span class="sale-label">
+                                SALE
+                            </span>
+
+                            <div>
+                                <span class="old-price">
+                                    ${{ product.price }}
+                                </span>
+
+                                <span class="sale-price">
+                                    ${{ product.sale_price }}
+                                </span>
+                            </div>
+
+                        {% else %}
+
+                            <span class="regular-price">
+                                ${{ product.price }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Product Action -->
+                <div class="vendor-product-action">
+
+                    <a
+                        href="{% url 'productdetail' product.id %}"
+                        class="vendor-view-button"
+                    >
+                        VIEW PRODUCT
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% empty %}
+
+            <div class="vendor-empty-state">
+
+                <span class="empty-number">00</span>
+
+                <h3>NO PRODUCTS YET</h3>
+
+                <p>
+                    You haven't added any products to your store.
+                    Add your first vinyl record to get started.
+                </p>
+
+                <a
+                    href="{% url 'add_product' %}"
+                    class="brutalist-primary-button"
+                >
+                    + ADD PRODUCT
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
     </div>
-  </div>
 </section>
 
 {% endblock %}

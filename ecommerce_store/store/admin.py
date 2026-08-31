@@ -41,10 +41,11 @@ admin.site.unregister(Order)
 
 admin.site.register(Order, OrderAdmin)
 
+
 class RatingAdmin(admin.ModelAdmin):
     model = Ratings
     fields = ["title", "score", "vendor", "product", "user", "review",]
     readonly_fields = ["created_at", "updated_at"]
 
+
 admin.site.register(Ratings, RatingAdmin)
-    

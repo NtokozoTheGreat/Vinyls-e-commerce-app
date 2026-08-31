@@ -4,11 +4,17 @@ from store.models import Product
 from django.utils import timezone
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-import datetime
 
 
 # Create your models here.
 class ShippingAddress(models.Model):
+    """
+    Stores a customer's shipping information.
+
+    Shipping addresses are used during checkout and are
+    associated with an authenticated user when available.
+    """
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     shipping_full_name = models.CharField(max_length=100)
     shipping_email = models.CharField(max_length=254)
@@ -20,7 +26,7 @@ class ShippingAddress(models.Model):
     shipping_zipcode = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "Shipping Address"
+        verbose_name_plural = "Shipping Addresses"
 
     def __str__(self):
         return f'Shipping Address : {str(self.id)}'
@@ -28,6 +34,14 @@ class ShippingAddress(models.Model):
 
 # customer orders
 class Order(models.Model):
+    """
+    Represents a completed customer purchase.
+
+    Stores customer details, payment information,
+    shipping information, and the current
+    fulfillment status of the order.
+    """
+
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("shipped", "Shipped"),
@@ -51,6 +65,14 @@ class Order(models.Model):
 
 @receiver(pre_save, sender=Order)
 def set_shipped_date_on_update(sender, instance, **kwargs):
+    """
+    Automatically record shipment and delivery timestamps
+    when an order's status changes.
+
+    Existing timestamps are preserved unless the status
+    transitions to a new fulfillment stage.
+    """
+
     if not instance.pk:
         return
     try:
@@ -68,6 +90,13 @@ def set_shipped_date_on_update(sender, instance, **kwargs):
 
 # order item
 class OrderItem(models.Model):
+    """
+    Represents an individual product within an order.
+
+    Each OrderItem stores the purchased product,
+    quantity, and purchase price at the time
+    the order was placed.
+    """
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items", null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveBigIntegerField(default=1)
@@ -76,4 +105,3 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.vinyl_name} : {self.quantity}"
-

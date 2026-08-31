@@ -1,53 +1,218 @@
+```html id="m6h0r4"
 {% extends 'base.html' %}
 
 {% block content %}
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Fresh Arrivals</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Discover new vinyls </p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
-{% if vinyls %}
-{% for vinyl in vinyls%}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="{{ vinyl.image.url}}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ vinyl.vinyl_name}}</h5>
-                                    <!-- Product price-->
-                                     {{ vinyl.artist_name}}
-                                        <br></br>
-                                    ${{ vinyl.price}}
+<!-- =========================================================
+     FRESH ARRIVALS HEADER
+     ========================================================= -->
+
+<section class="arrivals-hero">
+
+    <div class="container-fluid">
+
+        <div class="arrivals-hero-grid">
+
+            <div class="arrivals-title">
+
+                <span class="arrivals-kicker">
+                    VINYLS / CATALOGUE / 04
+                </span>
+
+                <h1>
+                    Fresh<br>
+                    <span>Arrivals.</span>
+                </h1>
+
+                <p>
+                    The latest records added to the collection.
+                </p>
+
+            </div>
+
+
+            <div class="arrivals-index">
+
+                <span>
+                    NEW
+                </span>
+
+                <strong>
+                    04
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ARRIVALS
+     ========================================================= -->
+
+<section class="arrivals-products">
+
+    <div class="container-fluid">
+
+        <div class="arrivals-toolbar">
+
+            <div>
+
+                <span class="arrivals-toolbar-label">
+                    LATEST ADDITIONS
+                </span>
+
+                <span class="arrivals-toolbar-title">
+                    JUST IN
+                </span>
+
+            </div>
+
+            <span class="arrivals-toolbar-meta">
+                NEW RECORDS
+            </span>
+
+        </div>
+
+
+        {% if vinyls %}
+
+            <div class="row g-0 arrivals-grid">
+
+                {% for vinyl in vinyls %}
+
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                        <article class="vinyl-card h-100">
+
+                            <!-- Product image -->
+
+                            <div class="vinyl-image-wrapper">
+
+                                <div class="vinyl-index">
+                                    {{ forloop.counter|stringformat:"02d" }}
                                 </div>
+
+                                <div class="new-record-label">
+                                    NEW
+                                </div>
+
+                                <img
+                                    class="vinyl-image"
+                                    src="{{ vinyl.image.url }}"
+                                    alt="{{ vinyl.vinyl_name }}"
+                                />
+
                             </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'productdetail' vinyl.id %}">View product</a></div>
+
+
+                            <!-- Product information -->
+
+                            <div class="vinyl-info">
+
+                                <div class="vinyl-category">
+                                    FRESH ARRIVAL
+                                </div>
+
+                                <h3 class="vinyl-title">
+                                    {{ vinyl.vinyl_name }}
+                                </h3>
+
+                                <p class="vinyl-artist">
+                                    {{ vinyl.artist_name }}
+                                </p>
+
+
+                                <!-- Price -->
+
+                                <div class="vinyl-price">
+
+                                    {% if vinyl.on_sale %}
+
+                                        <span class="sale-label">
+                                            SALE
+                                        </span>
+
+                                        <span class="old-price">
+                                            ${{ vinyl.price }}
+                                        </span>
+
+                                        <span class="sale-price">
+                                            ${{ vinyl.sale_price }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="regular-price">
+                                            ${{ vinyl.price }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
                             </div>
-                        </div>
+
+
+                            <!-- Product action -->
+
+                            <div class="vinyl-action">
+
+                                <a
+                                    class="vinyl-view-button"
+                                    href="{% url 'productdetail' vinyl.id %}"
+                                >
+                                    View record
+
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </a>
+
+                            </div>
+
+                        </article>
+
                     </div>
-                
 
- {% endfor %}
+                {% endfor %}
 
-{% endif %}
-                </div>
-</div>
-                
             </div>
-                
-        </section>
+
+        {% else %}
+
+            <div class="arrivals-empty">
+
+                <span>
+                    404 / EMPTY
+                </span>
+
+                <h2>
+                    NOTHING<br>
+                    NEW YET.
+                </h2>
+
+                <p>
+                    Check back soon for newly added records.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="brutalist-button"
+                >
+                    Browse all records
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
 
 {% endblock %}
+```

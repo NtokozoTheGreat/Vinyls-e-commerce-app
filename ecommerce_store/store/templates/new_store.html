@@ -2,51 +2,108 @@
 {% load static %}
 
 {% block content %}
-<!-- Header-->
-<header class="bg-dark py-5">
-<div class="container px-4 px-lg-5 my-5">
-<div class="text-center text-white">
-<h1 class="display-4 fw-bolder">New stores</h1>
-<p class="lead fw-normal text-white-50 mb-0">View new sellers</p>
-</div>
-</div>
+
+<!-- Page Header -->
+<header class="brutalist-page-header">
+    <div class="container">
+        <p class="brutalist-eyebrow">VINYLS / MARKETPLACE</p>
+
+        <h1>NEW<br>STORES.</h1>
+
+        <p class="brutalist-subtitle">
+            Discover the latest record sellers joining Vinyls.
+        </p>
+    </div>
 </header>
-<!-- Section-->
-<section class="py-5">
-<div class="container px-4 px-lg-5 mt-5">
-<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
-{% if stores %}
-{% for store in stores %}
-<div class="col mb-5">
-<div class="card h-100">
-<!-- Store image-->
-{% if store.image %}
-    <img class="card-img-top" src="{{ store.image.url }}" alt="..." />
-{% else %}
-    <img class="card-img-top" src="{% static 'images/placeholder.png' %}" alt="No image available" />
-{% endif %}
-<!-- Store details-->
-<div class="card-body p-4">
-<div class="text-center">
-<!-- Store name-->
-<h5 class="fw-bolder">{{ store.store_name }}</h5>
-<p>{{ store.store_description|truncatewords:15 }}</p>
-</div>
-</div>
-<!-- Store actions-->
-<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-<div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'store_detail' store.id %}">View store</a></div>
-</div>
-</div>
-</div>
 
-{% endfor %}
+<!-- Store Collection -->
+<section class="brutalist-section">
+    <div class="container">
 
-{% endif %}
-</div>
-</div>
-</div>
+        <div class="brutalist-section-heading">
+            <span>01</span>
+            <h2>RECENTLY ADDED</h2>
+        </div>
+
+        {% if stores %}
+
+        <div class="brutalist-grid">
+
+            {% for store in stores %}
+
+            <article class="brutalist-card">
+
+                <!-- Store Image -->
+                <div class="brutalist-card-image">
+
+                    {% if store.image %}
+
+                        <img
+                            src="{{ store.image.url }}"
+                            alt="{{ store.store_name }}"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{% static 'images/placeholder.png' %}"
+                            alt="No image available"
+                        >
+
+                    {% endif %}
+
+                    <span class="brutalist-card-number">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </span>
+
+                </div>
+
+
+                <!-- Store Details -->
+                <div class="brutalist-card-content">
+
+                    <p class="brutalist-card-label">
+                        RECORD STORE
+                    </p>
+
+                    <h3>{{ store.store_name }}</h3>
+
+                    <p class="brutalist-card-description">
+                        {{ store.store_description|truncatewords:15 }}
+                    </p>
+
+                </div>
+
+
+                <!-- Store Action -->
+                <div class="brutalist-card-footer">
+
+                    <a
+                        href="{% url 'store_detail' store.id %}"
+                        class="brutalist-button"
+                    >
+                        VIEW STORE
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="brutalist-empty">
+            <span>NO STORES FOUND.</span>
+        </div>
+
+        {% endif %}
+
+    </div>
 </section>
 
 {% endblock %}

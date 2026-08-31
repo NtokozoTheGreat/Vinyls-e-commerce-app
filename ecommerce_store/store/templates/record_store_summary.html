@@ -1,51 +1,144 @@
 {% extends 'base.html' %}
 
 {% block content %}
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Record stores</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">find your favoutite store</p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            {% if stores %}
-                {% for store in stores%}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                             {%if store.image %}
-                            <img class="card-img-top" src="{{ store.image.url}}" alt="{{ store.image.url}}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #eee;"/>
-                            {% else %}
-                            <img class="card-img-top" src="/static/default-store.jpg" alt="..." />
-                            {% endif %}
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- store name-->
-                                    <h5 class="fw-bolder">{{ store.store_name}}</h5>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'store_detail' store.id %}">View store</a></div>
-                            </div>
-                        </div>
+
+<section class="store-directory">
+
+    <!-- =====================================================
+         STORE DIRECTORY HEADER
+         ===================================================== -->
+
+    <header class="store-directory-header">
+
+        <div class="store-header-main">
+
+            <span class="store-kicker">
+                VINYLS / STORES 
+            </span>
+
+            <h1>
+                RECORD<br>
+                <span>STORES.</span>
+            </h1>
+
+        </div>
+
+
+        <div class="store-header-meta">
+
+            <span>
+                FIND YOUR
+            </span>
+
+            <strong>
+                {{ stores|length|stringformat:"02d" }}
+            </strong>
+
+            <span>
+                FAVOURITE
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         STORE GRID
+         ===================================================== -->
+
+    <section class="store-grid">
+
+        {% if stores %}
+
+            {% for store in stores %}
+
+                <article class="store-card">
+
+                    <!-- Store number -->
+
+                    <div class="store-number">
+                        {{ forloop.counter|stringformat:"02d" }}
                     </div>
-                </div>
-                
 
- {% endfor %}
 
-{% endif %}
-                </div>
+                    <!-- Store image -->
+
+                    <div class="store-image">
+
+                        {% if store.image %}
+
+                            <img
+                                src="{{ store.image.url }}"
+                                alt="{{ store.store_name }}"
+                            >
+
+                        {% else %}
+
+                            <img
+                                src="/static/default-store.jpg"
+                                alt="Default store image"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Store information -->
+
+                    <div class="store-info">
+
+                        <span class="store-label">
+                            RECORD OUTLET
+                        </span>
+
+                        <h2>
+                            {{ store.store_name }}
+                        </h2>
+
+
+                        <div class="store-bottom">
+
+                            <span class="store-index">
+                                OUTLET / {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+
+                            <a
+                                href="{% url 'store_detail' store.id %}"
+                                class="store-link"
+                            >
+                                VIEW STORE
+                                <i class="bi bi-arrow-up-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="store-empty">
+
+                <span>
+                    404 / EMPTY DIRECTORY
+                </span>
+
+                <h2>
+                    NO STORES<br>
+                    FOUND.
+                </h2>
+
             </div>
-                
-        </section>
-        
+
+        {% endif %}
+
+    </section>
+
+</section>
 
 {% endblock %}

@@ -1,31 +1,268 @@
-
 {% extends 'base.html' %}
+
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Register</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome to Vinlys...!</p>
-                </div>
-            </div>
-        </header>
+<section class="auth-page">
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                        <div class='col-8'>
-                           <form method="POST" action="{%url 'register' %}">
-                            {% csrf_token %}
-                            <br/><br/>
-                            {{form.as_p}}
-                            <br/><br/>
-                                <button type="submit" class="btn btn-secondary">Register</button>
-                            </form> 
-                        </div>
+    <!-- =====================================================
+         AUTH HEADER
+         ===================================================== -->
+
+    <header class="auth-header">
+
+        <div class="auth-header-main">
+
+            <span class="auth-kicker">
+                VINYLS / ACCOUNT / 003
+            </span>
+
+            <h1>
+                CREATE<br>
+                <span>ACCOUNT.</span>
+            </h1>
+
+        </div>
+
+        <div class="auth-header-meta">
+
+            <span>
+                NEW USER
+            </span>
+
+            <strong>
+                01
+            </strong>
+
+            <span>
+                REGISTRATION
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         REGISTRATION FORM
+         ===================================================== -->
+
+    <section class="auth-content">
+
+        <div class="auth-intro">
+
+            <span>
+                // JOIN THE COLLECTION
+            </span>
+
+            <p>
+                Create an account to buy records, follow
+                outlets, leave reviews and manage your orders.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{% url 'register' %}"
+            class="brutalist-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- Django form errors -->
+
+            {% if form.non_field_errors %}
+
+                <div class="form-error">
+
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+
                 </div>
+
+            {% endif %}
+
+
+            <!-- Username -->
+
+            <div class="form-field">
+
+                <label for="{{ form.username.id_for_label }}">
+                    USERNAME
+                </label>
+
+                {{ form.username }}
+
+                {% if form.username.errors %}
+
+                    <div class="field-error">
+
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+                {% if form.username.help_text %}
+                    <small>{{ form.username.help_text|safe }}</small>
+                {% endif %}
+
             </div>
-        </section>
+
+
+            <!-- First Name -->
+
+            <div class="form-field">
+
+                <label for="{{ form.first_name.id_for_label }}">
+                    FIRST NAME
+                </label>
+
+                {{ form.first_name }}
+
+                {% if form.first_name.errors %}
+
+                    <div class="field-error">
+
+                        {% for error in form.first_name.errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Last Name -->
+
+            <div class="form-field">
+
+                <label for="{{ form.last_name.id_for_label }}">
+                    LAST NAME
+                </label>
+
+                {{ form.last_name }}
+
+                {% if form.last_name.errors %}
+
+                    <div class="field-error">
+
+                        {% for error in form.last_name.errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Email -->
+
+            <div class="form-field">
+
+                <label for="{{ form.email.id_for_label }}">
+                    EMAIL
+                </label>
+
+                {{ form.email }}
+
+                {% if form.email.errors %}
+
+                    <div class="field-error">
+
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Password -->
+
+            <div class="form-field">
+
+                <label for="{{ form.password1.id_for_label }}">
+                    PASSWORD
+                </label>
+
+                {{ form.password1 }}
+
+                {% if form.password1.errors %}
+
+                    <div class="field-error">
+
+                        {% for error in form.password1.errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+                {% if form.password1.help_text %}
+                    <small>{{ form.password1.help_text|safe }}</small>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Confirm Password -->
+
+            <div class="form-field">
+
+                <label for="{{ form.password2.id_for_label }}">
+                    CONFIRM PASSWORD
+                </label>
+
+                {{ form.password2 }}
+
+                {% if form.password2.errors %}
+
+                    <div class="field-error">
+
+                        {% for error in form.password2.errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+                {% if form.password2.help_text %}
+                    <small>{{ form.password2.help_text|safe }}</small>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Submit -->
+
+            <div class="form-submit">
+
+                <button type="submit" class="brutalist-submit">
+                    CREATE ACCOUNT
+                    <i class="bi bi-arrow-up-right"></i>
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</section>
+
 {% endblock %}

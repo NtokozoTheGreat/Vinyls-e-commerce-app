@@ -1,58 +1,236 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Header-->
-<header class="bg-dark py-5">
-<div class="container px-4 px-lg-5 my-5">
-<div class="text-center text-white">
-<h1 class="display-4 fw-bolder">Popular Vinlys</h1>
-<p class="lead fw-normal text-white-50 mb-0">view trending vinlys</p>
-</div>
-</div>
-</header>
-<!-- Section-->
-<section class="py-5">
-<div class="container px-4 px-lg-5 mt-5">
-<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
-{% if vinyls %}
-{% for vinyl in vinyls%}
-<div class="col mb-5">
-<div class="card h-100">
-<!-- Product image-->
-{% if vinyl.image %}
-<img class="card-img-top" src="{{ vinyl.image.url }}" alt="..." />
-{% endif %}
-<!-- Product details-->
-<div class="card-body p-4">
-<div class="text-center">
-<!-- Product name-->
-<h5 class="fw-bolder">{{ vinyl.vinyl_name}}</h5>
-<!-- Product price-->
-{{ vinyl.artist_name}}
-<br></br>
-                                    ${{ vinyl.price}}
-<br>
-{% if vinyl.ratings_count > 0 %}
-    <small class="text-body-secondary">{{ vinyl.average_rating }}★ ({{ vinyl.ratings_count }})</small>
-{% else %}
-    <small class="text-body-secondary">No reviews yet</small>
-{% endif %}
-</div>
-</div>
-<!-- Product actions-->
-<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-<div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'productdetail' vinyl.id %}">View product</a></div>
-</div>
-</div>
-</div>
+<!-- =========================================================
+     POPULAR VINYLS HEADER
+     ========================================================= -->
 
-{% endfor %}
+<section class="popular-hero">
 
-{% endif %}
-</div>
-</div>
-</div>
+    <div class="container-fluid">
+
+        <div class="popular-hero-grid">
+
+            <div class="popular-title">
+
+                <span class="popular-kicker">
+                    VINYLS / CHARTS / 06
+                </span>
+
+                <h1>
+                    Popular<br>
+                    <span>Vinyls.</span>
+                </h1>
+
+                <p>
+                    The records collectors are listening to,
+                    buying and talking about right now.
+                </p>
+
+            </div>
+
+
+            <div class="popular-index">
+
+                <span>
+                    TRENDING
+                </span>
+
+                <strong>
+                    06
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     POPULAR RECORDS
+     ========================================================= -->
+
+<section class="popular-section">
+
+    <div class="container-fluid">
+
+        <div class="popular-toolbar">
+
+            <div>
+
+                <span class="popular-toolbar-label">
+                    CURRENT CHART
+                </span>
+
+                <span class="popular-toolbar-title">
+                    TOP RECORDS
+                </span>
+
+            </div>
+
+            <span class="popular-toolbar-meta">
+                TRENDING NOW
+            </span>
+
+        </div>
+
+
+        {% if vinyls %}
+
+            <div class="row g-0 popular-grid">
+
+                {% for vinyl in vinyls %}
+
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                        <article class="popular-card h-100">
+
+                            <!-- Album image -->
+
+                            <div class="popular-image-wrapper">
+
+                                <div class="popular-rank">
+                                    #{{ forloop.counter }}
+                                </div>
+
+
+                                {% if vinyl.image %}
+
+                                    <img
+                                        class="popular-image"
+                                        src="{{ vinyl.image.url }}"
+                                        alt="{{ vinyl.vinyl_name }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="popular-no-image">
+                                        NO IMAGE
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Record information -->
+
+                            <div class="popular-info">
+
+                                <span class="popular-label">
+                                    TRENDING RECORD
+                                </span>
+
+                                <h2 class="popular-name">
+                                    {{ vinyl.vinyl_name }}
+                                </h2>
+
+                                <p class="popular-artist">
+                                    {{ vinyl.artist_name }}
+                                </p>
+
+
+                                <!-- Price -->
+
+                                <div class="popular-price">
+                                    ${{ vinyl.price }}
+                                </div>
+
+
+                                <!-- Rating -->
+
+                                <div class="popular-rating">
+
+                                    {% if vinyl.ratings_count > 0 %}
+
+                                        <span class="popular-star">
+                                            ★
+                                        </span>
+
+                                        <strong>
+                                            {{ vinyl.average_rating }}
+                                        </strong>
+
+                                        <span>
+                                            / 5
+                                        </span>
+
+                                        <span class="popular-rating-count">
+                                            ({{ vinyl.ratings_count }})
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="popular-no-rating">
+                                            NO REVIEWS YET
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Action -->
+
+                            <div class="popular-action">
+
+                                <a
+                                    href="{% url 'productdetail' vinyl.id %}"
+                                    class="popular-view-button"
+                                >
+                                    View record
+
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="popular-empty">
+
+                <span>
+                    404 / EMPTY
+                </span>
+
+                <h2>
+                    NO TRENDING<br>
+                    RECORDS.
+                </h2>
+
+                <p>
+                    There aren't enough records with ratings
+                    to generate the popular chart yet.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="brutalist-button"
+                >
+                    Browse records
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
 </section>
 
 {% endblock %}

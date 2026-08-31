@@ -1,55 +1,188 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Welcome</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome to Vinlys...!</p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    {% for product in products%}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="{{ product.image.url}}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ product.vinyl_name}}</h5>
-                                    <!-- Product price-->
-                                     {{ product.artist_name}}
-                                        <br></br>
-                                    {% if product.on_sale %}
-                                                <div class='d-flex justify-content-center small text-warning mb-2'>
-                                                    <div class="bi-star-fill"></div>
-                                                    &nbsp;&nbsp;Sale&nbsp;&nbsp;
-                                                    <div class="bi-star-fill"></div>
-                                                </div>
-                                                <strike>
-                                                ${{product.price}}
-                                                </strike>
-                                                &nbsp;
-                                                ${{product.sale_price}}
-                                            {% else %}
-                                                ${{product.price}}
-                                            {% endif %}
 
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'productdetail' product.id %}">View product</a></div>
-                            </div>
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+
+<header class="home-hero">
+
+    <div class="container-fluid">
+
+        <div class="home-hero-grid">
+
+            <div class="home-hero-main">
+
+                <p class="hero-kicker">
+                    VINYLS / MARKETPLACE / 01
+                </p>
+
+                <h1>
+                    Discover<br>
+                    records.<br>
+                    <span>Build your collection.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Find records from independent sellers,
+                    collectors and music lovers.
+                </p>
+
+                <div class="hero-action">
+                    <a href="#records" class="brutalist-button">
+                        Browse records
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </div>
+
+            </div>
+
+
+            <div class="home-hero-side">
+
+                <div class="hero-side-label">
+                    <span>VINYLS</span>
+                    <span>EST. 2023</span>
+                </div>
+
+                <div class="hero-side-number">
+                    01
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     PRODUCT SECTION
+     ========================================================= -->
+
+<section id="records" class="products-section">
+
+    <div class="container-fluid">
+
+        <!-- Section heading -->
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-number">01 /</span>
+                <h2>Latest records</h2>
+            </div>
+
+            <span class="section-meta">
+                NEW ARRIVALS
+            </span>
+
+        </div>
+
+
+        <!-- Product grid -->
+
+        <div class="row g-0 product-grid">
+
+            {% for product in products %}
+
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                <article class="vinyl-card h-100">
+
+                    <!-- Product image -->
+
+                    <div class="vinyl-image-wrapper">
+
+                        <div class="vinyl-index">
+                            {{ forloop.counter|stringformat:"02d" }}
                         </div>
+
+                        <img
+                            class="vinyl-image"
+                            src="{{ product.image.url }}"
+                            alt="{{ product.vinyl_name }}"
+                        />
+
                     </div>
-                    {% endfor %}
+
+
+                    <!-- Product information -->
+
+                    <div class="vinyl-info">
+
+                        <div class="vinyl-category">
+                            RECORD
+                        </div>
+
+                        <h3 class="vinyl-title">
+                            {{ product.vinyl_name }}
+                        </h3>
+
+                        <p class="vinyl-artist">
+                            {{ product.artist_name }}
+                        </p>
+
+
+                        <!-- Price -->
+
+                        <div class="vinyl-price">
+
+                            {% if product.on_sale %}
+
+                                <span class="sale-label">
+                                    SALE
+                                </span>
+
+                                <span class="old-price">
+                                    ${{ product.price }}
+                                </span>
+
+                                <span class="sale-price">
+                                    ${{ product.sale_price }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="regular-price">
+                                    ${{ product.price }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Product action -->
+
+                    <div class="vinyl-action">
+
+                        <a
+                            class="vinyl-view-button"
+                            href="{% url 'productdetail' product.id %}"
+                        >
+                            View record
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
 
 {% endblock %}

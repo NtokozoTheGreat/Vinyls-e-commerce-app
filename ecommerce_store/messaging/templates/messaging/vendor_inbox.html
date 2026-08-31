@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container py-5">
-    <h4 class="mb-4">Messages for {{ vendor.store_name }}</h4>
-    <div class="list-group">
+<div class="inbox-page">
+
+    <div class="inbox-hero">
+        <span class="inbox-label">Vendor Messages</span>
+        <h1>Messages for {{ vendor.store_name }}</h1>
+    </div>
+
+    <div class="inbox-list">
         {% for conversation in conversations %}
-        <a href="{% url 'conversation_detail' conversation.id %}" class="list-group-item list-group-item-action">
-            <div class="d-flex justify-content-between">
-                <strong>{{ conversation.buyer }}</strong>
-                <small class="text-body-secondary">{{ conversation.updated_at|date:"M d, H:i" }}</small>
+        <a href="{% url 'conversation_detail' conversation.id %}" class="inbox-item">
+            <div class="inbox-item-top">
+                <span class="inbox-item-name">{{ conversation.buyer }}</span>
+                <span class="inbox-item-date">{{ conversation.updated_at|date:"M d, H:i" }}</span>
             </div>
-            <small class="text-body-secondary">
+            <span class="inbox-item-subject">
                 {% if conversation.product %}
                     {{ conversation.product.vinyl_name }}
                 {% elif conversation.product_name_snapshot %}
@@ -17,11 +22,15 @@
                 {% else %}
                     General inquiry
                 {% endif %}
-            </small>
+            </span>
         </a>
         {% empty %}
-            <p class="text-body-secondary">No messages yet.</p>
+        <div class="inbox-empty">
+            <span>Empty</span>
+            <p>No messages yet.</p>
+        </div>
         {% endfor %}
     </div>
+
 </div>
 {% endblock %}

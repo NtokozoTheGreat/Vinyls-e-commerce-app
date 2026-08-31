@@ -1,38 +1,133 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">login</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome to Vinlys...!</p>
-                </div>
-            </div>
-        </header>
+<section class="auth-page">
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                    <center>
-                        <div class='col-8'>
-                           <form method="POST" action="{%url 'login' %}">
-                            {% csrf_token %}
-                            
-                                <div class="mb-3">
-                                    <label for="username" class="form-label" placeholder="Enter your usersname">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="password" class="form-label" placeholder="">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
-                                </div>
-                                <button type="submit" class="btn btn-primary">login</button>
-                            </form> 
-                        </div>
-                    </center>
+    <div class="container-fluid">
+
+        <div class="auth-layout">
+
+            <!-- Left side -->
+
+            <div class="auth-intro">
+
+                <span class="auth-kicker">
+                    VINYLS / ACCOUNT / 01
+                </span>
+
+                <h1>
+                    LOG<br>
+                    <span>IN.</span>
+                </h1>
+
+                <div class="auth-stamp">
+                    VINYLS.LS<br>
+                    MEMBER ACCESS
                 </div>
+
             </div>
-        </section>
+
+
+            <!-- Right side -->
+
+            <div class="auth-form-panel">
+
+                <div class="auth-form-header">
+
+                    <span>
+                        MEMBER ACCESS
+                    </span>
+
+                    <strong>
+                        01
+                    </strong>
+
+                </div>
+
+
+                <form method="POST" action="{% url 'login' %}">
+
+                    {% csrf_token %}
+
+
+                    <!-- Username -->
+
+                    <div class="brutalist-form-group">
+
+                        <label for="username">
+                            USERNAME
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="ENTER USERNAME"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Password -->
+
+                    <div class="brutalist-form-group">
+
+                        <label for="password">
+                            PASSWORD
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="ENTER PASSWORD"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="brutalist-submit"
+                    >
+                        LOGIN
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                </form>
+
+
+                <div class="auth-footer">
+
+                    <span>
+                        NOT A MEMBER?
+                    </span>
+
+                    <a href="{% url 'register' %}">
+                        CREATE ACCOUNT →
+                    </a>
+
+                </div>
+
+            </div>
+                <div class="auth-footer">
+
+                    <a href="{% url 'password_reset' %}">
+                        Forgot your password?
+                    </a>
+</a>
+
+                </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}

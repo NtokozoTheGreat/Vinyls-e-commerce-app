@@ -21,3 +21,4 @@ def unread_messages(request):
 
     # the dict key returned here becomes the variable name usable in templates: {{ unread_message_count }}
     return {'unread_message_count': count}
+

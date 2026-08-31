@@ -1,34 +1,92 @@
-
 {% extends 'base.html' %}
+
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Update profile</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Update your profile...!</p>
-                </div>
-            </div>
-        </header>
+<!-- Page Header -->
+<header class="brutalist-page-header">
+    <div class="container">
+        <div class="brutalist-header-content">
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                        <div class='col-8'>
-                           <form method="POST" action="{%url 'update_user' %}">
-                            {% csrf_token %}
-                            <br/><br/>
-                            {{user_form.as_p}}
-                            <br/><br/>
+            <span class="brutalist-label">ACCOUNT / PROFILE</span>
 
-                                <button type="submit" class="btn btn-secondary">update profile</button>
-                            </form> 
-                            <br></br>
-                            <a href="{% url 'update_password' %}" class="btn btn-success">update password</a>
-                        </div>
+            <h1>UPDATE PROFILE</h1>
+
+            <p>
+                Update your account information and personal details.
+            </p>
+
+        </div>
+    </div>
+</header>
+
+
+<!-- Profile Form -->
+<section class="brutalist-section">
+    <div class="container">
+        <div class="update-info-wrapper">
+
+            <form method="POST"
+                  action="{% url 'update_user' %}"
+                  class="brutalist-form">
+
+                {% csrf_token %}
+
+                <!-- Profile Information -->
+                <div class="form-section">
+
+                    <div class="form-section-header">
+
+                        <span class="section-number">01</span>
+
+                        <h2>PROFILE INFORMATION</h2>
+
+                    </div>
+
+                    <div class="form-fields">
+
+                        {{ user_form.as_p }}
+
+                    </div>
+
                 </div>
+
+
+                <!-- Save Changes -->
+                <div class="form-submit">
+
+                    <button type="submit" class="brutalist-button">
+                        UPDATE PROFILE
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- Password -->
+            <div class="account-secondary-action">
+
+                <div>
+                    <span class="brutalist-label">SECURITY</span>
+
+                    <h3>Need to change your password?</h3>
+
+                    <p>
+                        Update your account password separately.
+                    </p>
+                </div>
+
+                <a href="{% url 'update_password' %}"
+                   class="brutalist-secondary-button">
+                    UPDATE PASSWORD
+                    <span>→</span>
+                </a>
+
             </div>
-        </section>
+
+        </div>
+    </div>
+</section>
+
 {% endblock %}

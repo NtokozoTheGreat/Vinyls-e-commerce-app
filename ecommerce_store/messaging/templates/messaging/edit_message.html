@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container py-5" style="max-width: 500px;">
-    <h4>Edit message</h4>
-    <form method="post">
-        {% csrf_token %}
-        <textarea name="body" class="form-control mb-3" rows="3" required>{{ message.body }}</textarea>
-        <!-- pre-filled with the current message text between the opening/closing textarea tags -->
-        <button type="submit" class="btn btn-dark">Save</button>
-        <a href="{% url 'conversation_detail' message.conversation.id %}" class="btn btn-outline-secondary">Cancel</a>
-    </form>
+<div class="container message-form-page">
+    <div class="message-form-card">
+        <span class="message-form-label">Edit Message</span>
+        <h1>Edit your message</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="body" class="form-control" rows="3" required>{{ message.body }}</textarea>
+            <!-- pre-filled with the current message text between the opening/closing textarea tags -->
+            <div class="message-form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'conversation_detail' message.conversation.id %}" class="btn btn-outline-dark">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
