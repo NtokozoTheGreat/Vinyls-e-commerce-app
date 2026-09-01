@@ -2942,15 +2942,11 @@ img {
 
     display: block;
 
-    object-fit: cover;
+    object-fit: contain;
 
     transition:
         transform 0.25s ease;
-}
-
-
-.store-card:hover .store-image {
-    transform: scale(1.04);
+        
 }
 
 

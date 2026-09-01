@@ -33,9 +33,9 @@ SECRET_KEY = "django-insecure-487&$g0km=zqn@l!2lwngfws8y6i*r#sxsmmj60+i+@*14p9l2
 DEBUG = True
 
 ALLOWED_HOSTS = ['vinyls-e-commerce-app-production.up.railway.app', '127.0.0.1',
-                 'localhost', "vinyls-e-commerce-app.onrender.com",
+                 'localhost', 'vinyls-e-commerce-app.onrender.com',
                  ]
-CSRF_TRUSTED_ORIGINS = ['https://vinyls-e-commerce-app-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://vinyls-e-commerce-app-production.up.railway.app', ]
 
 
 # Application definition
