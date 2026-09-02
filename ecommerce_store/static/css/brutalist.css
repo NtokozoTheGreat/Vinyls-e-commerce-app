@@ -11297,3 +11297,151 @@ img {
     border-color: var(--vinyl-black);
     color: var(--vinyl-white);
 }
+
+.auth-body {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.auth-side-col {
+    position: sticky;
+    top: 30px;
+}
+
+@media (max-width: 900px) {
+
+    .auth-body {
+        display: block;
+    }
+
+    .auth-side-col {
+        position: static;
+        margin-top: 50px;
+    }
+
+}
+/* =========================================================
+   REGISTER PAGE (fully scoped — no shared classes with login)
+   ========================================================= */
+
+.register-page {
+    border-left: var(--border-heavy);
+    border-right: var(--border-heavy);
+    border-bottom: var(--border-heavy);
+}
+
+.register-layout {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    min-height: calc(100vh - 150px);
+}
+
+/* FORM COLUMN */
+
+.register-form-col {
+    display: flex;
+    align-items: center;
+
+    padding: 70px 60px;
+
+    background: var(--vinyl-white);
+    border-right: var(--border-heavy);
+}
+
+.register-form-inner {
+    width: 100%;
+    max-width: 640px;
+}
+
+.register-kicker {
+    display: block;
+    margin-bottom: 40px;
+
+    font-family: monospace;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    color: var(--vinyl-red);
+}
+
+/* SIDE COLUMN */
+
+.register-side-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 40px 35px;
+
+    background: var(--vinyl-black);
+    color: var(--vinyl-white);
+}
+
+.register-side-top {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--vinyl-white);
+
+    font-family: monospace;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+}
+
+.register-side-top strong {
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--vinyl-red);
+}
+
+.register-side-heading {
+    margin: 30px 0 0;
+
+    font-family: 'Barber-Complete', Arial, sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+}
+
+.register-side-heading span {
+    color: var(--vinyl-red);
+}
+
+.register-side-note {
+    margin-top: 30px;
+
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #ccc;
+}
+
+@media (max-width: 900px) {
+
+    .register-layout {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .register-form-col {
+        order: 2;
+        padding: 45px 25px;
+        border-right: 0;
+        border-bottom: var(--border-heavy);
+    }
+
+    .register-side-col {
+        order: 1;
+        padding: 35px 25px;
+    }
+
+    .register-side-heading {
+        font-size: clamp(2.2rem, 8vw, 3.5rem);
+    }
+
+}
