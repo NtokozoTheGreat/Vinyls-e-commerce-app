@@ -1,0 +1,48 @@
+{% load static %}
+{% block content %}
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="collage-form-page">
+    <header class="collage-form-hero">
+        <div class="collage-form-hero__copy">
+            <span class="collage-kicker">SELLER / PRODUCT MANAGEMENT</span>
+            <h1>Add<br><span>Vinyl.</span></h1>
+            <p>Add a new record to your store and make it available to collectors.</p>
+        </div>
+        <div class="collage-form-hero__blank" aria-hidden="true"></div>
+    </header>
+
+    <section class="collage-form-layout">
+        <aside class="collage-form-aside collage-form-aside--pink">
+            <span class="collage-form-aside__number">01</span>
+            <span class="collage-handwritten-label">PRODUCT INFORMATION</span>
+            <h2>List the<br>record.</h2>
+            <p>Enter the vinyl details below. Accurate information helps collectors know exactly what they are buying.</p>
+            <div class="collage-form-note"><strong>*</strong> Complete all required fields before publishing.</div>
+        </aside>
+
+        <div class="collage-form-panel">
+            <div class="collage-form-panel__header">
+                <div>
+                    <span class="collage-kicker">NEW LISTING</span>
+                    <h2>Record Details</h2>
+                </div>
+                <span class="collage-handwritten-badge">SELL<br>SPIN<br>REPEAT</span>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" class="collage-django-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="collage-form-actions-row">
+                    <button type="submit" class="collage-primary-button collage-form-submit">
+                        Add Product <span>→</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% endblock %}

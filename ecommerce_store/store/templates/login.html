@@ -1,133 +1,25 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-
-<section class="auth-page">
-
-    <div class="container-fluid">
-
-        <div class="auth-layout">
-
-            <!-- Left side -->
-
-            <div class="auth-intro">
-
-                <span class="auth-kicker">
-                    VINYLS / ACCOUNT / 01
-                </span>
-
-                <h1>
-                    LOG<br>
-                    <span>IN.</span>
-                </h1>
-
-                <div class="auth-stamp">
-                    VINYLS.LS<br>
-                    MEMBER ACCESS
-                </div>
-
-            </div>
-
-
-            <!-- Right side -->
-
-            <div class="auth-form-panel">
-
-                <div class="auth-form-header">
-
-                    <span>
-                        MEMBER ACCESS
-                    </span>
-
-                    <strong>
-                        01
-                    </strong>
-
-                </div>
-
-
-                <form method="POST" action="{% url 'login' %}">
-
-                    {% csrf_token %}
-
-
-                    <!-- Username -->
-
-                    <div class="brutalist-form-group">
-
-                        <label for="username">
-                            USERNAME
-                        </label>
-
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            placeholder="ENTER USERNAME"
-                            autocomplete="username"
-                            required
-                        >
-
-                    </div>
-
-
-                    <!-- Password -->
-
-                    <div class="brutalist-form-group">
-
-                        <label for="password">
-                            PASSWORD
-                        </label>
-
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="ENTER PASSWORD"
-                            autocomplete="current-password"
-                            required
-                        >
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="brutalist-submit"
-                    >
-                        LOGIN
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-
-                </form>
-
-
-                <div class="auth-footer">
-
-                    <span>
-                        NOT A MEMBER?
-                    </span>
-
-                    <a href="{% url 'register' %}">
-                        CREATE ACCOUNT →
-                    </a>
-
-                </div>
-
-            </div>
-                <div class="auth-footer">
-
-                    <a href="{% url 'password_reset' %}">
-                        Forgot your password?
-                    </a>
-</a>
-
-                </div>
-
-        </div>
-
+<section class="collage-auth-page">
+    <div class="collage-auth-intro collage-auth-intro--login">
+        <span class="collage-kicker">VINYLS / ACCOUNT / 01</span>
+        <h1>LOG<br><span>IN.</span></h1>
+        <p>SAME MUSIC.<br>BRIGHTER DAYS.<br>TOGETHER.</p>
+        <div class="collage-auth-art collage-header-blank" aria-hidden="true"></div>
+        <div class="collage-handwritten-strip collage-handwritten-strip--auth">VINYLS.LS / MEMBER ACCESS</div>
     </div>
 
+    <div class="collage-auth-form-panel">
+        <div class="collage-auth-form-header"><span>MEMBER ACCESS</span><strong>01</strong></div>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="collage-form-group"><label for="username">USERNAME</label><div class="collage-input-icon"><i class="bi bi-person"></i><input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required></div></div>
+            <div class="collage-form-group"><label for="password">PASSWORD</label><div class="collage-input-icon"><i class="bi bi-lock"></i><input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required></div></div>
+            <button type="submit" class="collage-auth-submit">LOGIN <span>→</span></button>
+        </form>
+        <div class="collage-auth-footer"><span>NOT A MEMBER?</span><a href="{% url 'register' %}">CREATE ACCOUNT →</a></div>
+        <a class="collage-forgot-link" href="{% url 'password_reset' %}">Forgot your password?</a>
+    </div>
 </section>
-
 {% endblock %}

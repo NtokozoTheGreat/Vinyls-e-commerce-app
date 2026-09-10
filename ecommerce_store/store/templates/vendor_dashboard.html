@@ -1,157 +1,43 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-
-<!-- Dashboard Header -->
-<header class="brutalist-page-header vendor-header">
-    <div class="container">
-        <div class="brutalist-header-content">
-
-            <span class="brutalist-label">VENDOR / DASHBOARD</span>
-
-            <h1>{{ store.store_name }}</h1>
-
-            <p>Manage your store and product collection.</p>
-
-        </div>
+<section class="collage-dashboard-header">
+    <div class="collage-dashboard-header__copy">
+        <span class="collage-kicker">VENDOR / DASHBOARD</span>
+        <h1>{{ store.store_name }}</h1>
+        <p>Manage your store and product collection.</p>
     </div>
-</header>
-
-
-<!-- Dashboard -->
-<section class="brutalist-section">
-    <div class="container">
-
-        <!-- Dashboard Controls -->
-        <div class="vendor-dashboard-top">
-
-            <div>
-                <span class="dashboard-label">YOUR INVENTORY</span>
-
-                <h2>PRODUCTS</h2>
-
-                <p>
-                    Manage the records currently listed in your store.
-                </p>
-            </div>
-
-            <a href="{% url 'add_product' %}" class="brutalist-primary-button">
-                + ADD PRODUCT
-            </a>
-
-        </div>
-
-
-        <!-- Products -->
-        <div class="vendor-product-grid">
-
-            {% for product in products %}
-
-            <article class="vendor-product-card">
-
-                <!-- Product Image -->
-                <div class="vendor-product-image">
-
-                    {% if product.image %}
-                        <img
-                            src="{{ product.image.url }}"
-                            alt="{{ product.vinyl_name }}"
-                        >
-                    {% endif %}
-
-                </div>
-
-
-                <!-- Product Information -->
-                <div class="vendor-product-info">
-
-                    <span class="product-type">
-                        VINYL RECORD
-                    </span>
-
-                    <h3>
-                        {{ product.vinyl_name }}
-                    </h3>
-
-                    <p class="product-artist">
-                        {{ product.artist_name }}
-                    </p>
-
-
-                    <!-- Price -->
-                    <div class="vendor-product-price">
-
-                        {% if product.on_sale %}
-
-                            <span class="sale-label">
-                                SALE
-                            </span>
-
-                            <div>
-                                <span class="old-price">
-                                    ${{ product.price }}
-                                </span>
-
-                                <span class="sale-price">
-                                    ${{ product.sale_price }}
-                                </span>
-                            </div>
-
-                        {% else %}
-
-                            <span class="regular-price">
-                                ${{ product.price }}
-                            </span>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-                <!-- Product Action -->
-                <div class="vendor-product-action">
-
-                    <a
-                        href="{% url 'productdetail' product.id %}"
-                        class="vendor-view-button"
-                    >
-                        VIEW PRODUCT
-                        <span>→</span>
-                    </a>
-
-                </div>
-
-            </article>
-
-            {% empty %}
-
-            <div class="vendor-empty-state">
-
-                <span class="empty-number">00</span>
-
-                <h3>NO PRODUCTS YET</h3>
-
-                <p>
-                    You haven't added any products to your store.
-                    Add your first vinyl record to get started.
-                </p>
-
-                <a
-                    href="{% url 'add_product' %}"
-                    class="brutalist-primary-button"
-                >
-                    + ADD PRODUCT
-                </a>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
+    <div class="collage-dashboard-header__art collage-header-blank" aria-hidden="true"></div>
 </section>
 
+<section class="collage-dashboard-section">
+    <div class="collage-dashboard-top">
+        <div><span class="collage-handwritten-label">YOUR INVENTORY</span><h2>PRODUCTS</h2><p>Manage the records currently listed in your store.</p></div>
+        <a href="{% url 'add_product' %}" class="collage-primary-button">+ ADD PRODUCT</a>
+        <div class="collage-dashboard-stat"><i class="bi bi-box"></i><strong>{{ products|length }}</strong><span>Products</span></div>
+    </div>
+
+    <div class="vendor-product-grid collage-dashboard-grid">
+        {% for product in products %}
+            <article class="vendor-product-card collage-dashboard-card">
+                <div class="vendor-product-image">
+                    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">{% endif %}
+                    <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                    {% if product.on_sale %}<span class="sale-label collage-sale-sticker">SALE</span>{% endif %}
+                </div>
+                <div class="vendor-product-info">
+                    <span class="product-type">VINYL RECORD</span>
+                    <h3>{{ product.vinyl_name }}</h3>
+                    <p class="product-artist">{{ product.artist_name }}</p>
+                    <div class="vendor-product-price">
+                        {% if product.on_sale %}<span class="old-price">${{ product.price }}</span><span class="sale-price">${{ product.sale_price }}</span>{% else %}<span class="regular-price">${{ product.price }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="vendor-product-action"><a href="{% url 'productdetail' product.id %}" class="vendor-view-button">VIEW PRODUCT <span>→</span></a></div>
+            </article>
+        {% empty %}
+            <div class="collage-empty-state collage-empty-state--wide"><span>00</span><h3>NO PRODUCTS YET</h3><p>You haven't added any products to your store. Add your first vinyl record to get started.</p><a href="{% url 'add_product' %}" class="collage-primary-button">+ ADD PRODUCT</a></div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

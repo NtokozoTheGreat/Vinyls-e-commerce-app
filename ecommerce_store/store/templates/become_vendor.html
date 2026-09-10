@@ -1,95 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<section class="collage-form-page">
+    <header class="collage-form-hero">
+        <div class="collage-form-hero__copy">
+            <span class="collage-kicker">VINYLS / SELLER PROGRAM</span>
+            <h1>Become<br><span>a Vendor.</span></h1>
+            <p>Open your own record outlet and start selling vinyl to collectors on Vinyls.</p>
+        </div>
+        <div class="collage-form-hero__blank" aria-hidden="true"></div>
+    </header>
 
-<!-- Page Header -->
-<header class="brutalist-page-header">
-    <div class="container">
+    <section class="collage-form-layout">
+        <aside class="collage-form-aside collage-form-aside--yellow">
+            <span class="collage-form-aside__number">01</span>
+            <span class="collage-handwritten-label">INDEPENDENT SELLER</span>
+            <h2>Open your<br>store.</h2>
+            <p>Tell the community about your outlet. Once registered, you can create listings and manage your vinyl collection.</p>
+            <div class="collage-form-note"><strong>*</strong> Make sure your store information is accurate.</div>
+        </aside>
 
-        <p class="brutalist-eyebrow">
-            VINYLS / SELLER PROGRAM
-        </p>
-
-        <h1>
-            BECOME<br>
-            A VENDOR.
-        </h1>
-
-        <p class="brutalist-subtitle">
-            Open your own record store and start selling
-            vinyl to collectors on Vinyls.
-        </p>
-
-    </div>
-</header>
-
-
-<!-- Vendor Registration -->
-<section class="brutalist-form-section">
-
-    <div class="container">
-
-        <div class="brutalist-form-layout">
-
-            <!-- Information -->
-            <aside class="brutalist-form-sidebar">
-
-                <div class="brutalist-form-index">
-                    01
+        <div class="collage-form-panel">
+            <div class="collage-form-panel__header">
+                <div>
+                    <span class="collage-kicker">STORE APPLICATION</span>
+                    <h2>Outlet Details</h2>
                 </div>
-
-                <h2>
-                    OPEN YOUR<br>
-                    STORE.
-                </h2>
-
-                <p>
-                    Tell us about your record store. Once registered,
-                    you'll be able to create listings and manage your
-                    vinyl collection.
-                </p>
-
-                <div class="brutalist-form-note">
-                    <span>*</span>
-                    Make sure your store information is accurate.
-                </div>
-
-            </aside>
-
-
-            <!-- Registration Form -->
-            <div class="brutalist-form-container">
-
-                <form
-                    method="POST"
-                    enctype="multipart/form-data"
-                    class="brutalist-form"
-                >
-
-                    {% csrf_token %}
-
-                    {{ form.as_p }}
-
-                    <div class="brutalist-form-actions">
-
-                        <button
-                            type="submit"
-                            class="brutalist-submit"
-                        >
-                            CREATE STORE
-                            <span>→</span>
-                        </button>
-
-                    </div>
-
-                </form>
-
+                <span class="collage-handwritten-badge">REAL<br>MUSIC<br>REAL PEOPLE</span>
             </div>
 
+            <form method="POST" enctype="multipart/form-data" class="collage-django-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="collage-form-actions-row">
+                    <button type="submit" class="collage-primary-button collage-form-submit">
+                        Create Store <span>→</span>
+                    </button>
+                </div>
+            </form>
         </div>
-
-    </div>
-
+    </section>
 </section>
-
 {% endblock %}

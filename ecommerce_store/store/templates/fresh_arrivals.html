@@ -1,214 +1,77 @@
-```html id="m6h0r4"
 {% extends 'base.html' %}
 
 {% block content %}
-
-<section class="arrivals-hero">
-
-    <div class="container-fluid">
-
-        <div class="arrivals-hero-grid">
-
-            <div class="arrivals-title">
-
-                <span class="arrivals-kicker">
-                    VINYLS / CATALOGUE /
-                </span>
-
-                <h1>
-                    Fresh<br>
-                    <span>Arrivals.</span>
-                </h1>
-
-                <p>
-                    The latest records added to the collection.
-                </p>
-
-            </div>
-
-
-            <div class="arrivals-index">
-
-                <span>
-                    NEW
-                </span>
-
-                <strong>
-                    04
-                </strong>
-
-            </div>
-
+<section class="collage-directory-page">
+    <header class="collage-directory-hero collage-directory-hero--fresh">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / CATALOGUE / NEW</span>
+            <h1>Fresh<br><span>Arrivals.</span></h1>
+            <p>The latest records added to the marketplace, ready for a new collection.</p>
         </div>
 
-    </div>
+        <div class="collage-directory-hero__index">
+            <span>JUST IN</span>
+            <strong>{{ vinyls|length|stringformat:"02d" }}</strong>
+            <small>NEW</small>
+        </div>
 
-</section>
+        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+    </header>
 
-
-<!-- =========================================================
-     ARRIVALS
-     ========================================================= -->
-
-<section class="arrivals-products">
-
-    <div class="container-fluid">
-
-        <div class="arrivals-toolbar">
-
+    <section class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
             <div>
-
-                <span class="arrivals-toolbar-label">
-                    LATEST ADDITIONS
-                </span>
-
-                <span class="arrivals-toolbar-title">
-                    JUST IN
-                </span>
-
+                <span class="collage-section-number">01 /</span>
+                <h2>Latest Additions</h2>
             </div>
-
-            <span class="arrivals-toolbar-meta">
-                NEW RECORDS
-            </span>
-
+            <span class="collage-section-meta">NEW RECORDS</span>
         </div>
-
 
         {% if vinyls %}
-
-            <div class="row g-0 arrivals-grid">
-
+            <div class="collage-product-grid">
                 {% for vinyl in vinyls %}
+                    <article class="vinyl-card">
+                        <a class="vinyl-image-wrapper" href="{% url 'productdetail' vinyl.id %}">
+                            <span class="vinyl-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                            <span class="collage-card-badge collage-card-badge--pink">NEW</span>
+                            {% if vinyl.image %}
+                                <img class="vinyl-image" src="{{ vinyl.image.url }}" alt="{{ vinyl.vinyl_name }}">
+                            {% endif %}
+                            <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                        </a>
 
-                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="vinyl-info">
+                            <span class="vinyl-category">FRESH ARRIVAL</span>
+                            <h3 class="vinyl-title">{{ vinyl.vinyl_name }}</h3>
+                            <p class="vinyl-artist">{{ vinyl.artist_name }}</p>
 
-                        <article class="vinyl-card h-100">
-
-                            <!-- Product image -->
-
-                            <div class="vinyl-image-wrapper">
-
-                                <div class="vinyl-index">
-                                    {{ forloop.counter|stringformat:"02d" }}
-                                </div>
-
-                                <div class="new-record-label">
-                                    NEW
-                                </div>
-
-                                <img
-                                    class="vinyl-image"
-                                    src="{{ vinyl.image.url }}"
-                                    alt="{{ vinyl.vinyl_name }}"
-                                />
-
+                            <div class="vinyl-price">
+                                {% if vinyl.on_sale %}
+                                    <span class="sale-label">SALE</span>
+                                    <span class="old-price">${{ vinyl.price }}</span>
+                                    <span class="sale-price">${{ vinyl.sale_price }}</span>
+                                {% else %}
+                                    <span class="regular-price">${{ vinyl.price }}</span>
+                                {% endif %}
                             </div>
+                        </div>
 
-
-                            <!-- Product information -->
-
-                            <div class="vinyl-info">
-
-                                <div class="vinyl-category">
-                                    FRESH ARRIVAL
-                                </div>
-
-                                <h3 class="vinyl-title">
-                                    {{ vinyl.vinyl_name }}
-                                </h3>
-
-                                <p class="vinyl-artist">
-                                    {{ vinyl.artist_name }}
-                                </p>
-
-
-                                <!-- Price -->
-
-                                <div class="vinyl-price">
-
-                                    {% if vinyl.on_sale %}
-
-                                        <span class="sale-label">
-                                            SALE
-                                        </span>
-
-                                        <span class="old-price">
-                                            ${{ vinyl.price }}
-                                        </span>
-
-                                        <span class="sale-price">
-                                            ${{ vinyl.sale_price }}
-                                        </span>
-
-                                    {% else %}
-
-                                        <span class="regular-price">
-                                            ${{ vinyl.price }}
-                                        </span>
-
-                                    {% endif %}
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- Product action -->
-
-                            <div class="vinyl-action">
-
-                                <a
-                                    class="vinyl-view-button"
-                                    href="{% url 'productdetail' vinyl.id %}"
-                                >
-                                    View record
-
-                                    <i class="bi bi-arrow-up-right"></i>
-                                </a>
-
-                            </div>
-
-                        </article>
-
-                    </div>
-
+                        <div class="vinyl-action">
+                            <a class="vinyl-view-button" href="{% url 'productdetail' vinyl.id %}">
+                                View record <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </article>
                 {% endfor %}
-
             </div>
-
         {% else %}
-
-            <div class="arrivals-empty">
-
-                <span>
-                    404 / EMPTY
-                </span>
-
-                <h2>
-                    NOTHING<br>
-                    NEW YET.
-                </h2>
-
-                <p>
-                    Check back soon for newly added records.
-                </p>
-
-                <a
-                    href="{% url 'home' %}"
-                    class="brutalist-button"
-                >
-                    Browse all records
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>404 / EMPTY</span>
+                <h2>Nothing new yet.</h2>
+                <p>Check back soon for newly added records.</p>
+                <a href="{% url 'home' %}" class="collage-black-button">Browse all records <span>→</span></a>
             </div>
-
         {% endif %}
-
-    </div>
-
+    </section>
 </section>
-
 {% endblock %}
-```

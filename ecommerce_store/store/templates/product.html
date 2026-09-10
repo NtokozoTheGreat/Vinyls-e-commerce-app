@@ -1,429 +1,127 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
+<section class="collage-product-page">
+    <div class="collage-product-topline">
+        <span>VINYLS / RECORD / {{ product.id|stringformat:"03d" }}</span>
+        <span class="collage-highlight-label">AVAILABLE NOW</span>
+    </div>
 
-<section class="product-page">
-
-    <div class="container-fluid">
-
-        <div class="product-topbar">
-
-            <span>
-                VINYLS / RECORD / {{ product.id|stringformat:"03d" }}
-            </span>
-
-            <span>
-                AVAILABLE NOW
-            </span>
-
+    <div class="collage-product-main">
+        <div class="collage-product-art">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">
+            {% endif %}
+            <div class="collage-sticker collage-sticker--pink collage-sticker--product-left">MUSIC<br>CONNECTS<br>US ALL ♡</div>
+            <div class="collage-sticker collage-sticker--yellow collage-sticker--product-bottom">GOOD MUSIC<br>BETTER DAYS</div>
         </div>
 
-        <div class="product-main">
+        <div class="collage-product-information">
+            <span class="product-category">{{ product.category }}</span>
+            <h1>{{ product.vinyl_name }}</h1>
+            <p class="product-artist">{{ product.artist_name }}</p>
 
-            <!-- RECORD IMAGE -->
-
-            <div class="product-art">
-
-                <div class="product-art-label">
-                    RECORD
-                </div>
-
-                {% if product.image %}
-
-                    <img
-                        src="{{ product.image.url }}"
-                        alt="{{ product.vinyl_name }}"
-                    >
-
+            <div class="product-rating collage-inline-rating">
+                {% if product.ratings_count > 0 %}
+                    <strong>{{ product.average_rating }}★</strong>
+                    <span>{{ product.ratings_count }} review{{ product.ratings_count|pluralize }}</span>
+                {% else %}
+                    <span>NO REVIEWS YET</span>
                 {% endif %}
-
             </div>
 
+            <div class="collage-product-description">
+                <div class="collage-section-heading collage-section-heading--compact"><div><h2>About the Record</h2></div></div>
+                <p>{{ product.description }}</p>
+            </div>
 
-            <!-- PRODUCT INFORMATION -->
-
-            <div class="product-information">
-
-                <span class="product-category">
-                    {{ product.category }}
-                </span>
-
-                <h1 class="product-title">
-                    {{ product.vinyl_name }}
-                </h1>
-
-                <p class="product-artist">
-                    {{ product.artist_name }}
-                </p>
-
-
-                <!-- Rating -->
-
-                <div class="product-rating">
-
-                    {% if product.ratings_count > 0 %}
-
-                        <strong>
-                            {{ product.average_rating }}★
-                        </strong>
-
-                        <span>
-                            {{ product.ratings_count }}
-                            review{{ product.ratings_count|pluralize }}
-                        </span>
-
-                    {% else %}
-
-                        <span>
-                            NO REVIEWS YET
-                        </span>
-
-                    {% endif %}
-
+            <div class="collage-product-purchase-row">
+                <div class="collage-product-price"><strong>${{ product.price }}</strong></div>
+                <div class="quantity-control">
+                    <label for="qty-cart">Qty</label>
+                    <select class="product-quantity" id="qty-cart">
+                        <option selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                    </select>
                 </div>
+                <button href="{% url 'cart_add' %}" type="button" value="{{ product.id }}" id="add-cart" class="collage-primary-button collage-add-cart">Add to Cart <span>→</span></button>
+            </div>
 
-
-                <!-- Description -->
-
-                <div class="product-description">
-
-                    <span class="product-section-label">
-                        ABOUT THE RECORD
-                    </span>
-
-                    <p>
-                        {{ product.description }}
-                    </p>
-
-                </div>
-
-
-                <!-- Price -->
-
-                <div class="product-price-block">
-
-                    <span>
-                        PRICE
-                    </span>
-
-                    <strong>
-                        ${{ product.price }}
-                    </strong>
-
-                </div>
-
-
-                <!-- Quantity -->
-
-                <div class="product-purchase">
-
-                    <div class="quantity-control">
-
-                        <label for="qty-cart">
-                            QUANTITY
-                        </label>
-
-                        <select
-                            class="product-quantity"
-                            id="qty-cart"
-                        >
-                            <option selected>1</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-
-                    </div>
-
-
-                    <button
-                        href="{% url 'cart_add' %}"
-                        type="button"
-                        value="{{ product.id }}"
-                        id="add-cart"
-                        class="product-cart-button"
-                    >
-                        ADD TO CART
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-
-                </div>
-
-
-                <!-- Vendor -->
-
-                <div class="product-vendor">
-
-                    <span>
-                        SOLD BY
-                    </span>
-
-                    <strong>
-                        {{ product.vendor|title }}
-                    </strong>
-
-                </div>
-
-
-                <!-- Message vendor -->
-
+            <div class="collage-product-meta-row">
+                <div class="collage-vendor-mark"><span class="collage-vendor-avatar">V</span><span><small>Sold by</small><strong>{{ product.vendor|title }}</strong></span></div>
                 <div class="product-contact">
-
                     {% if user.is_authenticated %}
-
                         {% if user != product.vendor.user %}
-
-                            <a
-                                href="{% url 'start_conversation_product' product.vendor.id product.id %}"
-                            >
-                                ASK ABOUT THIS RECORD
-                                <i class="bi bi-arrow-up-right"></i>
-                            </a>
-
+                            <a href="{% url 'start_conversation_product' product.vendor.id product.id %}"><i class="bi bi-chat-left-text"></i> Ask About This Record <span>→</span></a>
                         {% endif %}
-
                     {% else %}
-
-                        <a
-                            href="{% url 'login' %}?next={{ request.path }}"
-                        >
-                            LOG IN TO CONTACT SELLER
-                            <i class="bi bi-arrow-up-right"></i>
-                        </a>
-
+                        <a href="{% url 'login' %}?next={{ request.path }}"><i class="bi bi-chat-left-text"></i> Log in to contact seller <span>→</span></a>
                     {% endif %}
-
                 </div>
-
             </div>
-
         </div>
+    </div>
 
+    <div class="collage-product-lower">
         <section class="product-tracklist">
-
-            <div class="tracklist-heading">
-
-                <span>
-                    RECORD / TRACKLIST
-                </span>
-
-                <strong>
-                    {{ tracklist|length|stringformat:"02d" }}
-                </strong>
-
-            </div>
-
-
+            <div class="collage-section-heading"><div><h2>Record / Tracklist</h2></div><span class="collage-section-meta">{{ tracklist|length|stringformat:"02d" }}</span></div>
             <div class="tracklist-content">
-
                 {% for track in tracklist %}
-
-                    <div class="track">
-
-                        <span class="track-number">
-                            {{ forloop.counter|stringformat:"02d" }}
-                        </span>
-
-                        <span class="track-name">
-                            {{ track }}
-                        </span>
-
-                    </div>
-
+                    <div class="track"><span class="track-number">{{ forloop.counter|stringformat:"02d" }}</span><span class="track-name">{{ track }}</span></div>
                 {% empty %}
-
-                    <div class="track-empty">
-                        NO TRACKLIST AVAILABLE
-                    </div>
-
+                    <div class="track-empty">NO TRACKLIST AVAILABLE</div>
                 {% endfor %}
-
             </div>
-
         </section>
 
         <section class="product-reviews">
-
-            <div class="reviews-header">
-
-                <div>
-
-                    <span>
-                        COMMUNITY / FEEDBACK
-                    </span>
-
-                    <h2>
-                        Reviews.
-                    </h2>
-
-                </div>
-
-                <strong>
-                    {{ reviews.count|stringformat:"02d" }}
-                </strong>
-
-            </div>
-
-
-            <!-- Review action -->
-
+            <div class="collage-section-heading"><div><h2>Community / Feedback</h2></div><span class="collage-section-meta">{{ reviews.count|stringformat:"02d" }}</span></div>
             <div class="review-action">
-
                 {% if user.is_authenticated %}
-
                     {% if already_reviewed %}
-
-                        <span>
-                            YOU'VE ALREADY REVIEWED THIS RECORD.
-                        </span>
-
+                        <span class="collage-status-note">YOU'VE ALREADY REVIEWED THIS RECORD.</span>
                     {% elif user_can_review %}
-
-                        <a
-                            href="{% url 'rate_product' product.id %}"
-                            class="review-button"
-                        >
-                            WRITE A REVIEW
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-
+                        <a href="{% url 'rate_product' product.id %}" class="collage-primary-button">Write a Review <span>→</span></a>
                     {% else %}
-
-                        <span>
-                            YOU CAN REVIEW THIS RECORD ONCE YOUR
-                            ORDER HAS BEEN DELIVERED.
-                        </span>
-
+                        <span class="collage-status-note">YOU CAN REVIEW THIS RECORD ONCE YOUR ORDER HAS BEEN DELIVERED.</span>
                     {% endif %}
-
                 {% else %}
-
-                    <span>
-                        <a href="{% url 'login' %}?next={{ request.path }}">
-                            LOG IN
-                        </a>
-                        TO WRITE A REVIEW.
-                    </span>
-
+                    <span class="collage-status-note"><a href="{% url 'login' %}?next={{ request.path }}">LOG IN</a> TO WRITE A REVIEW.</span>
                 {% endif %}
-
             </div>
 
-
-            <!-- Reviews -->
-
-            <div class="reviews-list">
-
+            <div class="reviews-list collage-review-grid">
                 {% for review in reviews %}
-
-                    <article class="review-item">
-
-                        <div class="review-meta">
-
-                            <span>
-                                {{ forloop.counter|stringformat:"02d" }}
-                            </span>
-
-                            <span>
-                                {{ review.created_at|date:"M d, Y" }}
-                            </span>
-
-                        </div>
-
-
-                        <div class="review-content">
-
-                            <div class="review-title-row">
-
-                                <h3>
-                                    {{ review.title }}
-                                </h3>
-
-                                <strong>
-                                    {{ review.score }}★
-                                </strong>
-
-                            </div>
-
-                            <p>
-                                {{ review.review }}
-                            </p>
-
-                            <small>
-                                BY {{ review.user.username|upper }}
-                            </small>
-
-                        </div>
-
+                    <article class="review-item collage-review-card">
+                        <div class="review-meta"><span>{{ review.created_at|date:"M d, Y" }}</span><strong>{{ review.score }}★</strong></div>
+                        <div class="review-content"><h3>{{ review.title }}</h3><p>{{ review.review }}</p><small>BY {{ review.user.username|upper }}</small></div>
                     </article>
-
                 {% empty %}
-
-                    <div class="reviews-empty">
-
-                        <span>
-                            404 / EMPTY
-                        </span>
-
-                        <h3>
-                            NO REVIEWS<br>
-                            YET.
-                        </h3>
-
-                    </div>
-
+                    <div class="collage-empty-state"><span>404 / EMPTY</span><h3>No reviews yet.</h3></div>
                 {% endfor %}
-
             </div>
-
         </section>
-
     </div>
-
 </section>
 
 <script>
-
 $(document).on("click", "#add-cart", function(e){
-
     e.preventDefault();
-
     $.ajax({
-
         type: "POST",
-
         url: '{% url "cart_add" %}',
-
         data: {
-
             product_id: $(this).val(),
-
             product_qty: $('#qty-cart option:selected').text(),
-
             csrfmiddlewaretoken: '{{ csrf_token }}',
-
-            action: "post",
-
+            action: "post"
         },
-
         success: function(json){
-
             document.getElementById("cart_quantity").textContent = json.qty;
-
+            var mobileCount = document.getElementById("mobile_cart_quantity");
+            if (mobileCount) mobileCount.textContent = json.qty;
         },
-
-        error: function(xhr, errmsg, err){
-
-            console.log(errmsg);
-
-        }
-
+        error: function(xhr, errmsg, err){ console.log(errmsg); }
     });
-
 });
-
 </script>
-
 {% endblock %}

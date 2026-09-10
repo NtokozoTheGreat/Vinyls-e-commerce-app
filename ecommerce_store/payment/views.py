@@ -192,7 +192,7 @@ def process_order(request):
             return redirect('home')
             
     else:
-        messages.success(request, 'Access denied' )
+        messages.success(request, 'Access denied')
         return redirect('home')
 
 

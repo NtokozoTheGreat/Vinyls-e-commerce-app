@@ -1,0 +1,2171 @@
+/* ============================================================
+   VINYLS — MIXED MEDIA NAVBAR + OFFCANVAS
+============================================================ */
+
+:root {
+    --ref-cream: #f4eee2;
+    --ref-paper: #eee5d5;
+    --ref-paper-light: #f2e9da;
+
+    --ref-black: #111111;
+    --ref-pink: #ff4785;
+    --ref-yellow: #f6d52c;
+    --ref-red: #ce312d;
+}
+
+
+/* ============================================================
+   MAIN NAVBAR
+============================================================ */
+
+.reference-navbar {
+    position: relative;
+    z-index: 1030;
+
+    width: 100%;
+
+    padding:
+        18px
+        clamp(20px, 3vw, 50px)
+        16px;
+
+    background: var(--ref-cream);
+
+    color: var(--ref-black);
+
+    overflow: visible;
+}
+
+
+.reference-navbar::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: -2;
+
+    opacity: .15;
+
+    pointer-events: none;
+
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, .026) 0,
+            rgba(0, 0, 0, .026) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+}
+
+
+.reference-navbar-inner {
+    position: relative;
+
+    width: 100%;
+    min-height: 86px;
+
+    display: grid;
+
+    grid-template-columns:
+        190px
+        minmax(500px, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: clamp(18px, 2vw, 32px);
+}
+
+
+/* ============================================================
+   LOGO
+============================================================ */
+
+.reference-brand {
+    position: relative;
+
+    z-index: 10;
+
+    width: 180px;
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+
+    text-decoration: none;
+
+    transform: rotate(-2deg);
+}
+
+
+.reference-brand:hover,
+.reference-brand:focus {
+    text-decoration: none;
+}
+
+
+.reference-brand-yellow {
+    position: absolute;
+
+    z-index: -1;
+
+    left: 0;
+    top: 20px;
+
+    width: 148px;
+    height: 40px;
+
+    background: var(--ref-yellow);
+
+    transform: rotate(-2deg);
+
+    clip-path:
+        polygon(
+            0 17%,
+            10% 8%,
+            23% 13%,
+            37% 5%,
+            52% 12%,
+            66% 4%,
+            80% 11%,
+            100% 5%,
+            97% 88%,
+            83% 84%,
+            69% 94%,
+            53% 88%,
+            38% 96%,
+            24% 87%,
+            9% 94%,
+            2% 84%
+        );
+}
+
+
+.reference-brand-word {
+    position: relative;
+
+    z-index: 2;
+
+    color: #111;
+
+    font-family:
+        "Arial Black",
+        Impact,
+        sans-serif;
+
+    font-size: 42px;
+
+    font-style: italic;
+    font-weight: 900;
+
+    line-height: 1;
+
+    letter-spacing: -5px;
+
+    transform: skewX(-8deg);
+
+    text-shadow:
+        1px 0 #111,
+        -1px 0 #111,
+        0 1px #111;
+}
+
+
+.reference-brand-crown {
+    position: absolute;
+
+    z-index: 4;
+
+    width: 35px;
+    height: auto;
+
+    right: 0;
+    top: 0;
+
+    transform: rotate(9deg);
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   MAIN NAV LINKS
+============================================================ */
+
+.reference-nav-links {
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    overflow: visible;
+}
+
+
+/* ============================================================
+   INDIVIDUAL TORN PAPER NAV ITEMS
+============================================================ */
+
+.reference-paper-item {
+    position: relative;
+
+    flex: 0 0 auto;
+
+    min-width: 104px;
+    height: 60px;
+
+    padding:
+        0
+        19px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    isolation: isolate;
+
+    overflow: visible;
+}
+
+
+.reference-paper-wide {
+    min-width: 138px;
+}
+
+
+/*
+Safe cream center.
+
+This sits behind the text and prevents
+transparent/torn areas from cutting through it.
+*/
+
+.reference-paper-item::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: -3;
+
+    top: 9px;
+    right: 12px;
+    bottom: 9px;
+    left: 12px;
+
+    background: var(--ref-paper);
+
+    pointer-events: none;
+}
+
+
+/*
+Actual paper PNG.
+
+The image is larger than the safe content area,
+so the torn edge stays outside the text.
+*/
+
+.reference-paper-piece {
+    position: absolute;
+
+    z-index: -2;
+
+    top: -8px;
+    right: -10px;
+    bottom: -8px;
+    left: -10px;
+
+    width: calc(100% + 20px);
+    height: calc(100% + 16px);
+
+    object-fit: fill;
+
+    pointer-events: none;
+}
+
+
+/*
+Slight individual rotations.
+*/
+
+.reference-paper-item:nth-child(1) {
+    transform: rotate(-1.15deg);
+}
+
+
+.reference-paper-item:nth-child(2) {
+    transform: rotate(.7deg);
+}
+
+
+.reference-paper-item:nth-child(3) {
+    transform: rotate(-.5deg);
+}
+
+
+.reference-paper-item:nth-child(4) {
+    transform: rotate(.85deg);
+}
+
+
+.reference-paper-item:nth-child(5) {
+    transform: rotate(-.7deg);
+}
+
+
+/* ============================================================
+   NAV TEXT
+============================================================ */
+
+.reference-nav-link {
+    position: relative;
+
+    z-index: 5;
+
+    border: 0;
+    outline: 0;
+
+    padding:
+        12px
+        5px;
+
+    background: transparent;
+
+    color: var(--ref-black);
+
+    text-decoration: none;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+
+.reference-nav-link:hover,
+.reference-nav-link:focus {
+    color: var(--ref-black);
+
+    text-decoration: none;
+
+    outline: 0;
+}
+
+
+.reference-nav-button.dropdown-toggle::after {
+    display: none;
+}
+
+
+/* ============================================================
+   ACTIVE HOME PINK MARKER
+============================================================ */
+
+.reference-nav-active::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: -1;
+
+    left: 1px;
+    right: -4px;
+
+    bottom: 5px;
+
+    height: 5px;
+
+    background: var(--ref-pink);
+
+    transform: rotate(-2deg);
+
+    clip-path:
+        polygon(
+            0 40%,
+            15% 22%,
+            33% 31%,
+            50% 12%,
+            68% 27%,
+            84% 16%,
+            100% 27%,
+            97% 75%,
+            80% 69%,
+            61% 88%,
+            39% 72%,
+            19% 88%
+        );
+}
+
+
+/* ============================================================
+   DROPDOWNS
+============================================================ */
+
+.reference-dropdown-menu {
+    position: absolute;
+
+    min-width: 225px;
+
+    margin-top: 6px !important;
+
+    padding:
+        18px
+        17px;
+
+    border: 0;
+    border-radius: 0;
+
+    background: var(--ref-paper);
+
+    box-shadow:
+        8px
+        9px
+        0
+        rgba(0, 0, 0, .13);
+
+    transform: rotate(-.35deg);
+
+    isolation: isolate;
+}
+
+
+.reference-dropdown-menu::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: -2;
+
+    inset: -9px;
+
+    background:
+        url("../images/mixed-media/navbar/torn-paper.png")
+        center / 100% 100%
+        no-repeat;
+
+    pointer-events: none;
+}
+
+
+.reference-dropdown-menu::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: -3;
+
+    inset: 2px;
+
+    background: var(--ref-paper);
+
+    pointer-events: none;
+}
+
+
+.reference-dropdown-menu .dropdown-item {
+    position: relative;
+
+    z-index: 2;
+
+    padding:
+        9px
+        10px;
+
+    background: transparent;
+
+    color: #111;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    line-height: 1.25;
+}
+
+
+.reference-dropdown-menu .dropdown-item:hover,
+.reference-dropdown-menu .dropdown-item:focus {
+    background: rgba(255, 71, 133, .16);
+
+    color: #111;
+}
+
+
+.reference-dropdown-menu .dropdown-divider {
+    border-color: rgba(0, 0, 0, .15);
+}
+
+
+/* ============================================================
+   RIGHT ACTION ROW
+============================================================ */
+
+.reference-actions {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    overflow: visible;
+}
+
+
+/* ============================================================
+   INDIVIDUAL ACTION PAPER
+============================================================ */
+
+.reference-action-paper {
+    position: relative;
+
+    width: 62px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    isolation: isolate;
+
+    overflow: visible;
+}
+
+
+.reference-action-paper::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: -3;
+
+    top: 8px;
+    right: 9px;
+    bottom: 8px;
+    left: 9px;
+
+    background: var(--ref-paper);
+
+    pointer-events: none;
+}
+
+
+.reference-action-paper-image {
+    position: absolute;
+
+    z-index: -2;
+
+    top: -6px;
+    right: -7px;
+    bottom: -6px;
+    left: -7px;
+
+    width: calc(100% + 14px);
+    height: calc(100% + 12px);
+
+    object-fit: fill;
+
+    pointer-events: none;
+}
+
+
+.reference-action-paper:nth-child(1) {
+    transform: rotate(-1deg);
+}
+
+
+.reference-action-paper:nth-child(2) {
+    transform: rotate(.8deg);
+}
+
+
+.reference-action-paper:nth-child(3) {
+    transform: rotate(-.55deg);
+}
+
+
+.reference-action-paper:nth-child(4) {
+    transform: rotate(1deg);
+}
+
+
+/* ============================================================
+   ACTION ICON BUTTONS
+============================================================ */
+
+.reference-action-button {
+    position: relative;
+
+    z-index: 5;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: #111;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+
+.reference-action-button:hover,
+.reference-action-button:focus {
+    color: #111;
+
+    text-decoration: none;
+
+    outline: 0;
+}
+
+
+.reference-action-button i {
+    font-size: 21px;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   CART COUNT
+============================================================ */
+
+.reference-cart-count {
+    position: absolute;
+
+    z-index: 10;
+
+    top: -3px;
+    right: -5px;
+
+    min-width: 20px;
+    height: 20px;
+
+    padding:
+        0
+        5px;
+
+    border-radius: 999px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--ref-pink);
+
+    color: #111;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   GOOD MUSIC NOTE
+============================================================ */
+
+.reference-good-music {
+    position: absolute;
+
+    right: 1px;
+    top: -14px;
+
+    color: var(--ref-pink);
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 9px;
+    font-style: italic;
+    font-weight: 900;
+
+    line-height: .95;
+
+    text-align: right;
+
+    transform: rotate(-7deg);
+}
+
+
+/* ============================================================
+   BOOTSTRAP OFFCANVAS BACKDROP
+============================================================ */
+
+.offcanvas-backdrop.show {
+    opacity: .88 !important;
+
+    background-color: #080808 !important;
+}
+
+
+/* ============================================================
+   SEARCH OFFCANVAS
+============================================================ */
+
+.reference-search-canvas {
+    height: 100vh !important;
+
+    border: 0 !important;
+
+    background: transparent !important;
+
+    overflow: visible !important;
+
+    pointer-events: none;
+}
+
+
+.reference-search-canvas.show {
+    pointer-events: auto;
+}
+
+
+/* ============================================================
+   SEARCH TORN PAPER PANEL
+============================================================ */
+
+.reference-search-paper {
+    position: absolute;
+
+    left: clamp(20px, 2.1vw, 36px);
+    top: clamp(120px, 18vh, 190px);
+
+    width: min(1090px, calc(100vw - 470px));
+
+    min-width: 720px;
+
+    height: 310px;
+
+    padding:
+        64px
+        72px
+        50px;
+
+    isolation: isolate;
+
+    overflow: visible;
+}
+
+
+/*
+Safe inner paper center.
+*/
+
+.reference-search-paper::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: -3;
+
+    top: 22px;
+    right: 24px;
+    bottom: 22px;
+    left: 24px;
+
+    background: var(--ref-paper-light);
+
+    pointer-events: none;
+}
+
+
+/*
+Torn-paper silhouette.
+*/
+
+.reference-search-paper-image {
+    position: absolute;
+
+    z-index: -2;
+
+    top: -16px;
+    right: -20px;
+    bottom: -16px;
+    left: -20px;
+
+    width: calc(100% + 40px);
+    height: calc(100% + 32px);
+
+    object-fit: fill;
+
+    pointer-events: none;
+}
+
+
+/*
+Subtle inner texture.
+*/
+
+.reference-search-paper::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: -1;
+
+    top: 28px;
+    right: 31px;
+    bottom: 28px;
+    left: 31px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, .06),
+            rgba(0, 0, 0, .024)
+        );
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   SEARCH CLOSE BUTTON
+============================================================ */
+
+.reference-tape-close {
+    position: absolute;
+
+    z-index: 20;
+
+    top: 14px;
+    right: 16px;
+
+    width: 68px;
+    height: 68px;
+
+    padding: 8px;
+
+    background: rgba(202, 191, 170, .58);
+
+    transform: rotate(5deg);
+
+    clip-path:
+        polygon(
+            5% 8%,
+            91% 2%,
+            100% 91%,
+            10% 100%
+        );
+}
+
+
+.reference-tape-close button,
+.reference-account-tape-close button {
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background: rgba(242, 231, 211, .78);
+
+    color: #111;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+
+.reference-tape-close i,
+.reference-account-tape-close i {
+    font-size: 29px;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   SEARCH CONTENT
+============================================================ */
+
+.reference-search-content {
+    position: relative;
+
+    z-index: 5;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.reference-search-label {
+    margin:
+        0
+        0
+        18px;
+
+    color: #111;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 900;
+
+    letter-spacing: .065em;
+
+    transform: rotate(-1deg);
+}
+
+
+.reference-search-form {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        180px;
+
+    align-items: end;
+
+    gap: 32px;
+}
+
+
+.reference-search-input-wrap {
+    min-width: 0;
+
+    padding:
+        0
+        8px;
+
+    border-bottom:
+        2px solid
+        #111;
+}
+
+
+.reference-search-input-wrap input {
+    width: 100%;
+
+    border: 0;
+    outline: 0;
+
+    padding:
+        0
+        0
+        12px;
+
+    background: transparent;
+
+    color: #222;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: clamp(36px, 4vw, 64px);
+
+    font-style: italic;
+    font-weight: 900;
+
+    line-height: .95;
+
+    letter-spacing: -.055em;
+}
+
+
+.reference-search-input-wrap input::placeholder {
+    color: rgba(30, 30, 30, .47);
+
+    opacity: 1;
+}
+
+
+.reference-search-submit {
+    min-width: 180px;
+    height: 60px;
+
+    padding:
+        0
+        20px;
+
+    border: 0;
+
+    background: var(--ref-pink);
+
+    color: #111;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 11px;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transform: rotate(-1deg);
+
+    clip-path:
+        polygon(
+            2% 8%,
+            18% 2%,
+            34% 7%,
+            51% 2%,
+            68% 7%,
+            84% 3%,
+            98% 10%,
+            95% 90%,
+            77% 86%,
+            62% 93%,
+            42% 87%,
+            23% 94%,
+            5% 89%
+        );
+}
+
+
+/* ============================================================
+   ACCOUNT OFFCANVAS
+============================================================ */
+
+.reference-account-canvas {
+    width: min(430px, 95vw) !important;
+
+    border: 0 !important;
+
+    background: transparent !important;
+
+    padding:
+        7px
+        8px
+        7px
+        4px;
+
+    overflow: visible !important;
+}
+
+
+/* ============================================================
+   ACCOUNT TORN PAPER
+============================================================ */
+
+.reference-account-paper {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    padding:
+        50px
+        43px
+        28px;
+
+    isolation: isolate;
+
+    overflow: visible;
+}
+
+
+/*
+Safe interior.
+*/
+
+.reference-account-paper::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: -3;
+
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+
+    background: var(--ref-paper-light);
+
+    pointer-events: none;
+}
+
+
+/*
+Torn silhouette extends outside safe content.
+*/
+
+.reference-account-paper-image {
+    position: absolute;
+
+    z-index: -2;
+
+    top: -14px;
+    right: -17px;
+    bottom: -14px;
+    left: -17px;
+
+    width: calc(100% + 34px);
+    height: calc(100% + 28px);
+
+    object-fit: fill;
+
+    pointer-events: none;
+}
+
+
+/*
+Subtle paper interior.
+*/
+
+.reference-account-paper::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: -1;
+
+    top: 27px;
+    right: 28px;
+    bottom: 27px;
+    left: 28px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, .06),
+            rgba(0, 0, 0, .022)
+        );
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   ACCOUNT CLOSE
+============================================================ */
+
+.reference-account-tape-close {
+    position: absolute;
+
+    z-index: 20;
+
+    top: 16px;
+    right: 8px;
+
+    width: 68px;
+    height: 68px;
+
+    padding: 8px;
+
+    background: rgba(202, 191, 170, .58);
+
+    transform: rotate(5deg);
+
+    clip-path:
+        polygon(
+            5% 8%,
+            91% 2%,
+            100% 91%,
+            10% 100%
+        );
+}
+
+
+/* ============================================================
+   ACCOUNT CONTENT
+============================================================ */
+
+.reference-account-content {
+    position: relative;
+
+    z-index: 5;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.reference-account-small {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #111;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 900;
+}
+
+
+.reference-account-content h2 {
+    margin:
+        0
+        0
+        16px;
+
+    padding-right: 60px;
+
+    color: #111;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 58px;
+    font-style: italic;
+    font-weight: 900;
+
+    line-height: .88;
+
+    letter-spacing: -.08em;
+
+    transform: rotate(-2deg);
+
+    transform-origin: left center;
+}
+
+
+.reference-account-content h2 span {
+    color: var(--ref-pink);
+}
+
+
+/* ============================================================
+   SIGNED-IN STRIP
+============================================================ */
+
+.reference-account-user {
+    margin:
+        4px
+        -4px
+        8px;
+
+    padding:
+        11px
+        15px;
+
+    background: var(--ref-yellow);
+
+    transform: rotate(-.5deg);
+
+    clip-path:
+        polygon(
+            1% 6%,
+            20% 2%,
+            37% 6%,
+            55% 2%,
+            73% 6%,
+            99% 2%,
+            97% 94%,
+            81% 90%,
+            60% 96%,
+            40% 91%,
+            19% 95%,
+            2% 91%
+        );
+}
+
+
+.reference-account-user small {
+    display: block;
+
+    color: #111;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: .04em;
+}
+
+
+.reference-account-user strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #111;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 17px;
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   ACCOUNT LINKS
+============================================================ */
+
+.reference-account-links {
+    display: grid;
+
+    padding:
+        0
+        4px;
+}
+
+
+.reference-account-links > a {
+    min-height: 47px;
+
+    padding:
+        10px
+        6px;
+
+    border-bottom:
+        1px solid
+        rgba(0, 0, 0, .15);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    color: #111;
+
+    text-decoration: none;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 900;
+
+    line-height: 1;
+}
+
+
+.reference-account-links > a:hover,
+.reference-account-links > a:focus {
+    color: #111;
+
+    text-decoration: none;
+}
+
+
+.reference-account-end {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.reference-message-count {
+    min-width: 30px;
+    height: 30px;
+
+    padding:
+        0
+        6px;
+
+    border-radius: 50%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--ref-pink);
+
+    color: #111;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 900;
+}
+
+
+.reference-account-logout {
+    color: var(--ref-red) !important;
+}
+
+
+.reference-account-logout i {
+    color: var(--ref-red);
+}
+
+
+/* ============================================================
+   GUEST ACCOUNT
+============================================================ */
+
+.reference-account-guest {
+    display: grid;
+
+    gap: 12px;
+
+    margin-top: 8px;
+}
+
+
+.reference-account-guest p {
+    margin:
+        0
+        0
+        5px;
+
+    max-width: 28ch;
+
+    color: #111;
+
+    font-size: 14px;
+
+    line-height: 1.45;
+}
+
+
+.reference-account-guest a {
+    min-height: 48px;
+
+    padding:
+        12px
+        14px;
+
+    display: flex;
+    align-items: center;
+
+    color: #111;
+
+    background: var(--ref-pink);
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-style: italic;
+    font-weight: 900;
+
+    text-decoration: none;
+}
+
+
+.reference-account-guest a + a {
+    background: transparent;
+
+    border:
+        2px solid
+        #111;
+}
+
+
+/* ============================================================
+   ACCOUNT BOTTOM COLLAGE
+============================================================ */
+
+.reference-account-art {
+    position: relative;
+
+    min-height: 190px;
+
+    margin-top: auto;
+
+    overflow: visible;
+}
+
+
+.reference-account-vinyl {
+    position: absolute;
+
+    width: 195px;
+
+    left: -94px;
+    bottom: -43px;
+
+    transform: rotate(-4deg);
+}
+
+
+.reference-account-note {
+    position: absolute;
+
+    right: 24px;
+    bottom: 47px;
+
+    color: #111;
+
+    font-family:
+        "Comic Sans MS",
+        "Bradley Hand",
+        cursive;
+
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 900;
+
+    line-height: .95;
+
+    text-align: center;
+
+    transform: rotate(-5deg);
+}
+
+
+.reference-account-marker {
+    position: absolute;
+
+    width: 86px;
+    height: 7px;
+
+    right: 31px;
+    bottom: 30px;
+
+    background: var(--ref-yellow);
+
+    transform: rotate(-7deg);
+}
+
+
+.reference-account-crown {
+    position: absolute;
+
+    width: 39px;
+
+    right: 2px;
+    bottom: 5px;
+
+    transform: rotate(8deg);
+}
+
+
+/* ============================================================
+   MOBILE NAV OFFCANVAS
+============================================================ */
+
+.reference-mobile-canvas {
+    width: min(390px, 94vw) !important;
+
+    border: 0 !important;
+
+    background: var(--ref-paper);
+}
+
+
+.reference-mobile-canvas .offcanvas-header {
+    min-height: 86px;
+
+    padding:
+        22px
+        24px;
+
+    border-bottom:
+        1px solid
+        rgba(0, 0, 0, .14);
+}
+
+
+.reference-mobile-title {
+    margin: 0;
+
+    color: #111;
+
+    font-family:
+        "Arial Black",
+        Impact,
+        sans-serif;
+
+    font-size: 34px;
+    font-style: italic;
+    font-weight: 900;
+
+    letter-spacing: -3px;
+}
+
+
+.reference-mobile-close {
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: var(--ref-yellow);
+
+    color: #111;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+
+.reference-mobile-close i {
+    font-size: 24px;
+}
+
+
+.reference-mobile-canvas .offcanvas-body {
+    padding:
+        18px
+        24px
+        30px;
+}
+
+
+.reference-mobile-links {
+    display: grid;
+}
+
+
+.reference-mobile-links > a {
+    min-height: 54px;
+
+    padding:
+        12px
+        2px;
+
+    border-bottom:
+        1px solid
+        rgba(0, 0, 0, .14);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: #111;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+
+.reference-mobile-link-end {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.reference-mobile-count {
+    min-width: 25px;
+    height: 25px;
+
+    padding:
+        0
+        6px;
+
+    border-radius: 50%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--ref-pink);
+
+    color: #111;
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   RESPONSIVE — LARGE
+============================================================ */
+
+@media (max-width: 1399.98px) {
+
+    .reference-navbar-inner {
+        grid-template-columns:
+            175px
+            minmax(470px, 1fr)
+            auto;
+
+        gap: 14px;
+    }
+
+
+    .reference-nav-links {
+        gap: 3px;
+    }
+
+
+    .reference-paper-item {
+        min-width: 92px;
+
+        padding:
+            0
+            14px;
+    }
+
+
+    .reference-paper-wide {
+        min-width: 122px;
+    }
+
+
+    .reference-nav-link {
+        font-size: 13px;
+    }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE — LAPTOP
+============================================================ */
+
+@media (max-width: 1199.98px) {
+
+    .reference-navbar-inner {
+        grid-template-columns:
+            165px
+            minmax(440px, 1fr)
+            auto;
+    }
+
+
+    .reference-brand {
+        width: 160px;
+    }
+
+
+    .reference-brand-word {
+        font-size: 38px;
+    }
+
+
+    .reference-brand-yellow {
+        width: 136px;
+    }
+
+
+    .reference-paper-item {
+        min-width: 84px;
+
+        height: 57px;
+
+        padding:
+            0
+            11px;
+    }
+
+
+    .reference-paper-wide {
+        min-width: 112px;
+    }
+
+
+    .reference-nav-link {
+        font-size: 12px;
+    }
+
+
+    .reference-action-paper {
+        width: 55px;
+    }
+
+
+    .reference-good-music {
+        display: none !important;
+    }
+
+
+    .reference-search-paper {
+        width: min(900px, calc(100vw - 430px));
+
+        min-width: 620px;
+    }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE — TABLET
+============================================================ */
+
+@media (max-width: 991.98px) {
+
+    .reference-navbar {
+        padding:
+            13px
+            18px;
+    }
+
+
+    .reference-navbar-inner {
+        grid-template-columns:
+            1fr
+            auto;
+
+        min-height: 68px;
+    }
+
+
+    .reference-brand {
+        width: 170px;
+        height: 64px;
+    }
+
+
+    .reference-actions {
+        gap: 3px;
+    }
+
+
+    .reference-action-paper {
+        width: 57px;
+        height: 55px;
+    }
+
+
+    .reference-search-paper {
+        left: 16px;
+        right: 16px;
+
+        top: 108px;
+
+        width: auto;
+        min-width: 0;
+
+        height: 295px;
+
+        padding:
+            62px
+            54px
+            42px;
+    }
+
+
+    .reference-search-form {
+        grid-template-columns:
+            minmax(0, 1fr)
+            160px;
+
+        gap: 22px;
+    }
+
+
+    .reference-search-submit {
+        min-width: 160px;
+    }
+
+
+    .reference-account-canvas {
+        width: min(420px, 96vw) !important;
+    }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE — MOBILE
+============================================================ */
+
+@media (max-width: 575.98px) {
+
+    .reference-navbar {
+        padding:
+            10px
+            10px;
+    }
+
+
+    .reference-navbar-inner {
+        gap: 6px;
+    }
+
+
+    .reference-brand {
+        width: 132px;
+        height: 56px;
+    }
+
+
+    .reference-brand-word {
+        font-size: 31px;
+
+        letter-spacing: -4px;
+    }
+
+
+    .reference-brand-yellow {
+        width: 114px;
+        height: 31px;
+
+        top: 17px;
+    }
+
+
+    .reference-brand-crown {
+        width: 27px;
+
+        right: -1px;
+    }
+
+
+    .reference-action-paper {
+        width: 45px;
+        height: 49px;
+    }
+
+
+    .reference-action-paper-image {
+        top: -4px;
+        right: -5px;
+        bottom: -4px;
+        left: -5px;
+
+        width: calc(100% + 10px);
+        height: calc(100% + 8px);
+    }
+
+
+    .reference-action-button {
+        width: 34px;
+        height: 36px;
+    }
+
+
+    .reference-action-button i {
+        font-size: 19px;
+    }
+
+
+    .reference-search-paper {
+        top: 88px;
+
+        left: 9px;
+        right: 9px;
+
+        width: auto;
+        min-width: 0;
+
+        height: 370px;
+
+        padding:
+            68px
+            34px
+            34px;
+    }
+
+
+    .reference-search-paper::before {
+        top: 18px;
+        right: 16px;
+        bottom: 18px;
+        left: 16px;
+    }
+
+
+    .reference-search-paper-image {
+        top: -11px;
+        right: -13px;
+        bottom: -11px;
+        left: -13px;
+
+        width: calc(100% + 26px);
+        height: calc(100% + 22px);
+    }
+
+
+    .reference-search-paper::after {
+        top: 24px;
+        right: 22px;
+        bottom: 24px;
+        left: 22px;
+    }
+
+
+    .reference-search-form {
+        grid-template-columns: 1fr;
+
+        gap: 22px;
+    }
+
+
+    .reference-search-input-wrap {
+        padding:
+            0
+            4px;
+    }
+
+
+    .reference-search-input-wrap input {
+        font-size: 34px;
+    }
+
+
+    .reference-search-submit {
+        width: 155px;
+        min-width: 155px;
+
+        justify-self: start;
+
+        height: 55px;
+    }
+
+
+    .reference-tape-close {
+        width: 60px;
+        height: 60px;
+
+        top: 12px;
+        right: 12px;
+    }
+
+
+    .reference-account-canvas {
+        width: 96vw !important;
+
+        padding: 4px;
+    }
+
+
+    .reference-account-paper {
+        padding:
+            52px
+            30px
+            26px;
+    }
+
+
+    .reference-account-paper::before {
+        top: 16px;
+        right: 14px;
+        bottom: 16px;
+        left: 14px;
+    }
+
+
+    .reference-account-paper-image {
+        top: -9px;
+        right: -11px;
+        bottom: -9px;
+        left: -11px;
+
+        width: calc(100% + 22px);
+        height: calc(100% + 18px);
+    }
+
+
+    .reference-account-paper::after {
+        top: 22px;
+        right: 20px;
+        bottom: 22px;
+        left: 20px;
+    }
+
+
+    .reference-account-tape-close {
+        width: 60px;
+        height: 60px;
+
+        top: 13px;
+        right: 7px;
+    }
+
+
+    .reference-account-content h2 {
+        font-size: 48px;
+
+        padding-right: 50px;
+    }
+
+
+    .reference-account-links > a {
+        min-height: 44px;
+
+        font-size: 13px;
+    }
+
+
+    .reference-account-art {
+        min-height: 165px;
+    }
+
+
+    .reference-account-vinyl {
+        width: 165px;
+
+        left: -83px;
+    }
+
+
+    .reference-account-note {
+        font-size: 14px;
+    }
+
+}

@@ -1,136 +1,75 @@
-\{% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
-
-<section class="collection-page">
-
-    <!-- =====================================================
-         COLLECTION HEADER
-         ===================================================== -->
-
-    <header class="collection-header">
-
-        <div class="collection-header-main">
-
-            <span class="collection-kicker">
-                VINYLS / ARCHIVE / 001
-            </span>
-
-            <h1>
-                RECORD<br>
-                <span>COLLECTION.</span>
-            </h1>
-
+<section class="collage-directory-page">
+    <header class="collage-directory-hero collage-directory-hero--records">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / ARCHIVE /</span>
+            <h1>Record<br><span>Collection.</span></h1>
+            <p>Discover new, old and timeless sounds from across the marketplace.</p>
         </div>
 
-
-        <div class="collection-header-meta">
-
-            <span>
-                EXPLORE
-            </span>
-
-            <strong>
-                {{ vinyls|length|stringformat:"02d" }}
-            </strong>
-
-            <span>
-                RECORDS
-            </span>
-
+        <div class="collage-directory-hero__index">
+            <span>RECORDS</span>
+            <strong>{{ vinyls|length|stringformat:"02d" }}</strong>
+            <small>EXPLORE</small>
         </div>
 
+        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
     </header>
-    <br>
-    <section class="collection-grid">
+
+    <section class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
+            <div>
+                <span class="collage-section-number">01 /</span>
+                <h2>All Records</h2>
+            </div>
+            <span class="collage-section-meta">{{ vinyls|length }} RECORDS</span>
+        </div>
 
         {% if vinyls %}
+            <div class="collage-product-grid">
+                {% for vinyl in vinyls %}
+                    <article class="vinyl-card">
+                        <a class="vinyl-image-wrapper" href="{% url 'productdetail' vinyl.id %}">
+                            <span class="vinyl-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                            {% if vinyl.image %}
+                                <img class="vinyl-image" src="{{ vinyl.image.url }}" alt="{{ vinyl.vinyl_name }}">
+                            {% endif %}
+                            <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                        </a>
 
-            {% for vinyl in vinyls %}
+                        <div class="vinyl-info">
+                            <span class="vinyl-category">RECORD</span>
+                            <h3 class="vinyl-title">{{ vinyl.vinyl_name }}</h3>
+                            <p class="vinyl-artist">{{ vinyl.artist_name }}</p>
 
-                <article class="record-card">
-
-                    <!-- Record number -->
-
-                    <div class="record-number">
-                        {{ forloop.counter|stringformat:"02d" }}
-                    </div>
-
-
-                    <!-- Image -->
-
-                    <div class="record-image">
-
-                        {% if vinyl.image %}
-
-                            <img
-                                src="{{ vinyl.image.url }}"
-                                alt="{{ vinyl.vinyl_name }}"
-                            >
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- Information -->
-
-                    <div class="record-info">
-
-                        <span class="record-label">
-                            RECORD
-                        </span>
-
-                        <h2>
-                            {{ vinyl.vinyl_name }}
-                        </h2>
-
-                        <p class="record-artist">
-                            {{ vinyl.artist_name }}
-                        </p>
-
-
-                        <div class="record-bottom">
-
-                            <strong class="record-price">
-                                ${{ vinyl.price }}
-                            </strong>
-
-                            <a
-                                href="{% url 'productdetail' vinyl.id %}"
-                                class="record-link"
-                            >
-                                VIEW
-                                <i class="bi bi-arrow-up-right"></i>
-                            </a>
-
+                            <div class="vinyl-price">
+                                {% if vinyl.on_sale %}
+                                    <span class="sale-label">SALE</span>
+                                    <span class="old-price">${{ vinyl.price }}</span>
+                                    <span class="sale-price">${{ vinyl.sale_price }}</span>
+                                {% else %}
+                                    <span class="regular-price">${{ vinyl.price }}</span>
+                                {% endif %}
+                            </div>
                         </div>
 
-                    </div>
-
-                </article>
-
-            {% endfor %}
-
-        {% else %}
-
-            <div class="collection-empty">
-
-                <span>
-                    404 / EMPTY ARCHIVE
-                </span>
-
-                <h2>
-                    NO RECORDS<br>
-                    FOUND.
-                </h2>
-
+                        <div class="vinyl-action">
+                            <a class="vinyl-view-button" href="{% url 'productdetail' vinyl.id %}">
+                                View record <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
             </div>
-
+        {% else %}
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>404 / EMPTY ARCHIVE</span>
+                <h2>No records found.</h2>
+                <p>The archive is empty right now.</p>
+            </div>
         {% endif %}
-
     </section>
-
 </section>
-
 {% endblock %}

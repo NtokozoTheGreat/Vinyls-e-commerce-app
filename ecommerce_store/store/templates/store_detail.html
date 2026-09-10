@@ -1,332 +1,81 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-
-<div class="store-page">
-
-    <!-- =====================================================
-         STORE HERO
-         ===================================================== -->
-
-    <header class="store-hero">
-
-        <div class="store-hero-main">
-
-            <span class="store-label">
-                RECORD STORE / {{ stores.id|stringformat:"03d" }}
-            </span>
-
-            <h1>
-                {{ stores.store_name }}
-            </h1>
-
-            <div class="store-hero-line">
-                <span>
-                    INDEPENDENT RECORD SELLER
-                </span>
-
-                <span>
-                    /
-                </span>
-
-                <span>
-                    VINYLS
-                </span>
-            </div>
-
+<div class="collage-store-page collage-store-detail-page">
+    <header class="collage-store-hero">
+        <div class="collage-store-hero__title">
+            <span class="collage-kicker">RECORD STORE / {{ stores.id|stringformat:"03d" }}</span>
+            <h1>{{ stores.store_name }}</h1>
+            <p>INDEPENDENT RECORD SELLER / VINYLS</p>
         </div>
-
-
-        <div class="store-hero-number">
-            <span>STORE</span>
-            <strong>#{{ stores.id|stringformat:"03d" }}</strong>
-        </div>
-
+        <div class="collage-store-hero__art collage-header-blank" aria-hidden="true"></div>
     </header>
 
-
-    <!-- =====================================================
-         STORE INFORMATION
-         ===================================================== -->
-
-    <section class="store-information">
-
-        <!-- Store image -->
-
-        <div class="store-profile-image">
-
+    <section class="collage-store-profile">
+        <div class="collage-store-profile__image">
             {% if stores.image %}
-
-                <img
-                    src="{{ stores.image.url }}"
-                    alt="{{ stores.store_name }}"
-                >
-
+                <img src="{{ stores.image.url }}" alt="{{ stores.store_name }}">
             {% else %}
-
-                <img
-                    src="{% static 'images/placeholder.png' %}"
-                    alt="No image available"
-                >
-
+                <img src="{% static 'images/vinyls_collage/analog-interior-collage.jpg' %}" alt="Record store interior collage">
             {% endif %}
-
+            <div class="collage-sticker collage-sticker--pink collage-sticker--store-photo">RECORDS<br>PEOPLE<br>PLACES<br>BETTER DAYS</div>
         </div>
 
-
-        <!-- Store details -->
-
-        <div class="store-profile-details">
-
-            <span class="store-section-label">
-                // ABOUT THE STORE
-            </span>
-
-            <p class="store-description">
-                {{ description }}
-            </p>
-
-
-            <!-- Contact -->
-
-            <div class="store-contact">
-
-                <div>
-                    <span>EMAIL</span>
-                    <strong>{{ stores.email }}</strong>
-                </div>
-
-                <div>
-                    <span>PHONE</span>
-                    <strong>{{ stores.phone_number }}</strong>
-                </div>
-
+        <div class="collage-store-profile__content">
+            <span class="collage-kicker">// ABOUT THE STORE</span>
+            <p class="collage-store-description">{{ description }}</p>
+            <div class="collage-contact-list">
+                <div><i class="bi bi-envelope"></i><span>{{ stores.email }}</span></div>
+                <div><i class="bi bi-telephone"></i><span>{{ stores.phone_number }}</span></div>
             </div>
-
-
-            <!-- Rating -->
-
-            <div class="store-rating">
-
-                <span>STORE RATING</span>
-
+            <div class="collage-rating-badge">
                 {% if stores.ratings_count > 0 %}
-
-                    <strong>
-                        {{ stores.average_rating }}★
-                    </strong>
-
-                    <small>
-                        {{ stores.ratings_count }}
-                        review{{ stores.ratings_count|pluralize }}
-                    </small>
-
+                    <strong>{{ stores.average_rating }}★</strong>
+                    <span>{{ stores.ratings_count }} review{{ stores.ratings_count|pluralize }}</span>
                 {% else %}
-
-                    <strong class="no-rating">
-                        NO RATING
-                    </strong>
-
-                    <small>
-                        No reviews yet
-                    </small>
-
+                    <strong>NO RATING</strong><span>No reviews yet</span>
                 {% endif %}
-
             </div>
-
-
-            <!-- Review action -->
-
-            <div class="store-review-action">
-
+            <div class="collage-actions collage-actions--store">
                 {% if user.is_authenticated %}
-
                     {% if already_reviewed %}
-
-                        <span class="review-complete">
-                            ✓ YOU HAVE REVIEWED THIS STORE
-                        </span>
-
+                        <span class="collage-status-note">✓ YOU HAVE REVIEWED THIS STORE</span>
                     {% else %}
-
-                        <a
-                            href="{% url 'rate_vendor' stores.id %}"
-                            class="brutalist-button"
-                        >
-                            WRITE A REVIEW
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-
+                        <a href="{% url 'rate_vendor' stores.id %}" class="collage-primary-button">WRITE A REVIEW <span>→</span></a>
                     {% endif %}
-
                 {% else %}
-
-                    <a
-                        href="{% url 'login' %}?next={{ request.path }}"
-                        class="brutalist-button"
-                    >
-                        LOG IN TO REVIEW
-                        <i class="bi bi-arrow-right"></i>
-                    </a>
-
+                    <a href="{% url 'login' %}?next={{ request.path }}" class="collage-primary-button">LOG IN TO REVIEW <span>→</span></a>
                 {% endif %}
-
             </div>
-
         </div>
-
     </section>
 
-
-    <!-- =====================================================
-         STORE INVENTORY
-         ===================================================== -->
-
-    <section class="store-inventory">
-
-        <div class="inventory-header">
-
-            <div>
-
-                <span>
-                    INVENTORY / {{ stores.store_name }}
-                </span>
-
-                <h2>
-                    RECORDS
-                </h2>
-
-            </div>
-
-            <div class="inventory-mark">
-                VINYL<br>
-                ONLY
-            </div>
-
+    <section class="collage-products-section collage-products-section--store">
+        <div class="collage-section-heading">
+            <div><span class="collage-section-number">INVENTORY / {{ stores.store_name }}</span><h2>Records</h2></div>
+            <span class="collage-handwritten-badge">VINYL<br>ONLY</span>
         </div>
-
 
         {% if products %}
-
-            <div class="store-product-grid">
-
+            <div class="collage-product-grid collage-product-grid--dense">
                 {% for product in products %}
-
-                    <article class="store-product-card">
-
-                        <!-- Product number -->
-
-                        <div class="store-product-number">
-                            {{ forloop.counter|stringformat:"02d" }}
-                        </div>
-
-
-                        <!-- Product image -->
-
-                        <div class="store-product-image">
-
-                            {% if product.image %}
-
-                                <img
-                                    src="{{ product.image.url }}"
-                                    alt="{{ product.vinyl_name }}"
-                                >
-
-                            {% else %}
-
-                                <img
-                                    src="{% static 'images/placeholder.png' %}"
-                                    alt="No image available"
-                                >
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <!-- Product information -->
-
+                    <article class="store-product-card collage-mini-record-card">
+                        <a class="store-product-image" href="{% url 'productdetail' product.id %}">
+                            <span class="store-product-number">{{ forloop.counter|stringformat:"02d" }}</span>
+                            {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">{% else %}<img src="{% static 'images/placeholder.png' %}" alt="No image available">{% endif %}
+                            <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                        </a>
                         <div class="store-product-info">
-
-                            <span>
-                                RECORD
-                            </span>
-
-                            <h3>
-                                {{ product.vinyl_name }}
-                            </h3>
-
-                            <p>
-                                {{ product.artist_name }}
-                            </p>
-
-
-                            <div class="store-product-meta">
-
-                                <strong>
-                                    ${{ product.price }}
-                                </strong>
-
-
-                                {% if product.ratings_count > 0 %}
-
-                                    <span>
-                                        {{ product.average_rating }}★
-                                        ({{ product.ratings_count }})
-                                    </span>
-
-                                {% else %}
-
-                                    <span>
-                                        NO REVIEWS
-                                    </span>
-
-                                {% endif %}
-
-                            </div>
-
-
-                            <a
-                                href="{% url 'productdetail' product.id %}"
-                                class="store-product-link"
-                            >
-                                VIEW RECORD
-                                <i class="bi bi-arrow-up-right"></i>
-                            </a>
-
+                            <span>RECORD</span><h3>{{ product.vinyl_name }}</h3><p>{{ product.artist_name }}</p>
+                            <div class="store-product-meta"><strong>${{ product.price }}</strong>{% if product.ratings_count > 0 %}<span>{{ product.average_rating }}★ ({{ product.ratings_count }})</span>{% else %}<span>NO REVIEWS</span>{% endif %}</div>
+                            <a href="{% url 'productdetail' product.id %}" class="store-product-link">VIEW RECORD <i class="bi bi-arrow-up-right"></i></a>
                         </div>
-
                     </article>
-
                 {% endfor %}
-
             </div>
-
         {% else %}
-
-            <div class="store-empty">
-
-                <span>
-                    INVENTORY / 000
-                </span>
-
-                <h2>
-                    NO RECORDS<br>
-                    AVAILABLE.
-                </h2>
-
-                <p>
-                    This store has no products listed yet.
-                </p>
-
-            </div>
-
+            <div class="collage-empty-state collage-empty-state--wide"><span>INVENTORY / 000</span><h2>NO RECORDS<br>AVAILABLE.</h2><p>This store has no products listed yet.</p></div>
         {% endif %}
-
     </section>
-
 </div>
-
 {% endblock %}

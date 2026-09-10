@@ -1,142 +1,28 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-
-<section class="register-page">
-
-    <div class="register-layout">
-
-        <!-- FORM COLUMN (dominant width) -->
-
-        <div class="register-form-col">
-
-            <div class="register-form-inner">
-
-                <span class="register-kicker">
-                    VINYLS / ACCOUNT /
-                </span>
-
-                <form
-                    method="POST"
-                    action="{% url 'register' %}"
-                    class="brutalist-form"
-                >
-
-                    {% csrf_token %}
-
-                    {% if form.non_field_errors %}
-                        <div class="form-error">
-                            {% for error in form.non_field_errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    <div class="form-field">
-                        <label for="{{ form.username.id_for_label }}">USERNAME</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                            <div class="field-error">
-                                {% for error in form.username.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if form.username.help_text %}<small>{{ form.username.help_text|safe }}</small>{% endif %}
-                    </div>
-
-                    <div class="form-field">
-                        <label for="{{ form.first_name.id_for_label }}">FIRST NAME</label>
-                        {{ form.first_name }}
-                        {% if form.first_name.errors %}
-                            <div class="field-error">
-                                {% for error in form.first_name.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-field">
-                        <label for="{{ form.last_name.id_for_label }}">LAST NAME</label>
-                        {{ form.last_name }}
-                        {% if form.last_name.errors %}
-                            <div class="field-error">
-                                {% for error in form.last_name.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-field">
-                        <label for="{{ form.email.id_for_label }}">EMAIL</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}
-                            <div class="field-error">
-                                {% for error in form.email.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-field">
-                        <label for="{{ form.password1.id_for_label }}">PASSWORD</label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}
-                            <div class="field-error">
-                                {% for error in form.password1.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if form.password1.help_text %}<small>{{ form.password1.help_text|safe }}</small>{% endif %}
-                    </div>
-
-                    <div class="form-field">
-                        <label for="{{ form.password2.id_for_label }}">CONFIRM PASSWORD</label>
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}
-                            <div class="field-error">
-                                {% for error in form.password2.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if form.password2.help_text %}<small>{{ form.password2.help_text|safe }}</small>{% endif %}
-                    </div>
-
-                    <div class="form-submit">
-                        <button type="submit" class="brutalist-submit">
-                            CREATE ACCOUNT
-                            <i class="bi bi-arrow-up-right"></i>
-                        </button>
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-
-        <!-- SIDE COLUMN (narrow, black branding panel) -->
-
-        <aside class="register-side-col">
-
-            <div class="register-side-top">
-                <span>NEW USER</span>
-                <strong>01</strong>
-                <span>REGISTRATION</span>
-            </div>
-
-            <div>
-
-                <h1 class="register-side-heading">
-                    CREATE<br>
-                    <span>ACCOUNT.</span>
-                </h1>
-
-                <p class="register-side-note">
-                    Create an account to buy records, follow
-                    outlets, leave reviews and manage your orders.
-                </p>
-
-            </div>
-
-        </aside>
-
+<section class="collage-register-page">
+    <div class="collage-register-form-col">
+        <span class="collage-kicker">VINYLS / ACCOUNT /</span>
+        <h1>Register.</h1>
+        <p class="collage-register-lead">Create your account and start your vinyl journey.</p>
+        <form method="POST" action="{% url 'register' %}" class="collage-register-form">
+            {% csrf_token %}
+            {% if form.non_field_errors %}<div class="form-error">{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+            <div class="collage-form-group"><label for="{{ form.username.id_for_label }}">USERNAME</label>{{ form.username }}{% if form.username.errors %}<div class="field-error">{% for error in form.username.errors %}{{ error }}{% endfor %}</div>{% endif %}{% if form.username.help_text %}<small>{{ form.username.help_text|safe }}</small>{% endif %}</div>
+            <div class="collage-form-row"><div class="collage-form-group"><label for="{{ form.first_name.id_for_label }}">FIRST NAME</label>{{ form.first_name }}{% if form.first_name.errors %}<div class="field-error">{% for error in form.first_name.errors %}{{ error }}{% endfor %}</div>{% endif %}</div><div class="collage-form-group"><label for="{{ form.last_name.id_for_label }}">LAST NAME</label>{{ form.last_name }}{% if form.last_name.errors %}<div class="field-error">{% for error in form.last_name.errors %}{{ error }}{% endfor %}</div>{% endif %}</div></div>
+            <div class="collage-form-group"><label for="{{ form.email.id_for_label }}">EMAIL</label>{{ form.email }}{% if form.email.errors %}<div class="field-error">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>{% endif %}</div>
+            <div class="collage-form-group"><label for="{{ form.password1.id_for_label }}">PASSWORD</label>{{ form.password1 }}{% if form.password1.errors %}<div class="field-error">{% for error in form.password1.errors %}{{ error }}{% endfor %}</div>{% endif %}{% if form.password1.help_text %}<small>{{ form.password1.help_text|safe }}</small>{% endif %}</div>
+            <div class="collage-form-group"><label for="{{ form.password2.id_for_label }}">CONFIRM PASSWORD</label>{{ form.password2 }}{% if form.password2.errors %}<div class="field-error">{% for error in form.password2.errors %}{{ error }}{% endfor %}</div>{% endif %}{% if form.password2.help_text %}<small>{{ form.password2.help_text|safe }}</small>{% endif %}</div>
+            <div class="collage-register-submit-row"><button type="submit" class="collage-auth-submit">CREATE ACCOUNT <span>↗</span></button><span>Already have an account? <a href="{% url 'login' %}">Sign in here →</a></span></div>
+        </form>
     </div>
 
+    <aside class="collage-register-side">
+        <div class="collage-register-side__labels"><span>NEW USER</span><strong>01</strong><span>REGISTRATION</span></div>
+        <h2>CREATE<br>ACCOUNT.</h2>
+        <p>Create an account to buy records, follow outlets, leave reviews and manage your orders.</p>
+        <div class="collage-register-side__graphic collage-header-blank" aria-hidden="true"></div>
+    </aside>
 </section>
-
 {% endblock %}

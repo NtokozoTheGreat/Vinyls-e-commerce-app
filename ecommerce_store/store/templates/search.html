@@ -1,221 +1,43 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-
-<section class="search-page">
-
-    <!-- =====================================================
-         SEARCH HEADER
-         ===================================================== -->
-
-    <header class="search-header">
-
-        <div class="search-header-main">
-
-            <span class="search-kicker">
-                VINYLS / SEARCH / 004
-            </span>
-
-            <h1>
-                FIND<br>
-                <span>RECORDS.</span>
-            </h1>
-
-        </div>
-
-
-        <div class="search-header-meta">
-
-            <span>
-                SEARCH
-            </span>
-
-            <strong>
-                →
-            </strong>
-
-            <span>
-                DISCOVER
-            </span>
-
-        </div>
-
-    </header>
-
-
-    <!-- =====================================================
-         SEARCH FORM
-         ===================================================== -->
-
-    <section class="search-interface">
-
-        <div class="search-intro">
-
-            <span>
-                // SEARCH THE COLLECTION
-            </span>
-
-            <p>
-                Search by record name, artist, or anything
-                you're looking for.
-            </p>
-
-        </div>
-
-
-        <form
-            method="POST"
-            action="{% url 'search' %}"
-            class="brutalist-search-form"
-        >
-
-            {% csrf_token %}
-
-            <label for="search-input">
-                SEARCH QUERY
-            </label>
-
-            <div class="search-input-row">
-
-                <input
-                    type="text"
-                    id="search-input"
-                    name="searched"
-                    placeholder="TYPE SOMETHING..."
-                    autocomplete="off"
-                    value="{{ request.POST.searched|default:'' }}"
-                >
-
-                <button type="submit">
-                    SEARCH
-                    <i class="bi bi-arrow-right"></i>
-                </button>
-
-            </div>
-
-        </form>
-
-    </section>
-
-
-    <!-- =====================================================
-         SEARCH RESULTS
-         ===================================================== -->
-
-    {% if products %}
-
-        <section class="search-results">
-
-            <div class="search-results-header">
-
-                <span>
-                    RESULTS / FOUND
-                </span>
-
-                <strong>
-                    {{ products|length|stringformat:"02d" }}
-                </strong>
-
-            </div>
-
-
-            <div class="search-results-grid">
-
-                {% for product in products %}
-
-                    <article class="search-product-card">
-
-                        <!-- Number -->
-
-                        <div class="search-product-number">
-                            {{ forloop.counter|stringformat:"02d" }}
-                        </div>
-
-
-                        <!-- Image -->
-
-                        <div class="search-product-image">
-
-                            {% if product.image %}
-
-                                <img
-                                    src="{{ product.image.url }}"
-                                    alt="{{ product.vinyl_name }}"
-                                >
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <!-- Details -->
-
-                        <div class="search-product-info">
-
-                            <span>
-                                RECORD
-                            </span>
-
-                            <h2>
-                                {{ product.vinyl_name }}
-                            </h2>
-
-                            <p>
-                                {{ product.artist_name }}
-                            </p>
-
-
-                            <div class="search-product-bottom">
-
-                                <strong>
-                                    ${{ product.price }}
-                                </strong>
-
-                                <a
-                                    href="{% url 'productdetail' product.id %}"
-                                >
-                                    VIEW
-                                    <i class="bi bi-arrow-up-right"></i>
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                {% endfor %}
-
-            </div>
-
-        </section>
-
-    {% elif request.POST.searched %}
-
-        <!-- =================================================
-             NO RESULTS
-             ================================================= -->
-
-        <section class="search-no-results">
-
-            <span>
-                404 / NO MATCH
-            </span>
-
-            <h2>
-                NOTHING<br>
-                FOUND.
-            </h2>
-
-            <p>
-                Try searching for another record,
-                artist, or genre.
-            </p>
-
-        </section>
-
-    {% endif %}
-
+<section class="collage-search-hero">
+    <div class="collage-search-hero__copy">
+        <span class="collage-kicker">VINYLS / SEARCH / 004</span>
+        <h1>Find<br><span>Records.</span></h1>
+        <div class="collage-handwritten-strip">Search → Discover</div>
+        <p>New artists. Classic albums. Hidden gems. What will you find today?</p>
+    </div>
+    <div class="collage-search-hero__art collage-header-blank" aria-hidden="true"></div>
 </section>
 
+<section class="collage-search-interface">
+    <h2>Search Query</h2>
+    <form method="POST" action="{% url 'search' %}" class="collage-search-form">
+        {% csrf_token %}
+        <div class="collage-search-input-wrap"><i class="bi bi-search"></i><input type="text" id="search-input" name="searched" placeholder="Search records..." autocomplete="off" value="{{ request.POST.searched|default:'' }}"></div>
+        <button type="submit">Search <span>→</span></button>
+    </form>
+</section>
+
+{% if products %}
+<section class="collage-products-section collage-search-results">
+    <div class="collage-section-heading"><div><h2>Results / Found {{ products|length|stringformat:"02d" }}</h2></div><span class="collage-section-meta">RELEVANCE</span></div>
+    <div class="collage-product-grid">
+        {% for product in products %}
+            <article class="search-product-card vinyl-card">
+                <a class="vinyl-image-wrapper" href="{% url 'productdetail' product.id %}">
+                    <span class="vinyl-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                    {% if product.image %}<img class="vinyl-image" src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">{% endif %}
+                    <span class="vinyl-disc-edge"></span>
+                </a>
+                <div class="vinyl-info"><span class="vinyl-category">RECORD</span><h3 class="vinyl-title">{{ product.vinyl_name }}</h3><p class="vinyl-artist">{{ product.artist_name }}</p><strong class="regular-price">${{ product.price }}</strong>{% if product.ratings_count > 0 %}<div class="collage-card-rating"><span>{{ product.average_rating }}★</span><small>({{ product.ratings_count }})</small></div>{% endif %}</div>
+                <div class="vinyl-action"><a class="vinyl-view-button" href="{% url 'productdetail' product.id %}">View <i class="bi bi-arrow-up-right"></i></a></div>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% elif request.POST.searched %}
+<section class="collage-empty-state collage-empty-state--search"><span>404 / NO MATCH</span><h2>Nothing<br>found.</h2><p>Try searching for another record, artist, or genre.</p></section>
+{% endif %}
 {% endblock %}

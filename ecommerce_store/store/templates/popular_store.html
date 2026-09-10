@@ -1,227 +1,75 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-
-<!-- =========================================================
-     POPULAR STORES HEADER
-     ========================================================= -->
-
-<section class="stores-hero">
-
-    <div class="container-fluid">
-
-        <div class="stores-hero-grid">
-
-            <div class="stores-title">
-
-                <span class="stores-kicker">
-                    VINYLS / OUTLETS / 05
-                </span>
-
-                <h1>
-                    Popular<br>
-                    <span>Stores.</span>
-                </h1>
-
-                <p>
-                    Discover the record sellers collectors keep coming back to.
-                </p>
-
-            </div>
-
-
-            <div class="stores-index">
-
-                <span>
-                    OUTLETS
-                </span>
-
-                <strong>
-                    05
-                </strong>
-
-            </div>
-
+<section class="collage-directory-page">
+    <header class="collage-directory-hero collage-directory-hero--popular-stores">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / MARKETPLACE / CHARTS</span>
+            <h1>Popular<br><span>Outlets.</span></h1>
+            <p>Discover the record sellers collectors keep coming back to.</p>
         </div>
 
-    </div>
+        <div class="collage-directory-hero__index">
+            <span>TOP</span>
+            <strong>{{ stores|length|stringformat:"02d" }}</strong>
+            <small>OUTLETS</small>
+        </div>
 
-</section>
+        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+    </header>
 
-
-<!-- =========================================================
-     STORES
-     ========================================================= -->
-
-<section class="stores-section">
-
-    <div class="container-fluid">
-
-        <div class="stores-toolbar">
-
+    <section class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
             <div>
-
-                <span class="stores-toolbar-label">
-                    RECORD DEALERS
-                </span>
-
-                <span class="stores-toolbar-title">
-                    TOP OUTLETS
-                </span>
-
+                <span class="collage-section-number">01 /</span>
+                <h2>Top Outlets</h2>
             </div>
-
-            <span class="stores-toolbar-meta">
-                POPULAR
-            </span>
-
+            <span class="collage-section-meta">COMMUNITY FAVOURITES</span>
         </div>
-
 
         {% if stores %}
-
-            <div class="row g-0 stores-grid">
-
+            <div class="collage-store-directory-grid">
                 {% for store in stores %}
+                    <article class="collage-store-directory-card">
+                        <a class="collage-store-directory-card__image" href="{% url 'store_detail' store.id %}">
+                            {% if store.image %}
+                                <img src="{{ store.image.url }}" alt="{{ store.store_name }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                            {% endif %}
+                            <span>#{{ forloop.counter|stringformat:"02d" }}</span>
+                            <em class="collage-card-badge collage-card-badge--yellow">TOP</em>
+                        </a>
 
-                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="collage-store-directory-card__body">
+                            <span class="collage-kicker">RECORD STORE</span>
+                            <h3>{{ store.store_name }}</h3>
+                            <p>{{ store.store_description|truncatewords:15 }}</p>
 
-                        <article class="store-card h-100">
-
-                            <!-- Store image -->
-
-                            <div class="store-image-wrapper">
-
-                                <div class="store-number">
-                                    {{ forloop.counter|stringformat:"02d" }}
+                            {% if store.ratings_count > 0 %}
+                                <div class="collage-card-rating">
+                                    <span>{{ store.average_rating }}★</span>
+                                    <small>({{ store.ratings_count }})</small>
                                 </div>
+                            {% else %}
+                                <div class="collage-card-rating"><small>NO REVIEWS YET</small></div>
+                            {% endif %}
+                        </div>
 
-                                {% if store.image %}
-
-                                    <img
-                                        class="store-image"
-                                        src="{{ store.image.url }}"
-                                        alt="{{ store.store_name }}"
-                                    >
-
-                                {% else %}
-
-                                    <div class="store-no-image">
-                                        NO IMAGE
-                                    </div>
-
-                                {% endif %}
-
-                            </div>
-
-
-                            <!-- Store information -->
-
-                            <div class="store-info">
-
-                                <span class="store-label">
-                                    RECORD OUTLET
-                                </span>
-
-                                <h2 class="store-name">
-                                    {{ store.store_name }}
-                                </h2>
-
-
-                                <p class="store-description">
-                                    {{ store.store_description|truncatewords:15 }}
-                                </p>
-
-
-                                <!-- Rating -->
-
-                                <div class="store-rating">
-
-                                    {% if store.ratings_count > 0 %}
-
-                                        <span class="rating-star">
-                                            ★
-                                        </span>
-
-                                        <strong>
-                                            {{ store.average_rating }}
-                                        </strong>
-
-                                        <span>
-                                            / 5
-                                        </span>
-
-                                        <span class="rating-count">
-                                            ({{ store.ratings_count }})
-                                        </span>
-
-                                    {% else %}
-
-                                        <span class="no-rating">
-                                            NO REVIEWS YET
-                                        </span>
-
-                                    {% endif %}
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- Store action -->
-
-                            <div class="store-action">
-
-                                <a
-                                    href="{% url 'store_detail' store.id %}"
-                                    class="store-view-button"
-                                >
-                                    View outlet
-
-                                    <i class="bi bi-arrow-up-right"></i>
-                                </a>
-
-                            </div>
-
-                        </article>
-
-                    </div>
-
+                        <a class="collage-store-directory-card__action" href="{% url 'store_detail' store.id %}">
+                            View store <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </article>
                 {% endfor %}
-
             </div>
-
         {% else %}
-
-            <div class="stores-empty">
-
-                <span>
-                    404 / EMPTY
-                </span>
-
-                <h2>
-                    NO STORES<br>
-                    FOUND.
-                </h2>
-
-                <p>
-                    There are currently no record outlets available.
-                </p>
-
-                <a
-                    href="{% url 'home' %}"
-                    class="brutalist-button"
-                >
-                    Back to Vinyls
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>00 / EMPTY</span>
+                <h2>No popular stores yet.</h2>
+                <p>Rated outlets will appear here as the community grows.</p>
             </div>
-
         {% endif %}
-
-    </div>
-
+    </section>
 </section>
-
 {% endblock %}

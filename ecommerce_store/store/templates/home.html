@@ -1,180 +1,132 @@
-
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-<header class="home-hero">
+<section class="collage-hero collage-hero--home">
+    <div class="collage-hero__copy">
+        <p class="collage-kicker">RARE FINDS. NEW RELEASES. TIMELESS CLASSICS.</p>
+        <h1>Discover<br>records.<br><span>Build your collection.</span></h1>
+        <p class="collage-lead">Find records from independent sellers, collectors and music lovers.</p>
+        <div class="collage-actions">
+            <a href="#records" class="collage-primary-button">Shop Now <span>→</span></a>
+            <a href="{% url 'record_collection_summary' %}" class="collage-outline-button">Explore Collections</a>
+        </div>
+    </div>
+    <div class="collage-hero__visual collage-hero__visual--home collage-header-blank" aria-hidden="true"></div>
+</section>
 
-    <div class="container-fluid">
+<section class="collage-category-strip" aria-labelledby="shop-by-category">
+    <div class="collage-category-strip__title">
+        <h2 id="shop-by-category">Shop<br>by Category <span>→</span></h2>
+    </div>
+    <a href="{% url 'category' 'rock' %}" class="collage-category-tile collage-category-tile--rock"><span>Rock</span></a>
+    <a href="{% url 'category' 'pop' %}" class="collage-category-tile collage-category-tile--pop"><span>Pop</span></a>
+    <a href="{% url 'category' 'hip-hop-rap' %}" class="collage-category-tile collage-category-tile--hiphop"><span>Hip Hop</span></a>
+    <a href="{% url 'category' 'electronic-edm' %}" class="collage-category-tile collage-category-tile--electronic"><span>Electronic</span></a>
+    <a href="{% url 'category' 'jazz' %}" class="collage-category-tile collage-category-tile--jazz"><span>Jazz</span></a>
+    <a href="{% url 'category' 'classical' %}" class="collage-category-tile collage-category-tile--classical"><span>Classical</span></a>
+</section>
 
-        <div class="home-hero-grid">
+<section id="records" class="collage-products-section">
+    <div class="collage-section-heading">
+        <div><span class="collage-section-number">01 /</span><h2>Latest Records</h2></div>
+        <a href="{% url 'record_collection_summary' %}">View All <span>→</span></a>
+    </div>
 
-            <div class="home-hero-main">
+    <div class="collage-product-grid">
+        {% for product in products|slice:":6" %}
+            <article class="vinyl-card">
+                <a class="vinyl-image-wrapper" href="{% url 'productdetail' product.id %}">
+                    <span class="vinyl-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                    {% if product.image %}<img class="vinyl-image" src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">{% endif %}
+                    <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                </a>
+                <div class="vinyl-info">
+                    <span class="vinyl-category">{{ product.category|default:"RECORD" }}</span>
+                    <h3 class="vinyl-title">{{ product.vinyl_name }}</h3>
+                    <p class="vinyl-artist">{{ product.artist_name }}</p>
+                    <div class="vinyl-price">
+                        {% if product.on_sale %}
+                            <span class="sale-label">SALE</span>
+                            <span class="old-price">${{ product.price }}</span>
+                            <span class="sale-price">${{ product.sale_price }}</span>
+                        {% else %}
+                            <span class="regular-price">${{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                    {% if product.ratings_count > 0 %}<div class="collage-card-rating"><span>{{ product.average_rating }}★</span><small>({{ product.ratings_count }})</small></div>{% endif %}
+                </div>
+                <div class="vinyl-action"><a class="vinyl-view-button" href="{% url 'productdetail' product.id %}">View record <i class="bi bi-arrow-up-right"></i></a></div>
+            </article>
+        {% empty %}
+            <div class="collage-empty-state"><span>00</span><h3>No records yet.</h3><p>Fresh arrivals will appear here.</p></div>
+        {% endfor %}
+    </div>
+</section>
 
-                <p class="hero-kicker">
-                    VINYLS / MARKETPLACE / 01
-                </p>
+<section class="collage-latest-stores" aria-labelledby="latest-stores-heading">
+    <div class="collage-section-heading">
+        <div>
+            <span class="collage-section-number">02 /</span>
+            <h2 id="latest-stores-heading">Latest Stores</h2>
+        </div>
+        <a href="{% url 'record_store_summary' %}">View All <span>→</span></a>
+    </div>
 
-                <h1>
-                    Discover<br>
-                    records.<br>
-                    <span>Build your collection.</span>
-                </h1>
+    <div class="collage-store-grid">
+        {% for store in latest_stores|slice:":4" %}
+            <article class="collage-store-card">
+                <div class="collage-store-card__top">
+                    <span class="collage-store-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                    <span class="collage-store-new">New Store</span>
+                </div>
 
-                <p class="hero-description">
-                    Find records from independent sellers,
-                    collectors and music lovers.
-                </p>
+                <div class="collage-store-card__graphic" aria-hidden="true">
+                    <div class="collage-store-initial">{{ store.store_name|slice:":1"|upper }}</div>
+                    <div class="collage-store-record"><span></span></div>
+                </div>
 
-                <div class="hero-action">
-                    <a href="#records" class="brutalist-button">
-                        Browse records
-                        <i class="bi bi-arrow-down"></i>
+                <div class="collage-store-card__content">
+                    <span class="collage-store-label">Independent Record Store</span>
+                    <h3>{{ store.store_name }}</h3>
+
+                    {% if store.store_description %}
+                        <p>{{ store.store_description|truncatewords:18 }}</p>
+                    {% else %}
+                        <p>Discover records from {{ store.store_name }}.</p>
+                    {% endif %}
+
+                    <div class="collage-store-meta">
+                        <div>
+                            <span>Added</span>
+                            <strong>{{ store.added_at|date:"d M Y" }}</strong>
+                        </div>
+
+                        {% if store.ratings_count > 0 %}
+                            <div>
+                                <span>Rating</span>
+                                <strong>{{ store.average_rating|floatformat:1 }} ★ <small>({{ store.ratings_count }})</small></strong>
+                            </div>
+                        {% else %}
+                            <div>
+                                <span>Rating</span>
+                                <strong>New</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <a href="{% url 'store_detail' store.id %}" class="collage-store-link">
+                        Visit Store <i class="bi bi-arrow-up-right"></i>
                     </a>
                 </div>
-
+            </article>
+        {% empty %}
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>00</span>
+                <h3>No stores yet.</h3>
+                <p>New record stores will appear here.</p>
             </div>
-
-
-            <div class="home-hero-side">
-
-                <div class="hero-side-label">
-                    <span>VINYLS</span>
-                    <span>EST. 2026</span>
-                </div>
-
-                <div class="hero-side-number">
-                    01
-                </div>
-
-            </div>
-
-        </div>
-
+        {% endfor %}
     </div>
-
-</header>
-
-<section id="records" class="products-section">
-
-    <div class="container-fluid">
-
-        <!-- Section heading -->
-
-        <div class="section-heading">
-
-            <div>
-                <span class="section-number">01 /</span>
-                <h2>Latest records</h2>
-            </div>
-
-            <span class="section-meta">
-                NEW ARRIVALS
-            </span>
-
-        </div>
-        <br>
-
-        <!-- Product grid -->
-
-        <div class="row g-0 product-grid">
-
-            {% for product in products %}
-
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-
-                <article class="vinyl-card h-100">
-
-                    <!-- Product image -->
-
-                    <div class="vinyl-image-wrapper">
-
-                        <div class="vinyl-index">
-                            {{ forloop.counter|stringformat:"02d" }}
-                        </div>
-
-                        <img
-                            class="vinyl-image"
-                            src="{{ product.image.url }}"
-                            alt="{{ product.vinyl_name }}"
-                        />
-
-                    </div>
-
-
-                    <!-- Product information -->
-
-                    <div class="vinyl-info">
-
-                        <div class="vinyl-category">
-                            RECORD
-                        </div>
-
-                        <h3 class="vinyl-title">
-                            {{ product.vinyl_name }}
-                        </h3>
-
-                        <p class="vinyl-artist">
-                            {{ product.artist_name }}
-                        </p>
-
-
-                        <!-- Price -->
-
-                        <div class="vinyl-price">
-
-                            {% if product.on_sale %}
-
-                                <span class="sale-label">
-                                    SALE
-                                </span>
-
-                                <span class="old-price">
-                                    ${{ product.price }}
-                                </span>
-
-                                <span class="sale-price">
-                                    ${{ product.sale_price }}
-                                </span>
-
-                            {% else %}
-
-                                <span class="regular-price">
-                                    ${{ product.price }}
-                                </span>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Product action -->
-
-                    <div class="vinyl-action">
-
-                        <a
-                            class="vinyl-view-button"
-                            href="{% url 'productdetail' product.id %}"
-                        >
-                            View record
-                            <i class="bi bi-arrow-up-right"></i>
-                        </a>
-
-                    </div>
-
-                </article>
-
-            </div>
-            <br>
-
-            {% endfor %}
-            
-
-        </div>
-
-    </div>
-
 </section>
 
 {% endblock %}

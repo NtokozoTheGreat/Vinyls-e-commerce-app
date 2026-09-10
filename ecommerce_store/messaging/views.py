@@ -45,7 +45,7 @@ def start_conversation(request, vendor_id, product_id=None):
         conversation.product_name_snapshot = product.vinyl_name
         conversation.save()
         
-    return redirect('conversation_detail', pk=conversation.id)
+    return redirect('messaging/conversation_detail', pk=conversation.id)
 
 @login_required
 def conversation_detail(request, pk):
@@ -137,6 +137,7 @@ def unread_count(request):
     
     return JsonResponse({'count': count})
 
+
 @login_required
 def edit_message(request, pk):
     """
@@ -161,6 +162,7 @@ def edit_message(request, pk):
         return redirect('conversation_detail', pk=message.conversation.id) 
     
     return render(request, 'messaging/edit_message.html', {'message': message})
+
 
 @login_required
 def delete_message(request, pk):

@@ -1,75 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="messages-page">
+<section class="messages-page collage-message-shell">
+    <header class="conversation-hero collage-message-hero">
+        <div class="collage-message-hero__topline">
+            <span class="conversation-label">VINYLS / CONVERSATION / 03</span>
+            <span class="collage-section-meta">LIVE THREAD</span>
+        </div>
 
-    <div class="conversation-hero">
-        <span class="conversation-label">Conversation</span>
         <h1>
             {% if request.user == conversation.buyer %}{{ conversation.vendor.store_name }}{% else %}{{ conversation.buyer }}{% endif %}
-            <!-- shows whichever side you're NOT logged in as, so it always reads naturally -->
         </h1>
 
         {% if conversation.product %}
-            <!-- product field is still set — it exists, link straight to it -->
             <p class="conversation-subject">
-                Regarding: <a href="{% url 'productdetail' conversation.product.id %}">{{ conversation.product.vinyl_name }}</a>
+                <span>Regarding</span>
+                <a href="{% url 'productdetail' conversation.product.id %}">{{ conversation.product.vinyl_name }}</a>
             </p>
         {% elif conversation.product_name_snapshot %}
-            <!-- product is NULL (deleted) but we saved its name earlier — show that instead -->
-            <p class="conversation-subject"><em>Regarding: {{ conversation.product_name_snapshot }} (no longer available)</em></p>
+            <p class="conversation-subject">
+                <span>Regarding</span>
+                <em>{{ conversation.product_name_snapshot }} (no longer available)</em>
+            </p>
         {% else %}
-            <!-- never had a product at all -->
-            <p class="conversation-subject"><em>General inquiry</em></p>
+            <p class="conversation-subject">
+                <span>Regarding</span>
+                <em>General inquiry</em>
+            </p>
         {% endif %}
-    </div>
+    </header>
 
-    <!-- data-last-id stores the newest message's id already on the page —
-         the JS below reads this to know where to start polling from -->
-    <div id="message-list" class="message-list" data-last-id="{{ messages.last.id|default:0 }}">
-        {% for message in messages %}
-        <div class="message-row {% if message.sender == request.user %}message-row-sent{% else %}message-row-received{% endif %}">
-            <!-- message-row-sent pushes your own messages to the right, like a normal chat bubble layout -->
-            <div class="message-bubble">
-                <div class="message-meta">
-                    <span>{{ message.sender }}</span>
-                    <span>{{ message.created_at|date:"H:i" }}{% if message.is_edited %} · edited{% endif %}</span>
-                </div>
-                <p class="message-body">{{ message.body }}</p>
+    <div class="collage-conversation-stage">
+        <div class="collage-conversation-stage__label">
+            <span>03 / MESSAGES</span>
+            <span>Newest messages appear below</span>
+        </div>
 
-                {% if message.sender == request.user %}
-                <div class="message-actions">
-                    <a href="{% url 'edit_message' message.id %}">Edit</a>
-                    <a href="{% url 'delete_message' message.id %}">Delete</a>
+        <div id="message-list" class="message-list" data-last-id="{{ messages.last.id|default:0 }}">
+            {% for message in messages %}
+            <div class="message-row {% if message.sender == request.user %}message-row-sent{% else %}message-row-received{% endif %}">
+                <div class="message-bubble">
+                    <div class="message-meta">
+                        <span>{{ message.sender }}</span>
+                        <span>{{ message.created_at|date:"H:i" }}{% if message.is_edited %} · edited{% endif %}</span>
+                    </div>
+                    <p class="message-body">{{ message.body }}</p>
+
+                    {% if message.sender == request.user %}
+                    <div class="message-actions">
+                        <a href="{% url 'edit_message' message.id %}">Edit</a>
+                        <a href="{% url 'delete_message' message.id %}">Delete</a>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
+            {% empty %}
+            <div class="message-list-empty">
+                <span>00 / EMPTY THREAD</span>
+                <p>Say hello to get the conversation started.</p>
+            </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="message-list-empty">
-            <span>No messages yet</span>
-            <p>Say hello to get the conversation started.</p>
-        </div>
-        {% endfor %}
+
+        <form method="post" class="message-composer">
+            {% csrf_token %}
+            <label class="message-composer__label" for="message-body">New message</label>
+            <div class="message-composer__field">
+                <input type="text" id="message-body" name="body" class="form-control" placeholder="Type a message..." required>
+            </div>
+            <button type="submit">Send <span>→</span></button>
+        </form>
     </div>
-
-    <form method="post" class="message-composer">
-        {% csrf_token %}  <!-- required on every Django POST form — protects against cross-site request forgery -->
-        <input type="text" name="body" class="form-control" placeholder="Type a message..." required>
-        <button type="submit">Send</button>
-    </form>
-
-</div>
+</section>
 
 <script>
 const messageList = document.getElementById('message-list');
-let lastId = parseInt(messageList.dataset.lastId) || 0;  // read starting point from the HTML data attribute
+let lastId = parseInt(messageList.dataset.lastId) || 0;
 
 function pollMessages() {
-    fetch(`{% url 'poll_messages' conversation.id %}?since=${lastId}`)  // ask server for anything newer than lastId
-        .then(res => res.json())          // parse the JSON response body
+    fetch(`{% url 'poll_messages' conversation.id %}?since=${lastId}`)
+        .then(res => res.json())
         .then(data => {
             data.messages.forEach(msg => {
-                const row = document.createElement('div');   // build a new DOM element for this message
+                const row = document.createElement('div');
                 row.className = 'message-row message-row-received';
 
                 row.innerHTML = `<div class="message-bubble">
@@ -77,18 +89,19 @@ function pollMessages() {
                         <span>${msg.sender}</span>
                         <span>${msg.created_at}</span>
                     </div>
-                    <p class="message-body">${msg.body}</p>
+                    <p class="message-body"></p>
                 </div>`;
 
-                messageList.appendChild(row);   // add it to the bottom of the chat box
-                lastId = msg.id;                // move the pointer forward so we don't re-fetch this one again
+                row.querySelector('.message-body').textContent = msg.body;
+                messageList.appendChild(row);
+                lastId = msg.id;
             });
             if (data.messages.length) {
-                messageList.scrollTop = messageList.scrollHeight;  // auto-scroll to show the newest message
+                messageList.scrollTop = messageList.scrollHeight;
             }
         });
 }
 
-setInterval(pollMessages, 5000);  // run pollMessages every 5000 milliseconds (5 seconds), repeating forever
+setInterval(pollMessages, 5000);
 </script>
 {% endblock %}

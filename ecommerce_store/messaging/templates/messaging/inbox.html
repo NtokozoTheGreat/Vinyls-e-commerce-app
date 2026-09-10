@@ -1,39 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="inbox-page">
+<section class="inbox-page collage-message-shell">
+    <header class="inbox-hero collage-message-hero">
+        <div class="collage-message-hero__topline">
+            <span class="inbox-label">VINYLS / MESSAGES / 01</span>
+            <span class="collage-section-meta">{{ conversations|length|stringformat:"02d" }} THREADS</span>
+        </div>
+        <h1>Your<br><span>Messages.</span></h1>
+        <p class="collage-message-hero__lead">Keep track of conversations with record stores and sellers.</p>
+    </header>
 
-    <div class="inbox-hero">
-        <span class="inbox-label">Messages</span>
-        <h1>Your Messages</h1>
-    </div>
-
-    <div class="inbox-list">
+    <section class="inbox-list collage-message-directory" aria-label="Your conversations">
         {% for conversation in conversations %}
-        <a href="{% url 'conversation_detail' conversation.id %}" class="inbox-item">
-            <div class="inbox-item-top">
-                <span class="inbox-item-name">
-                    {% if request.user == conversation.buyer %}{{ conversation.vendor.store_name }}{% else %}{{ conversation.buyer }}{% endif %}
+        <a href="{% url 'conversation_detail' conversation.id %}" class="inbox-item collage-message-thread">
+            <span class="inbox-item-index">{{ forloop.counter|stringformat:"02d" }}</span>
+
+            <div class="inbox-item-copy">
+                <div class="inbox-item-top">
+                    <span class="inbox-item-name">
+                        {% if request.user == conversation.buyer %}{{ conversation.vendor.store_name }}{% else %}{{ conversation.buyer }}{% endif %}
+                    </span>
+                    <span class="inbox-item-date">{{ conversation.updated_at|date:"M d, H:i" }}</span>
+                </div>
+
+                <span class="inbox-item-subject-label">Regarding</span>
+                <span class="inbox-item-subject">
+                    {% if conversation.product %}
+                        {{ conversation.product.vinyl_name }}
+                    {% elif conversation.product_name_snapshot %}
+                        {{ conversation.product_name_snapshot }} (removed)
+                    {% else %}
+                        General inquiry
+                    {% endif %}
                 </span>
-                <span class="inbox-item-date">{{ conversation.updated_at|date:"M d, H:i" }}</span>
             </div>
-            <span class="inbox-item-subject">
-                {% if conversation.product %}
-                    {{ conversation.product.vinyl_name }}
-                {% elif conversation.product_name_snapshot %}
-                    {{ conversation.product_name_snapshot }} (removed)
-                {% else %}
-                    General inquiry
-                {% endif %}
-            </span>
+
+            <span class="inbox-item-arrow" aria-hidden="true">→</span>
         </a>
         {% empty %}
-        <!-- empty runs only if the conversations queryset has zero items -->
         <div class="inbox-empty">
-            <span>Empty</span>
+            <span>00 / EMPTY</span>
             <p>No conversations yet.</p>
         </div>
         {% endfor %}
-    </div>
-
-</div>
+    </section>
+</section>
 {% endblock %}

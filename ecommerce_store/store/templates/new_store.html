@@ -2,108 +2,65 @@
 {% load static %}
 
 {% block content %}
+<section class="collage-directory-page">
+    <header class="collage-directory-hero collage-directory-hero--new-stores">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / MARKETPLACE / NEW</span>
+            <h1>New<br><span>Outlets.</span></h1>
+            <p>Discover the latest independent record sellers joining Vinyls.</p>
+        </div>
 
-<!-- Page Header -->
-<header class="brutalist-page-header">
-    <div class="container">
-        <p class="brutalist-eyebrow">VINYLS / MARKETPLACE</p>
+        <div class="collage-directory-hero__index">
+            <span>NEW</span>
+            <strong>{{ stores|length|stringformat:"02d" }}</strong>
+            <small>STORES</small>
+        </div>
 
-        <h1>NEW<br>STORES.</h1>
+        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+    </header>
 
-        <p class="brutalist-subtitle">
-            Discover the latest record sellers joining Vinyls.
-        </p>
-    </div>
-</header>
-
-
-<!-- Store Collection -->
-<section class="brutalist-section">
-    <div class="container">
-
-        <div class="brutalist-section-heading">
-            <span>01</span>
-            <h2>RECENTLY ADDED</h2>
+    <section class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
+            <div>
+                <span class="collage-section-number">01 /</span>
+                <h2>Recently Added</h2>
+            </div>
+            <span class="collage-section-meta">NEW OUTLETS</span>
         </div>
 
         {% if stores %}
+            <div class="collage-store-directory-grid">
+                {% for store in stores %}
+                    <article class="collage-store-directory-card">
+                        <a class="collage-store-directory-card__image" href="{% url 'store_detail' store.id %}">
+                            {% if store.image %}
+                                <img src="{{ store.image.url }}" alt="{{ store.store_name }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                            {% endif %}
+                            <span>{{ forloop.counter|stringformat:"02d" }}</span>
+                            <em class="collage-card-badge collage-card-badge--pink">NEW</em>
+                        </a>
 
-        <div class="brutalist-grid">
+                        <div class="collage-store-directory-card__body">
+                            <span class="collage-kicker">RECORD STORE</span>
+                            <h3>{{ store.store_name }}</h3>
+                            <p>{{ store.store_description|truncatewords:15 }}</p>
+                        </div>
 
-            {% for store in stores %}
-
-            <article class="brutalist-card">
-
-                <!-- Store Image -->
-                <div class="brutalist-card-image">
-
-                    {% if store.image %}
-
-                        <img
-                            src="{{ store.image.url }}"
-                            alt="{{ store.store_name }}"
-                        >
-
-                    {% else %}
-
-                        <img
-                            src="{% static 'images/placeholder.png' %}"
-                            alt="No image available"
-                        >
-
-                    {% endif %}
-
-                    <span class="brutalist-card-number">
-                        {{ forloop.counter|stringformat:"02d" }}
-                    </span>
-
-                </div>
-
-
-                <!-- Store Details -->
-                <div class="brutalist-card-content">
-
-                    <p class="brutalist-card-label">
-                        RECORD STORE
-                    </p>
-
-                    <h3>{{ store.store_name }}</h3>
-
-                    <p class="brutalist-card-description">
-                        {{ store.store_description|truncatewords:15 }}
-                    </p>
-
-                </div>
-
-
-                <!-- Store Action -->
-                <div class="brutalist-card-footer">
-
-                    <a
-                        href="{% url 'store_detail' store.id %}"
-                        class="brutalist-button"
-                    >
-                        VIEW STORE
-                        <span>→</span>
-                    </a>
-
-                </div>
-
-            </article>
-
-            {% endfor %}
-
-        </div>
-
+                        <a class="collage-store-directory-card__action" href="{% url 'store_detail' store.id %}">
+                            View store <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
         {% else %}
-
-        <div class="brutalist-empty">
-            <span>NO STORES FOUND.</span>
-        </div>
-
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>00 / EMPTY</span>
+                <h2>No new stores found.</h2>
+                <p>New sellers will appear here as they join the marketplace.</p>
+            </div>
         {% endif %}
-
-    </div>
+    </section>
 </section>
-
 {% endblock %}

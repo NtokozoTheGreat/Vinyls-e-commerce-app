@@ -40,8 +40,10 @@ def home(request):
     renders the main storefront.
     """
     products = Product.objects.all()
+    latest_stores = Vendor.objects.all().order_by('-added_at')[:4]
     
-    return render(request, 'home.html', {'products': products})
+    return render(request, 'home.html', {'products': products,
+                                         'latest_stores': latest_stores})
 
 
 def about_us(request):
@@ -159,6 +161,97 @@ def become_vendor(request):
     return render(request, "become_vendor.html", {'form': form})
 
 @login_required
+def delete_store(request, pk):
+
+    # Only vendors or admins can delete stores
+    if not hasattr(request.user, "vendor") and not request.user.is_staff:
+        messages.error(
+            request,
+            "Only vendors or admins can delete stores."
+        )
+        return redirect("home")
+
+    store = get_object_or_404(Vendor, pk=pk)
+
+    if not request.user.is_staff:
+        if store.user != request.user:
+            messages.error(
+                request,
+                "You can only delete your own store."
+            )
+            return redirect("vendor_dashboard")
+
+    if request.method == "POST":
+        store_name = store.store_name
+
+        store.delete()
+
+        messages.success(
+            request,
+            f"{store_name} has successfully been deleted."
+        )
+
+        return redirect("home")
+
+    return render(
+        request,
+        "delete_store.html",
+        {
+            "store": store
+        }
+    )
+
+
+@login_required
+def edit_store(request, store_id):
+
+    if not hasattr(request.user, "vendor") and not request.user.is_staff:
+        messages.error(
+            request,
+            "Only vendors or admins can edit stores."
+        )
+        return redirect("home")
+
+    store = get_object_or_404(Vendor, id=store_id)
+
+    if not request.user.is_staff:
+        if store.user != request.user:
+            messages.error(
+                request,
+                "You can only edit your own store."
+            )
+            return redirect("vendor_dashboard")
+
+    store_form = VendorProfileForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=store
+    )
+
+    if request.method == "POST" and store_form.is_valid():
+
+        store = store_form.save(commit=False)
+
+        store.save()
+
+        messages.success(
+            request,
+            f"{store.store_name.title()} has successfully been updated."
+        )
+
+        return redirect("vendor_dashboard")
+
+    return render(
+        request,
+        "update_store.html",
+        {
+            "store": store,
+            "store_form": store_form,
+            "store_name": store.store_name,
+        }
+    )
+
+@login_required
 def add_product(request):
     """
     Create a new product listing.
@@ -186,6 +279,99 @@ def add_product(request):
 
     return render(request, "add_product.html", {"form": form,
                                                 "store": request.user.vendor,})
+
+
+@login_required
+def edit_product(request, product_id):
+
+    if not hasattr(request.user, "vendor") and not request.user.is_staff:
+        messages.error(
+            request,
+            "Only vendors or admins can edit products."
+        )
+        return redirect("home")
+
+    product = get_object_or_404(Product, id=product_id)
+
+    if not request.user.is_staff:
+        if product.vendor != request.user.vendor:
+            messages.error(
+                request,
+                "You can only edit your own products."
+            )
+            return redirect("vendor_dashboard")
+
+    product_form = ProductForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=product
+    )
+
+    if request.method == "POST" and product_form.is_valid():
+
+        product_form.save()
+
+        messages.success(
+            request,
+            f"{product.vinyl_name} has successfully been updated."
+        )
+
+        return redirect("vendor_dashboard")
+
+    return render(
+        request,
+        "update_product.html",
+        {
+            "product": product,
+            "product_form": product_form,
+            "product_name": product.vinyl_name,
+        }
+    )
+    
+
+@login_required
+def delete_product(request, pk):
+
+    # Only vendors or admins can delete products
+    if not hasattr(request.user, "vendor") and not request.user.is_staff:
+        messages.error(
+            request,
+            "Only vendors or admins can delete products."
+        )
+        return redirect("home")
+
+    # Get the product
+    product = get_object_or_404(Product, pk=pk)
+
+    # Vendors can only delete their own products
+    if not request.user.is_staff:
+        if product.vendor != request.user.vendor:
+            messages.error(
+                request,
+                "You can only delete your own products."
+            )
+            return redirect("vendor_dashboard")
+
+    # Delete only after confirmation
+    if request.method == "POST":
+        product_name = product.vinyl_name
+
+        product.delete()
+
+        messages.success(
+            request,
+            f"{product_name} has successfully been deleted."
+        )
+
+        return redirect("vendor_dashboard")
+
+    return render(
+        request,
+        "delete_product.html",
+        {
+            "product": product
+        }
+    )
 
 
 def vendor_dashboard(request):

@@ -1,92 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<!-- Page Header -->
-<header class="brutalist-page-header">
-    <div class="container">
-        <div class="brutalist-header-content">
-
-            <span class="brutalist-label">ACCOUNT / PROFILE</span>
-
-            <h1>UPDATE PROFILE</h1>
-
-            <p>
-                Update your account information and personal details.
-            </p>
-
+<section class="collage-form-page collage-account-form-page">
+    <header class="collage-form-hero collage-form-hero--compact">
+        <div class="collage-form-hero__copy">
+            <span class="collage-kicker">ACCOUNT / PROFILE</span>
+            <h1>Update<br><span>Profile.</span></h1>
+            <p>Keep your account information and personal details up to date.</p>
         </div>
-    </div>
-</header>
+        <div class="collage-form-hero__blank" aria-hidden="true"></div>
+    </header>
 
+    <section class="collage-form-layout">
+        <aside class="collage-form-aside collage-form-aside--pink">
+            <span class="collage-form-aside__number">01</span>
+            <span class="collage-handwritten-label">MEMBER PROFILE</span>
+            <h2>Your details.<br>Your account.</h2>
+            <p>Update the information attached to your Vinyls profile.</p>
+            <div class="collage-form-note">MUSIC CONNECTS US ♡</div>
+        </aside>
 
-<!-- Profile Form -->
-<section class="brutalist-section">
-    <div class="container">
-        <div class="update-info-wrapper">
-
-            <form method="POST"
-                  action="{% url 'update_user' %}"
-                  class="brutalist-form">
-
-                {% csrf_token %}
-
-                <!-- Profile Information -->
-                <div class="form-section">
-
-                    <div class="form-section-header">
-
-                        <span class="section-number">01</span>
-
-                        <h2>PROFILE INFORMATION</h2>
-
-                    </div>
-
-                    <div class="form-fields">
-
-                        {{ user_form.as_p }}
-
-                    </div>
-
-                </div>
-
-
-                <!-- Save Changes -->
-                <div class="form-submit">
-
-                    <button type="submit" class="brutalist-button">
-                        UPDATE PROFILE
-                        <span>→</span>
-                    </button>
-
-                </div>
-
-            </form>
-
-
-            <!-- Password -->
-            <div class="account-secondary-action">
-
+        <div class="collage-form-panel">
+            <div class="collage-form-panel__header">
                 <div>
-                    <span class="brutalist-label">SECURITY</span>
-
-                    <h3>Need to change your password?</h3>
-
-                    <p>
-                        Update your account password separately.
-                    </p>
+                    <span class="collage-kicker">PROFILE INFORMATION</span>
+                    <h2>Account Details</h2>
                 </div>
-
-                <a href="{% url 'update_password' %}"
-                   class="brutalist-secondary-button">
-                    UPDATE PASSWORD
-                    <span>→</span>
-                </a>
-
             </div>
 
-        </div>
-    </div>
-</section>
+            <form method="POST" action="{% url 'update_user' %}" class="collage-django-form">
+                {% csrf_token %}
+                {{ user_form.as_p }}
+                <div class="collage-form-actions-row">
+                    <button type="submit" class="collage-primary-button collage-form-submit">
+                        Update Profile <span>→</span>
+                    </button>
+                </div>
+            </form>
 
+            <div class="collage-account-secondary-action">
+                <div>
+                    <span class="collage-kicker">SECURITY</span>
+                    <h3>Need to change your password?</h3>
+                    <p>Update your account password separately.</p>
+                </div>
+                <a href="{% url 'update_password' %}" class="collage-outline-button">
+                    Update Password <span>→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</section>
 {% endblock %}

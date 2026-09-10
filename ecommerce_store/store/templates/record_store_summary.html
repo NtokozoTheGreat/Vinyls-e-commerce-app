@@ -1,137 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-
-<section class="store-directory">
-
-    <header class="store-directory-header">
-
-        <div class="store-header-main">
-
-            <span class="store-kicker">
-                VINYLS / STORES /
-            </span>
-
-            <h1>
-                RECORD<br>
-                <span>STORES.</span>
-            </h1>
-
+<section class="collage-directory-page">
+    <header class="collage-directory-hero collage-directory-hero--stores">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / OUTLETS /</span>
+            <h1>Record<br><span>Outlets.</span></h1>
+            <p>Find independent record sellers that cater to your sound.</p>
         </div>
 
-
-        <div class="store-header-meta">
-
-            <span>
-                FIND YOUR
-            </span>
-
-            <strong>
-                {{ stores|length|stringformat:"02d" }}
-            </strong>
-
-            <span>
-                FAVOURITE
-            </span>
-
+        <div class="collage-directory-hero__index">
+            <span>OUTLETS</span>
+            <strong>{{ stores|length|stringformat:"02d" }}</strong>
+            <small>DISCOVER</small>
         </div>
-        
 
+        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
     </header>
 
-    <br>
-    <section class="store-grid">
+    <section class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
+            <div>
+                <span class="collage-section-number">01 /</span>
+                <h2>All Outlets</h2>
+            </div>
+            <span class="collage-section-meta">{{ stores|length }} STORES</span>
+        </div>
 
         {% if stores %}
+            <div class="collage-store-directory-grid">
+                {% for store in stores %}
+                    <article class="collage-store-directory-card">
+                        <a class="collage-store-directory-card__image" href="{% url 'store_detail' store.id %}">
+                            {% if store.image %}
+                                <img src="{{ store.image.url }}" alt="{{ store.store_name }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                            {% endif %}
+                            <span>{{ forloop.counter|stringformat:"02d" }}</span>
+                        </a>
 
-            {% for store in stores %}
-
-                <article class="store-card">
-
-                    <!-- Store number -->
-
-                    <div class="store-number">
-                        {{ forloop.counter|stringformat:"02d" }}
-                    </div>
-
-
-                    <!-- Store image -->
-
-                    <div class="store-image">
-
-                        {% if store.image %}
-
-                            <img
-                                src="{{ store.image.url }}"
-                                alt="{{ store.store_name }}"
-                            >
-
-                        {% else %}
-
-                            <img
-                                src="/static/default-store.jpg"
-                                alt="Default store image"
-                            >
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- Store information -->
-
-                    <div class="store-info">
-
-                        <span class="store-label">
-                            RECORD OUTLET
-                        </span>
-
-                        <h2>
-                            {{ store.store_name }}
-                        </h2>
-
-
-                        <div class="store-bottom">
-
-                            <span class="store-index">
-                                OUTLET / {{ forloop.counter|stringformat:"02d" }}
-                            </span>
-
-                            <a
-                                href="{% url 'store_detail' store.id %}"
-                                class="store-link"
-                            >
-                                VIEW STORE
-                                <i class="bi bi-arrow-up-right"></i>
-                            </a>
-
+                        <div class="collage-store-directory-card__body">
+                            <span class="collage-kicker">RECORD OUTLET</span>
+                            <h3>{{ store.store_name }}</h3>
+                            {% if store.store_description %}
+                                <p>{{ store.store_description|truncatewords:18 }}</p>
+                            {% endif %}
                         </div>
 
-                    </div>
-
-                </article>
-
-            {% endfor %}
-
-        {% else %}
-
-            <div class="store-empty">
-
-                <span>
-                    404 / EMPTY DIRECTORY
-                </span>
-
-                <h2>
-                    NO STORES<br>
-                    FOUND.
-                </h2>
-
+                        <a class="collage-store-directory-card__action" href="{% url 'store_detail' store.id %}">
+                            View store <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </article>
+                {% endfor %}
             </div>
-
+        {% else %}
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>404 / EMPTY DIRECTORY</span>
+                <h2>No stores found.</h2>
+                <p>Independent outlets will appear here when they join Vinyls.</p>
+            </div>
         {% endif %}
-
     </section>
-
 </section>
-
 {% endblock %}

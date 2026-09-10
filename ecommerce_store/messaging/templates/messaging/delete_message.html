@@ -1,20 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container message-form-page">
-    <div class="message-form-card">
-        <span class="message-form-label">Delete Message</span>
-        <h1>Delete this message?</h1>
+<section class="container message-form-page collage-message-shell">
+    <div class="message-form-card message-form-card--delete">
+        <div class="message-form-card__topline">
+            <span class="message-form-label">VINYLS / DELETE / 05</span>
+            <span class="collage-section-meta">CONFIRM ACTION</span>
+        </div>
 
-        <p class="message-preview">"{{ message.body }}"</p>
+        <h1>Delete this<br><span>message?</span></h1>
+        <p class="message-form-intro">This removes the message from the conversation.</p>
+
+        <div class="message-preview">
+            <span class="message-preview__label">Message preview</span>
+            <p>“{{ message.body }}”</p>
+        </div>
 
         <form method="post">
             {% csrf_token %}
             <div class="message-form-actions">
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <!-- this button submits a POST, which is what actually triggers deletion in the view -->
+                <button type="submit" class="btn btn-danger">Delete Message</button>
                 <a href="{% url 'conversation_detail' message.conversation.id %}" class="btn btn-outline-dark">Cancel</a>
             </div>
         </form>
     </div>
-</div>
+</section>
 {% endblock %}

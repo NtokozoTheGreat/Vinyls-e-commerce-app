@@ -1,154 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<section class="rating-page">
-
-    <div class="container-fluid">
-
-        <div class="rating-layout">
-
-            <!-- =================================================
-                 LEFT: INTRODUCTION
-                 ================================================= -->
-
-            <div class="rating-intro">
-
-                <div>
-
-                    <span class="rating-kicker">
-                        VINYLS / COMMUNITY / REVIEW
-                    </span>
-
-                    <h1>
-                        RATE<br>
-                        <span>IT.</span>
-                    </h1>
-
-                </div>
-
-
-                <div class="rating-intro-footer">
-
-                    <span>
-                        YOUR OPINION
-                    </span>
-
-                    <strong>
-                        MATTERS.
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 RIGHT: REVIEW FORM
-                 ================================================= -->
-
-            <div class="rating-form-panel">
-
-                <div class="rating-form-header">
-
-                    <span>
-                        WRITE A REVIEW
-                    </span>
-
-                    <strong>
-                        07
-                    </strong>
-
-                </div>
-
-
-                <!-- Product / Vendor -->
-
-                <div class="rating-subject">
-
-                    <span>
-                        {% if product %}
-                            RECORD
-                        {% elif vendor %}
-                            RECORD OUTLET
-                        {% endif %}
-                    </span>
-
-
-                    <h2>
-
-                        {% if product %}
-
-                            {{ product.vinyl_name }}
-
-                        {% elif vendor %}
-
-                            {{ vendor.store_name }}
-
-                        {% endif %}
-
-                    </h2>
-
-
-                    {% if product %}
-
-                        <p>
-                            {{ product.artist_name }}
-                        </p>
-
-                    {% endif %}
-
-                </div>
-
-
-                <!-- Review form -->
-
-                <form method="post" class="rating-form">
-
-                    {% csrf_token %}
-
-
-                    <div class="rating-fields">
-
-                        {{ form.as_p }}
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="rating-submit"
-                    >
-
-                        <span>
-                            SUBMIT REVIEW
-                        </span>
-
-                        <i class="bi bi-arrow-right"></i>
-
-                    </button>
-
-                </form>
-
-
-                <div class="rating-form-footer">
-
-                    <span>
-                        VINYLS / USER FEEDBACK
-                    </span>
-
-                    <span>
-                        BE HONEST. BE FAIR.
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
+<section class="collage-review-form-page">
+    <div class="collage-review-form-intro">
+        <span class="collage-kicker">VINYLS / COMMUNITY / REVIEW</span>
+        <h1>Rate<br><span>it.</span></h1>
+        <p>Your experience helps other collectors make better choices.</p>
+        <div class="collage-review-form-intro__note">YOUR OPINION<br><strong>MATTERS.</strong></div>
     </div>
 
-</section>
+    <div class="collage-review-form-panel">
+        <div class="collage-review-form-panel__header">
+            <span>WRITE A REVIEW</span>
+            <strong>07</strong>
+        </div>
 
+        <div class="collage-review-subject">
+            <span class="collage-kicker">
+                {% if product %}RECORD{% elif vendor %}RECORD OUTLET{% endif %}
+            </span>
+            <h2>
+                {% if product %}
+                    {{ product.vinyl_name }}
+                {% elif vendor %}
+                    {{ vendor.store_name }}
+                {% endif %}
+            </h2>
+            {% if product %}<p>{{ product.artist_name }}</p>{% endif %}
+        </div>
+
+        <form method="post" class="collage-django-form collage-review-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="collage-primary-button collage-form-submit">
+                Submit Review <i class="bi bi-arrow-right"></i>
+            </button>
+        </form>
+
+        <div class="collage-review-form-footer">
+            <span>VINYLS / USER FEEDBACK</span>
+            <span>BE HONEST. BE FAIR.</span>
+        </div>
+    </div>
+</section>
 {% endblock %}

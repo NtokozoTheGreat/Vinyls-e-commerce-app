@@ -338,3 +338,365 @@
 
 {% endblock %}
 
+
+
+\{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="collection-page">
+
+    <header class="collection-header">
+
+        <div class="collection-header-main">
+
+            <span class="collection-kicker">
+                VINYLS / ARCHIVE / 001
+            </span>
+
+            <h1>
+                RECORD<br>
+                <span>COLLECTION.</span>
+            </h1>
+
+        </div>
+
+
+        <div class="collection-header-meta">
+
+            <span>
+                EXPLORE
+            </span>
+
+            <strong>
+                {{ vinyls|length|stringformat:"02d" }}
+            </strong>
+
+            <span>
+                RECORDS
+            </span>
+
+        </div>
+
+    </header>
+    <br>
+    <section class="collection-grid">
+
+        {% if vinyls %}
+
+            {% for vinyl in vinyls %}
+
+                <article class="record-card">
+
+                    <!-- Record number -->
+
+                    <div class="record-number">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </div>
+
+
+                    <!-- Image -->
+
+                    <div class="record-image">
+
+                        {% if vinyl.image %}
+
+                            <img
+                                src="{{ vinyl.image.url }}"
+                                alt="{{ vinyl.vinyl_name }}"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Information -->
+
+                    <div class="record-info">
+
+                        <span class="record-label">
+                            RECORD
+                        </span>
+
+                        <h2>
+                            {{ vinyl.vinyl_name }}
+                        </h2>
+
+                        <p class="record-artist">
+                            {{ vinyl.artist_name }}
+                        </p>
+
+
+                        <div class="record-bottom">
+
+                            <strong class="record-price">
+                                ${{ vinyl.price }}
+                            </strong>
+
+                            <a
+                                href="{% url 'productdetail' vinyl.id %}"
+                                class="record-link"
+                            >
+                                VIEW
+                                <i class="bi bi-arrow-up-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="collection-empty">
+
+                <span>
+                    404 / EMPTY ARCHIVE
+                </span>
+
+                <h2>
+                    NO RECORDS<br>
+                    FOUND.
+                </h2>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<header class="home-hero">
+
+    <div class="hero-paper hero-paper-one"></div>
+    <div class="hero-paper hero-paper-two"></div>
+
+    <div class="hero-mark hero-mark-circle">
+        33⅓
+    </div>
+
+    <div class="hero-scribble">
+        COLLECT / LISTEN / REPEAT
+    </div>
+
+    <div class="container-fluid">
+
+        <div class="home-hero-grid">
+
+            <div class="home-hero-main">
+
+                <p class="hero-kicker">
+                    VINYLS / MARKETPLACE / 01
+                </p>
+
+                <div class="hero-title-wrap">
+
+                    <span class="hero-small-text">
+                        SIDE A
+                    </span>
+
+                    <h1>
+                        Discover
+                        <br>
+                        records.
+                    </h1>
+
+                    <div class="hero-title-offset">
+                        <span>Build your</span>
+                        <strong>collection.</strong>
+                    </div>
+
+                </div>
+
+                <p class="hero-description">
+                    Find records from independent sellers,
+                    collectors and music lovers.
+                </p>
+
+                <a href="#records" class="brutalist-button">
+                    <span>Browse records</span>
+                    <i class="bi bi-arrow-down"></i>
+                </a>
+
+            </div>
+
+
+            <div class="home-hero-side">
+
+                <div class="hero-side-label">
+                    <span>VINYLS</span>
+                    <span>EST. 2026</span>
+                </div>
+
+                <div class="hero-side-image">
+                    <!-- We can introduce an actual hero image here later -->
+                    <span>PLAY<br>LOUD</span>
+                </div>
+
+                <div class="hero-side-number">
+                    01
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<section id="records" class="products-section">
+
+    <div class="container-fluid">
+
+        <div class="section-heading">
+
+            <div class="section-heading-title">
+
+                <span class="section-number">
+                    01 /
+                </span>
+
+                <h2>
+                    Latest
+                    <em>records</em>
+                </h2>
+
+            </div>
+
+            <div class="section-heading-note">
+                <span>NEW ARRIVALS</span>
+                <span>PRESS PLAY →</span>
+            </div>
+
+        </div>
+
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+            <article class="vinyl-card">
+
+                <div class="vinyl-card-top">
+
+                    <span class="vinyl-index">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </span>
+
+                    <span class="vinyl-card-label">
+                        VINYL / ORIGINAL
+                    </span>
+
+                    {% if product.on_sale %}
+                        <span class="vinyl-sticker">
+                            SALE
+                        </span>
+                    {% endif %}
+
+                </div>
+
+
+                <a
+                    href="{% url 'productdetail' product.id %}"
+                    class="vinyl-artwork"
+                >
+
+                    <div class="artwork-shadow"></div>
+
+                    <div class="artwork-image">
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.vinyl_name }}"
+                            loading="lazy"
+                        >
+
+                    </div>
+
+                    <span class="artwork-mark">
+                        SIDE A
+                    </span>
+
+                    <span class="artwork-arrow">
+                        ↗
+                    </span>
+
+                </a>
+
+
+                <div class="vinyl-info">
+
+                    <div class="vinyl-info-main">
+
+                        <p class="vinyl-artist">
+                            {{ product.artist_name }}
+                        </p>
+
+                        <h3 class="vinyl-title">
+                            {{ product.vinyl_name }}
+                        </h3>
+
+                    </div>
+
+
+                    <div class="vinyl-meta">
+
+                        <div class="vinyl-price">
+
+                            {% if product.on_sale %}
+
+                                <span class="old-price">
+                                    ${{ product.price }}
+                                </span>
+
+                                <strong class="sale-price">
+                                    ${{ product.sale_price }}
+                                </strong>
+
+                            {% else %}
+
+                                <strong class="regular-price">
+                                    ${{ product.price }}
+                                </strong>
+
+                            {% endif %}
+
+                        </div>
+
+                        <a
+                            href="{% url 'productdetail' product.id %}"
+                            class="vinyl-view-button"
+                            aria-label="View {{ product.vinyl_name }}"
+                        >
+                            VIEW
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

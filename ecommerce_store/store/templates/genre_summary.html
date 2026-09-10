@@ -1,83 +1,58 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-
-<!-- Page Header -->
-<header class="brutalist-page-header">
-    <div class="container">
-
-        <p class="brutalist-eyebrow">
-            VINYLS / COLLECTION
-        </p>
-
-        <h1>
-            GENRES.
-        </h1>
-
-        <p class="brutalist-subtitle">
-            Explore records by sound, style and culture.
-        </p>
-
-    </div>
-</header>
-
-
-<!-- Genre Collection -->
-<section class="brutalist-section">
-
-    <div class="container">
-
-        <div class="brutalist-section-heading">
-            <span>01</span>
-            <h2>EXPLORE BY GENRE</h2>
+<section class="collage-directory-page">
+    <header class="collage-directory-hero collage-directory-hero--genre">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / GENRES /</span>
+            <h1>Find your<br><span>sound.</span></h1>
+            <p>Explore records by sound, style and culture. Pick a genre and start digging.</p>
         </div>
 
+        <div class="collage-directory-hero__index">
+            <span>GENRES</span>
+            <strong>{{ categories|length|stringformat:"02d" }}</strong>
+            <small>EXPLORE</small>
+        </div>
 
-        <div class="brutalist-genre-grid">
+        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+    </header>
 
+    <section class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
+            <div>
+                <span class="collage-section-number">01 /</span>
+                <h2>Find Your Style</h2>
+            </div>
+            <span class="collage-section-meta">{{ categories|length }} GENRES</span>
+        </div>
+
+        <div class="collage-genre-grid">
             {% for category in categories %}
-
-            <a
-                href="{% url 'category' category.slug %}"
-                class="brutalist-genre-card"
-            >
-
-                <!-- Genre Image -->
-                <div class="brutalist-genre-image">
-
-                    <img
-                        src="{{ category.image.url }}"
-                        alt="{{ category }}"
-                    >
-
-                    <span class="brutalist-genre-number">
-                        {{ forloop.counter|stringformat:"02d" }}
-                    </span>
-
+                <a href="{% url 'category' category.slug %}" class="collage-genre-card">
+                    <div class="collage-genre-card__image">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                        {% endif %}
+                        <span class="collage-genre-card__number">{{ forloop.counter|stringformat:"02d" }}</span>
+                    </div>
+                    <div class="collage-genre-card__content">
+                        <span>GENRE</span>
+                        <h3>{{ category }}</h3>
+                        <i class="bi bi-arrow-up-right"></i>
+                    </div>
+                </a>
+            {% empty %}
+                <div class="collage-empty-state collage-empty-state--wide">
+                    <span>00 / EMPTY</span>
+                    <h3>No genres available.</h3>
+                    <p>Genre collections will appear here when they are added.</p>
                 </div>
-
-
-                <!-- Genre Name -->
-                <div class="brutalist-genre-content">
-
-                    <h3>
-                        {{ category }}
-                    </h3>
-
-                    <span class="brutalist-genre-arrow">
-                        →
-                    </span>
-
-                </div>
-
-            </a>
-
             {% endfor %}
-
         </div>
-
-    </div>
-
+    </section>
 </section>
-
 {% endblock %}

@@ -1,65 +1,52 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<!-- Page Header -->
-<header class="brutalist-page-header">
-    <div class="container">
-        <div class="brutalist-header-content">
-            <span class="brutalist-label">ACCOUNT / SETTINGS</span>
-            <h1>UPDATE INFO</h1>
-            <p>Update your profile and shipping information.</p>
+<section class="collage-form-page collage-account-form-page">
+    <header class="collage-form-hero collage-form-hero--compact">
+        <div class="collage-form-hero__copy">
+            <span class="collage-kicker">ACCOUNT / SETTINGS</span>
+            <h1>Update<br><span>Info.</span></h1>
+            <p>Update your billing, profile and shipping information.</p>
         </div>
-    </div>
-</header>
+        <div class="collage-form-hero__blank" aria-hidden="true"></div>
+    </header>
 
+    <section class="collage-form-layout">
+        <aside class="collage-form-aside collage-form-aside--blue">
+            <span class="collage-form-aside__number">01</span>
+            <span class="collage-handwritten-label">ACCOUNT DETAILS</span>
+            <h2>Keep it<br>current.</h2>
+            <p>Make sure your account and delivery information is accurate before your next order.</p>
+            <div class="collage-form-note">PROFILE / BILLING / SHIPPING</div>
+        </aside>
 
-<!-- Update Information -->
-<section class="brutalist-section">
-    <div class="container">
-        <div class="update-info-wrapper">
-
-            <form method="POST" action="{% url 'update_info' %}" class="brutalist-form">
+        <div class="collage-form-panel">
+            <form method="POST" action="{% url 'update_info' %}" class="collage-django-form collage-django-form--sections">
                 {% csrf_token %}
 
-                <!-- Billing Information -->
-                <div class="form-section">
-                    <div class="form-section-header">
-                        <span class="section-number">01</span>
-                        <h2>BILLING INFORMATION</h2>
+                <section class="collage-form-section">
+                    <div class="collage-form-section__header">
+                        <span>01</span>
+                        <h2>Billing Information</h2>
                     </div>
+                    <div class="collage-form-section__fields">{{ form.as_p }}</div>
+                </section>
 
-                    <div class="form-fields">
-                        {{ form.as_p }}
+                <section class="collage-form-section">
+                    <div class="collage-form-section__header">
+                        <span>02</span>
+                        <h2>Shipping Information</h2>
                     </div>
-                </div>
+                    <div class="collage-form-section__fields">{{ shipping_form.as_p }}</div>
+                </section>
 
-
-                <!-- Shipping Information -->
-                <div class="form-section">
-                    <div class="form-section-header">
-                        <span class="section-number">02</span>
-                        <h2>SHIPPING INFORMATION</h2>
-                    </div>
-
-                    <div class="form-fields">
-                        {{ shipping_form.as_p }}
-                    </div>
-                </div>
-
-
-                <!-- Submit -->
-                <div class="form-submit">
-                    <button type="submit" class="brutalist-button">
-                        SAVE CHANGES
-                        <span>→</span>
+                <div class="collage-form-actions-row">
+                    <button type="submit" class="collage-primary-button collage-form-submit">
+                        Save Changes <span>→</span>
                     </button>
                 </div>
-
             </form>
-
         </div>
-    </div>
+    </section>
 </section>
-
 {% endblock %}

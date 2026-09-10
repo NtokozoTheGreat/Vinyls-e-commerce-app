@@ -1,801 +1,290 @@
-<nav class="vinyl-navbar">
+{% load static %}
+<nav class="collage-navbar" aria-label="Primary navigation">
+    <div class="collage-navbar__inner">
+        <a class="collage-brand" href="{% url 'home' %}" aria-label="Vinyls home">
+            <span>VINYLS</span>
+            <img src="{% static 'images/vinyls_collage/crown.svg' %}" alt="" aria-hidden="true">
+        </a>
 
-    <div class="vinyl-navbar-main">
+        <div class="collage-nav-panel d-none d-md-flex">
+            <a href="{% url 'home' %}">Home</a>
 
-        <!-- LEFT-ALIGNED LINKS -->
+            <div class="dropdown collage-dropdown">
+                <a class="dropdown-toggle" id="navbarDropdownStores" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlets</a>
+                <ul class="dropdown-menu collage-dropdown-menu" aria-labelledby="navbarDropdownStores">
+                    <li><a class="dropdown-item" href="{% url 'record_store_summary' %}">All Outlets</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'popular_store' %}">Popular Record Outlets</a></li>
+                    <li><a class="dropdown-item" href="{% url 'new_store' %}">New Record Outlets</a></li>
+                </ul>
+            </div>
 
-        <div class="vinyl-nav-left d-none d-md-flex">
+            <div class="dropdown collage-dropdown">
+                <a class="dropdown-toggle" id="navbarDropdownCollection" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Records</a>
+                <ul class="dropdown-menu collage-dropdown-menu" aria-labelledby="navbarDropdownCollection">
+                    <li><a class="dropdown-item" href="{% url 'record_collection_summary' %}">All Records</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'popular_vinyls' %}">Popular Vinyls</a></li>
+                    <li><a class="dropdown-item" href="{% url 'fresh_arrivals' %}">Fresh Arrivals</a></li>
+                </ul>
+            </div>
 
-            <ul class="vinyl-nav-links">
+            <div class="dropdown collage-dropdown">
+                <a class="dropdown-toggle" id="navbarDropdownGenre" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Genres</a>
+                <ul class="dropdown-menu collage-dropdown-menu collage-dropdown-menu--wide" aria-labelledby="navbarDropdownGenre">
+                    <li><a class="dropdown-item" href="{% url 'genre_summary' %}">All Genres</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'jazz' %}">Jazz</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'blues' %}">Blues</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'classical' %}">Classical</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'rock' %}">Rock</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'hip-hop-rap' %}">Hip-Hop &amp; Rap</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'pop' %}">Pop</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'soul-rb' %}">Soul &amp; R&amp;B</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'electronic-edm' %}">Electronic / EDM</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'reggae' %}">Reggae</a></li>
+                    <li><a class="dropdown-item" href="{% url 'category' 'country' %}">Country</a></li>
+                </ul>
+            </div>
 
-                <li>
-                    <a href="{% url 'home' %}">
-                        Home
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'aboutus' %}">
-                        About Us
-                    </a>
-                </li>
-
-                <!-- OUTLETS DROPDOWN -->
-
-                <li class="vinyl-nav-dropdown dropdown">
-
-                    <a
-                        class="vinyl-dropdown-toggle dropdown-toggle"
-                        id="navbarDropdownStores"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Outlets
-                    </a>
-
-                    <ul
-                        class="vinyl-dropdown dropdown-menu"
-                        aria-labelledby="navbarDropdownStores"
-                    >
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'record_store_summary' %}"
-                            >
-                                All Outlets
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'popular_store' %}"
-                            >
-                                Popular Record Outlets
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'new_store' %}"
-                            >
-                                New Record Outlets
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-
-
-                <!-- RECORDS DROPDOWN -->
-
-                <li class="vinyl-nav-dropdown dropdown">
-
-                    <a
-                        class="vinyl-dropdown-toggle dropdown-toggle"
-                        id="navbarDropdownCollection"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Records
-                    </a>
-
-                    <ul
-                        class="vinyl-dropdown dropdown-menu"
-                        aria-labelledby="navbarDropdownCollection"
-                    >
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'record_collection_summary' %}"
-                            >
-                                All Records
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'popular_vinyls' %}"
-                            >
-                                Popular Vinyls
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'fresh_arrivals' %}"
-                            >
-                                Fresh Arrivals
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-
-
-                <!-- GENRES DROPDOWN -->
-
-                <li class="vinyl-nav-dropdown dropdown">
-
-                    <a
-                        class="vinyl-dropdown-toggle dropdown-toggle"
-                        id="navbarDropdownGenre"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Genres
-                    </a>
-
-                    <ul
-                        class="vinyl-dropdown vinyl-dropdown-genres dropdown-menu"
-                        aria-labelledby="navbarDropdownGenre"
-                    >
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'genre_summary' %}"
-                            >
-                                All Genres
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'jazz' %}"
-                            >
-                                Jazz
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'blues' %}"
-                            >
-                                Blues
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'classical' %}"
-                            >
-                                Classical
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'rock' %}"
-                            >
-                                Rock
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'hip-hop-rap' %}"
-                            >
-                                Hip-Hop &amp; Rap
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'pop' %}"
-                            >
-                                Pop
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'soul-rb' %}"
-                            >
-                                Soul &amp; R&amp;B
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'electronic-edm' %}"
-                            >
-                                Electronic / EDM
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'reggae' %}"
-                            >
-                                Reggae
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'country' %}"
-                            >
-                                Country
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-
-            </ul>
-
+            <a href="{% url 'aboutus' %}">About Us</a>
         </div>
 
-
-        <!-- CENTER: BRAND -->
-
-        <div class="vinyl-navbar-brand">
-
-            <a href="{% url 'home' %}">
-                VINYLS
-            </a>
-
-        </div>
-
-
-        <!-- RIGHT: SEARCH + CART + MENU -->
-
-        <div class="vinyl-navbar-right">
-
-            <!-- Desktop Search -->
-
-            <form
-                class="vinyl-search d-none d-lg-flex"
-                method="POST"
-                action="{% url 'search' %}"
-                role="search"
-            >
-
-                {% csrf_token %}
-
-                <input
-                    type="search"
-                    name="searched"
-                    placeholder="SEARCH"
-                    aria-label="Search"
-                >
-
-                <button type="submit">
-                    <i class="bi bi-arrow-right"></i>
-                </button>
-
-            </form>
-
-
-            <!-- CART -->
-
-            <a
-                href="{% url 'cart_summary' %}"
-                class="vinyl-cart-button"
-                aria-label="Shopping cart"
-            >
-
-                <i class="bi bi-bag"></i>
-
-                <span>
-                    CART
-                </span>
-
-                <span
-                    id="cart_quantity"
-                    class="vinyl-cart-count"
-                >
-                    {{ cart_quantity|default:0 }}
-                </span>
-
-            </a>
-
-
-            <!-- MENU -->
-
+        <div class="collage-nav-actions">
             <button
-                class="vinyl-menu-button"
+                class="collage-icon-button collage-search-toggle"
                 type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar"
-                aria-label="Open navigation"
+                data-bs-toggle="collapse"
+                data-bs-target="#collageNavbarSearch"
+                aria-expanded="false"
+                aria-controls="collageNavbarSearch"
+                aria-label="Open search"
             >
-
-                <span>MENU</span>
-
-                <i class="bi bi-list"></i>
-
+                <i class="bi bi-search" aria-hidden="true"></i>
             </button>
 
-        </div>
+            <a href="{% url 'cart_summary' %}" class="collage-icon-button collage-cart" aria-label="Shopping cart">
+                <i class="bi bi-cart3" aria-hidden="true"></i>
+                <span id="cart_quantity" class="collage-cart-count">{{ cart_quantity|default:0 }}</span>
+            </a>
 
+            <button class="collage-icon-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Open account and navigation menu">
+                <i class="bi bi-person" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 
-
-    <!-- MOBILE / OFF-CANVAS NAVIGATION -->
-
-    <div
-        class="offcanvas offcanvas-end vinyl-offcanvas"
-        tabindex="-1"
-        id="offcanvasNavbar"
-        aria-labelledby="offcanvasNavbarLabel"
-    >
-
-        <!-- Offcanvas Header -->
-
-        <div class="vinyl-offcanvas-header">
-
-            <h5 id="offcanvasNavbarLabel">
-                VINYLS<span>.</span>
-            </h5>
-
+    <div class="collapse collage-navbar-search-collapse" id="collageNavbarSearch">
+        <div class="collage-navbar-search-sheet">
             <button
                 type="button"
-                class="vinyl-close-button"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-            >
-                ×
-            </button>
+                class="collage-navbar-search-close"
+                data-bs-toggle="collapse"
+                data-bs-target="#collageNavbarSearch"
+                aria-controls="collageNavbarSearch"
+                aria-label="Close search"
+            >×</button>
 
+            <form class="collage-navbar-search-form" method="POST" action="{% url 'search' %}" role="search">
+                {% csrf_token %}
+                <label for="collageNavbarSearchInput">SEARCH THE CRATES</label>
+                <div class="collage-navbar-search-row">
+                    <input
+                        id="collageNavbarSearchInput"
+                        type="search"
+                        name="searched"
+                        placeholder="ARTIST, TITLE, GENRE..."
+                        aria-label="Search records, artists, or genres"
+                    >
+                    <button type="submit">SEARCH <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
         </div>
+    </div>
 
+    <div class="offcanvas offcanvas-end collage-offcanvas" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="collage-offcanvas__header">
+            <div class="collage-offcanvas__identity">
+                <small>ACCOUNT</small>
+                <h5 id="offcanvasNavbarLabel">VINYLS<span aria-hidden="true">♥</span></h5>
 
-        <div class="offcanvas-body">
-
-
-            <!-- NAVIGATION -->
-
-            <div class="vinyl-mobile-section-label">
-                NAVIGATION
-            </div>
-
-
-            <ul class="vinyl-mobile-nav">
-
-                <li>
-                    <a href="{% url 'home' %}">
-                        Home
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'aboutus' %}">
-                        About Us
-                    </a>
-                </li>
-
-
-                <!-- OUTLETS DROPDOWN -->
-
-                <li class="vinyl-mobile-dropdown dropdown">
-
-                    <a
-                        class="dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Outlets
-                    </a>
-
-                    <ul class="vinyl-mobile-subnav dropdown-menu">
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'record_store_summary' %}"
-                            >
-                                All Outlets
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'popular_store' %}"
-                            >
-                                Popular Record Outlets
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'new_store' %}"
-                            >
-                                New Record Outlets
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-
-
-                <!-- RECORDS DROPDOWN -->
-
-                <li class="vinyl-mobile-dropdown dropdown">
-
-                    <a
-                        class="dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Records
-                    </a>
-
-                    <ul class="vinyl-mobile-subnav dropdown-menu">
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'record_collection_summary' %}"
-                            >
-                                All Records
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'popular_vinyls' %}"
-                            >
-                                Popular Vinyls
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'fresh_arrivals' %}"
-                            >
-                                Fresh Arrivals
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-
-
-                <!-- GENRES DROPDOWN -->
-
-                <li class="vinyl-mobile-dropdown dropdown">
-
-                    <a
-                        class="dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Genres
-                    </a>
-
-                    <ul class="vinyl-mobile-subnav dropdown-menu">
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'genre_summary' %}"
-                            >
-                                All Genres
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'jazz' %}"
-                            >
-                                Jazz
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'blues' %}"
-                            >
-                                Blues
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'classical' %}"
-                            >
-                                Classical
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'rock' %}"
-                            >
-                                Rock
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'hip-hop-rap' %}"
-                            >
-                                Hip-Hop &amp; Rap
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'pop' %}"
-                            >
-                                Pop
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'soul-rb' %}"
-                            >
-                                Soul &amp; R&amp;B
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'electronic-edm' %}"
-                            >
-                                Electronic / EDM
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'reggae' %}"
-                            >
-                                Reggae
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="{% url 'category' 'country' %}"
-                            >
-                                Country
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-
-            </ul>
-
-
-            <!-- SHOPPING -->
-
-            <div class="vinyl-mobile-section-label">
-                SHOPPING
-            </div>
-
-
-            <ul class="vinyl-mobile-nav">
-
-                <li>
-                    <a href="{% url 'cart_summary' %}">
-                        Cart
-
-                        <span
-                            id="mobile_cart_quantity"
-                            class="vinyl-mobile-count"
-                        >
-                            {{ cart_quantity|default:0 }}
-                        </span>
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <!-- ACCOUNT -->
-
-            <div class="vinyl-mobile-section-label">
-                ACCOUNT
-            </div>
-
-
-            <ul class="vinyl-mobile-nav">
-
+                {# Current user strip — shown only when logged in #}
                 {% if user.is_authenticated %}
-
-                    <!-- Profile -->
-
-                    <li>
-                        <a href="{% url 'update_user' %}">
-                            User Profile
-                        </a>
-                    </li>
-
-
-                    <!-- Update Info -->
-
-                    <li>
-                        <a href="{% url 'update_info' %}">
-                            Update Info
-                        </a>
-                    </li>
-
-
-                    <!-- Messages -->
-
-                    <li>
-                        <a href="{% url 'inbox' %}">
-                            Messages
-
-                            {% if unread_message_count > 0 %}
-
-                                <span class="vinyl-mobile-count">
-                                    {{ unread_message_count }}
-                                </span>
-
-                            {% endif %}
-
-                        </a>
-                    </li>
-
-
-                    <!-- Vendor -->
-
-                    {% if not request.user.vendor %}
-
-                        <li>
-                            <a href="{% url 'become_vendor' %}">
-                                Open Your Outlet
-                            </a>
-                        </li>
-
-                    {% else %}
-
-                        <li>
-                            <a href="{% url 'store_detail' pk=store.pk %}">
-                                My Outlet
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'vendor_dashboard' %}">
-                                Vendor Dashboard
-                            </a>
-                        </li>
-
-                    {% endif %}
-
-
-                    <!-- Admin -->
-
-                    {% if user.is_superuser %}
-
-                        <li>
-                            <a href="{% url 'shipped_dash' %}">
-                                Shipped Dashboard
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'not_shipped_dash' %}">
-                                Pending Dashboard
-                            </a>
-                        </li>
-
-                    {% endif %}
-
-
-                    <!-- Logout -->
-
-                    <li class="vinyl-mobile-danger">
-
-                        <a href="{% url 'logout' %}">
-                            Logout
-                        </a>
-
-                    </li>
-
-
-                {% else %}
-
-                    <li>
-                        <a href="{% url 'login' %}">
-                            Login
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'register' %}">
-                            Sign Up
-                        </a>
-                    </li>
-
+                    <div class="collage-offcanvas__user" aria-label="Signed in user">
+                        <span>SIGNED IN AS</span>
+                        <strong>{{ user.username }}</strong>
+                    </div>
                 {% endif %}
-
-            </ul>
-
-
-            <!-- MOBILE SEARCH -->
-
-            <form
-                class="vinyl-mobile-search"
-                method="POST"
-                action="{% url 'search' %}"
-                role="search"
-            >
-
-                {% csrf_token %}
-
-                <input
-                    type="search"
-                    name="searched"
-                    placeholder="SEARCH RECORDS"
-                    aria-label="Search"
-                >
-
-                <button type="submit">
-                    SEARCH
-                </button>
-
-            </form>
-
+            </div>
+            <button type="button" class="collage-offcanvas__close" data-bs-dismiss="offcanvas" aria-label="Close">×</button>
         </div>
 
-    </div>
+        <div class="offcanvas-body collage-offcanvas__body">
+            <form class="collage-mobile-search" method="POST" action="{% url 'search' %}" role="search">
+                {% csrf_token %}
+                <input type="search" name="searched" placeholder="SEARCH RECORDS" aria-label="Search records">
+                <button type="submit">SEARCH <span>→</span></button>
+            </form>
 
+            <p class="collage-menu-label">NAVIGATION</p>
+            <ul class="collage-mobile-nav">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'aboutus' %}">About Us</a></li>
+
+                <li>
+                    <a href="#mobileOutlets" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="mobileOutlets">
+                        Outlets <span aria-hidden="true">+</span>
+                    </a>
+                    <ul class="collapse collage-mobile-nav" id="mobileOutlets">
+                        <li><a href="{% url 'record_store_summary' %}">All Outlets</a></li>
+                        <li><a href="{% url 'popular_store' %}">Popular Record Outlets</a></li>
+                        <li><a href="{% url 'new_store' %}">New Record Outlets</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#mobileRecords" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="mobileRecords">
+                        Records <span aria-hidden="true">+</span>
+                    </a>
+                    <ul class="collapse collage-mobile-nav" id="mobileRecords">
+                        <li><a href="{% url 'record_collection_summary' %}">All Records</a></li>
+                        <li><a href="{% url 'popular_vinyls' %}">Popular Vinyls</a></li>
+                        <li><a href="{% url 'fresh_arrivals' %}">Fresh Arrivals</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#mobileGenres" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="mobileGenres">
+                        Genres <span aria-hidden="true">+</span>
+                    </a>
+                    <ul class="collapse collage-mobile-nav" id="mobileGenres">
+                        <li><a href="{% url 'genre_summary' %}">All Genres</a></li>
+                        <li><a href="{% url 'category' 'jazz' %}">Jazz</a></li>
+                        <li><a href="{% url 'category' 'blues' %}">Blues</a></li>
+                        <li><a href="{% url 'category' 'classical' %}">Classical</a></li>
+                        <li><a href="{% url 'category' 'rock' %}">Rock</a></li>
+                        <li><a href="{% url 'category' 'hip-hop-rap' %}">Hip-Hop &amp; Rap</a></li>
+                        <li><a href="{% url 'category' 'pop' %}">Pop</a></li>
+                        <li><a href="{% url 'category' 'soul-rb' %}">Soul &amp; R&amp;B</a></li>
+                        <li><a href="{% url 'category' 'electronic-edm' %}">Electronic / EDM</a></li>
+                        <li><a href="{% url 'category' 'reggae' %}">Reggae</a></li>
+                        <li><a href="{% url 'category' 'country' %}">Country</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p class="collage-menu-label">SHOPPING</p>
+            <ul class="collage-mobile-nav">
+                <li><a href="{% url 'cart_summary' %}">Cart <span id="mobile_cart_quantity" class="collage-mobile-count">{{ cart_quantity|default:0 }}</span></a></li>
+            </ul>
+
+            <p class="collage-menu-label">ACCOUNT</p>
+            <ul class="collage-mobile-nav">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'update_user' %}">User Profile</a></li>
+                    <li><a href="{% url 'update_info' %}">Update Info</a></li>
+                    <li><a href="{% url 'inbox' %}">Messages {% if unread_message_count > 0 %}<span class="collage-mobile-count">{{ unread_message_count }}</span>{% endif %}</a></li>
+                    {% if not request.user.vendor %}
+                        <li><a href="{% url 'become_vendor' %}">Open Your Outlet</a></li>
+                    {% else %}
+                        <li><a href="{% url 'store_detail' pk=store.pk %}">My Outlet</a></li>
+                        <li><a href="{% url 'vendor_dashboard' %}">Vendor Dashboard</a></li>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'shipped_dash' %}">Shipped Dashboard</a></li>
+                        <li><a href="{% url 'not_shipped_dash' %}">Pending Dashboard</a></li>
+                    {% endif %}
+                    <li class="collage-mobile-danger"><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+
+            {# Decorative footer artwork. Replace these two PNG filenames with your actual assets. #}
+            <div class="collage-offcanvas__footer-art" aria-hidden="true">
+                <img
+                    class="collage-offcanvas__disc-art"
+                    src="{% static 'images/vinyls_collage/menu-disc.png' %}"
+                    alt=""
+                >
+                <img
+                    class="collage-offcanvas__tagline-art"
+                    src="{% static 'images/vinyls_collage/menu-tagline.png' %}"
+                    alt=""
+                >
+            </div>
+        </div>
+    </div>
 </nav>
+
+<script>
+/* Desktop dropdown fallback for the collage navbar.
+   Bootstrap collapse/offcanvas are left alone. This only handles the three
+   main-nav dropdown toggles and prevents a missing Popper runtime from
+   breaking them. */
+(function () {
+    const nav = document.querySelector('.collage-nav-panel');
+    if (!nav || nav.dataset.collageDropdownsReady === 'true') return;
+    nav.dataset.collageDropdownsReady = 'true';
+
+    const dropdowns = Array.from(nav.querySelectorAll('.collage-dropdown'));
+
+    function closeDropdown(dropdown) {
+        const toggle = dropdown.querySelector(':scope > .dropdown-toggle');
+        const menu = dropdown.querySelector(':scope > .dropdown-menu');
+        dropdown.classList.remove('show');
+        if (toggle) {
+            toggle.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+        if (menu) menu.classList.remove('show');
+    }
+
+    function closeAll(except) {
+        dropdowns.forEach(function (dropdown) {
+            if (dropdown !== except) closeDropdown(dropdown);
+        });
+    }
+
+    function toggleDropdown(dropdown) {
+        const toggle = dropdown.querySelector(':scope > .dropdown-toggle');
+        const menu = dropdown.querySelector(':scope > .dropdown-menu');
+        if (!toggle || !menu) return;
+
+        const willOpen = !menu.classList.contains('show');
+        closeAll(dropdown);
+
+        dropdown.classList.toggle('show', willOpen);
+        toggle.classList.toggle('show', willOpen);
+        menu.classList.toggle('show', willOpen);
+        toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    }
+
+    /* Capture the click before Bootstrap's document-level dropdown handler.
+       This avoids Popper-related failures while preserving the current HTML. */
+    document.addEventListener('click', function (event) {
+        const toggle = event.target.closest('.collage-nav-panel .collage-dropdown > .dropdown-toggle');
+
+        if (toggle) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            toggleDropdown(toggle.closest('.collage-dropdown'));
+            return;
+        }
+
+        if (!event.target.closest('.collage-nav-panel .collage-dropdown')) {
+            closeAll();
+        }
+    }, true);
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeAll();
+            const openToggle = nav.querySelector('.collage-dropdown > .dropdown-toggle[aria-expanded="true"]');
+            if (openToggle) openToggle.focus();
+        }
+    });
+})();
+</script>

@@ -1,19 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container message-form-page">
+<section class="container message-form-page collage-message-shell">
     <div class="message-form-card">
-        <span class="message-form-label">Edit Message</span>
-        <h1>Edit your message</h1>
+        <div class="message-form-card__topline">
+            <span class="message-form-label">VINYLS / EDIT / 04</span>
+            <span class="collage-section-meta">MESSAGE</span>
+        </div>
 
-        <form method="post">
+        <h1>Edit your<br><span>message.</span></h1>
+        <p class="message-form-intro">Update the message below, then save your changes.</p>
+
+        <form method="post" class="collage-message-edit-form">
             {% csrf_token %}
-            <textarea name="body" class="form-control" rows="3" required>{{ message.body }}</textarea>
-            <!-- pre-filled with the current message text between the opening/closing textarea tags -->
+            <label for="edit-message-body">Message</label>
+            <textarea id="edit-message-body" name="body" class="form-control" rows="3" required>{{ message.body }}</textarea>
+
             <div class="message-form-actions">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Save Changes <span>→</span></button>
                 <a href="{% url 'conversation_detail' message.conversation.id %}" class="btn btn-outline-dark">Cancel</a>
             </div>
         </form>
     </div>
-</div>
+</section>
 {% endblock %}
