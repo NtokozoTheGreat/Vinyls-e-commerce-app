@@ -1,1 +1,33 @@
-<h1>the greatest</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="collage-payment-success-page">
+    <section class="collage-payment-success-card">
+        <div class="collage-payment-success-card__marker">04 / COMPLETE</div>
+        <div class="collage-payment-success-card__icon" aria-hidden="true">
+            <i class="bi bi-check-lg"></i>
+        </div>
+
+        <span class="collage-handwritten-label">GOOD MUSIC / GOOD NEWS</span>
+        <h1>Payment <span>complete.</span></h1>
+        <p>Your order has been received successfully.</p>
+
+        {% if order %}
+        <div class="collage-payment-success-order">
+            <span>ORDER</span>
+            <strong>#{{ order.id }}</strong>
+            {% if order.amount_paid %}
+            <span>PAID</span>
+            <strong>${{ order.amount_paid }}</strong>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="collage-payment-success-actions">
+            <a href="/" class="collage-black-button">BACK TO VINYLS <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+
+        <div class="collage-payment-success-note">SPIN MORE / WORRY LESS</div>
+    </section>
+</div>
+{% endblock %}

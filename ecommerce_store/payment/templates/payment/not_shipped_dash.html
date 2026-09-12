@@ -1,137 +1,72 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="collage-order-admin-page">
 
-<!-- Header -->
-<header class="bg-dark py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Pending Orders</h1>
-            <p class="lead fw-normal text-white-50 mb-0">
-                Items waiting to be shipped!
-            </p>
+    <header class="collage-order-admin-hero">
+        <div class="collage-order-admin-hero__copy">
+            <span class="collage-kicker">VENDOR / ORDERS / PENDING</span>
+            <h1>Pending <span>orders.</span></h1>
+            <p>Orders waiting to be packed, shipped, and sent on their way.</p>
         </div>
-    </div>
-</header>
+        <div class="collage-order-admin-hero__blank collage-header-blank" aria-hidden="true"></div>
+    </header>
 
-
-<!-- Pending Orders -->
-<section class="py-5">
-    <div class="container px-4 px-lg-5">
-
-        <div class="orders-card">
-
-            <div class="orders-card-header">
-                <h5 class="mb-0">Orders Awaiting Shipment</h5>
+    <section class="collage-order-admin-stage">
+        <div class="collage-order-admin-heading">
+            <div>
+                <span class="collage-handwritten-label">Needs attention</span>
+                <h2>Orders Awaiting Shipment</h2>
             </div>
-
-            <div class="orders-card-body">
-
-                <div class="table-responsive">
-
-                    <table class="table orders-table align-middle">
-
-                        <thead>
-                            <tr>
-                                <th scope="col">Order No.</th>
-                                <th scope="col">Full Name</th>
-                                <th scope="col">Date Ordered</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Number</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Shipping Status</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            {% for item in orders %}
-
-                            <tr>
-
-                                <td>
-                                    <a
-                                        href="{% url 'orders' item.id %}"
-                                        class="order-link"
-                                    >
-                                        #{{ item.id }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    {{ item.full_name }}
-                                </td>
-
-                                <td>
-                                    {{ item.date_ordered }}
-                                </td>
-
-                                <td>
-                                    {{ item.email }}
-                                </td>
-
-                                <td>
-                                    {{ item.phone }}
-                                </td>
-
-                                <td>
-                                    <strong>${{ item.amount_paid }}</strong>
-                                </td>
-
-                                <td>
-
-                                    <form method="POST">
-
-                                        {% csrf_token %}
-
-                                        <input
-                                            type="hidden"
-                                            name="shipping_status"
-                                            value="shipped"
-                                        >
-
-                                        <input
-                                            type="hidden"
-                                            name="num"
-                                            value="{{ item.id }}"
-                                        >
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-secondary btn-sm"
-                                        >
-                                            Mark as Shipped
-                                        </button>
-
-                                    </form>
-
-                                </td>
-
-                            </tr>
-
-                            {% empty %}
-
-                            <tr>
-                                <td
-                                    colspan="7"
-                                    class="text-center text-body-secondary py-5"
-                                >
-                                    There are currently no pending orders.
-                                </td>
-                            </tr>
-
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
+            <span class="collage-payment-sticker collage-payment-sticker--pink">PACK / SHIP / REPEAT</span>
         </div>
 
-    </div>
-</section>
-
+        <div class="collage-order-table-wrap">
+            <table class="collage-order-table">
+                <thead>
+                    <tr>
+                        <th>ORDER NO.</th>
+                        <th>FULL NAME</th>
+                        <th>DATE ORDERED</th>
+                        <th>EMAIL</th>
+                        <th>NUMBER</th>
+                        <th>PRICE</th>
+                        <th>SHIPPING STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in orders %}
+                    <tr>
+                        <td><a href="{% url 'orders' item.id %}" class="collage-order-link">#{{ item.id }}</a></td>
+                        <td>{{ item.full_name }}</td>
+                        <td>{{ item.date_ordered }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.phone }}</td>
+                        <td><strong>${{ item.amount_paid }}</strong></td>
+                        <td>
+                            <form method="POST" class="collage-order-status-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="shipping_status" value="shipped">
+                                <input type="hidden" name="num" value="{{ item.id }}">
+                                <button type="submit" class="collage-order-status-button collage-order-status-button--ship">
+                                    MARK AS SHIPPED
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="collage-payment-empty collage-payment-empty--table">
+                                <span>ORDERS / 000</span>
+                                <h3>No pending orders.</h3>
+                                <p>Everything is currently shipped.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 {% endblock %}

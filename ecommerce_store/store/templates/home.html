@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<section class="collage-hero collage-hero--home">
-    <div class="collage-hero__copy">
+<section class="home-top home-collage-stage" aria-labelledby="shop-by-category">
+<section class="collage-hero collage-hero--home home-top-hero" style="background-image: url('{% static 'images/vinyls_collage/home-hero-final.png' %}');">
+    <div class="collage-hero__copy home-top-copy">
         <p class="collage-kicker">RARE FINDS. NEW RELEASES. TIMELESS CLASSICS.</p>
         <h1>Discover<br>records.<br><span>Build your collection.</span></h1>
         <p class="collage-lead">Find records from independent sellers, collectors and music lovers.</p>
@@ -11,7 +12,7 @@
             <a href="{% url 'record_collection_summary' %}" class="collage-outline-button">Explore Collections</a>
         </div>
     </div>
-    <div class="collage-hero__visual collage-hero__visual--home collage-header-blank" aria-hidden="true"></div>
+    <div class="collage-hero__visual collage-hero__visual--home collage-header-blank home-top-art-spacer" aria-hidden="true"></div>
 </section>
 
 <section class="collage-category-strip" aria-labelledby="shop-by-category">
@@ -25,8 +26,9 @@
     <a href="{% url 'category' 'jazz' %}" class="collage-category-tile collage-category-tile--jazz"><span>Jazz</span></a>
     <a href="{% url 'category' 'classical' %}" class="collage-category-tile collage-category-tile--classical"><span>Classical</span></a>
 </section>
+</section>
 
-<section id="records" class="collage-products-section">
+<section id="records" class="home-records collage-products-section">
     <div class="collage-section-heading">
         <div><span class="collage-section-number">01 /</span><h2>Latest Records</h2></div>
         <a href="{% url 'record_collection_summary' %}">View All <span>→</span></a>
@@ -63,7 +65,7 @@
     </div>
 </section>
 
-<section class="collage-latest-stores" aria-labelledby="latest-stores-heading">
+<section class="home-stores collage-latest-stores" aria-labelledby="latest-stores-heading" style="background-image: url('{% static 'images/vinyls_collage/home-stores-bg-safe.png' %}');">
     <div class="collage-section-heading">
         <div>
             <span class="collage-section-number">02 /</span>

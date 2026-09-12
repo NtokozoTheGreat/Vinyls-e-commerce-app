@@ -1,59 +1,103 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="collage-order-detail-page">
 
- <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shipped items</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome to Vinlys...!</p>
+    <header class="collage-order-admin-hero">
+        <div class="collage-order-admin-hero__copy">
+            <span class="collage-kicker">VENDOR / ORDER / {{ order.id }}</span>
+            <h1>Order <span>#{{ order.id }}</span></h1>
+            <p>Customer, shipping, payment, and fulfilment details in one place.</p>
+        </div>
+        <div class="collage-order-admin-hero__blank collage-header-blank" aria-hidden="true"></div>
+    </header>
+
+    <section class="collage-order-detail-stage">
+        <div class="collage-order-detail-card">
+            <div class="collage-order-detail-card__topline">
+                <div>
+                    <span class="collage-handwritten-label">Order details</span>
+                    <h2>No. {{ order.id }}</h2>
                 </div>
+                <span class="collage-order-status-pill">{{ order.status|title }}</span>
             </div>
-        </header>
 
-<!-- Section -->
-        <section>
-            <div class="container">
-                <div class="row">
-                    <center>
-                        <div class='col-8'>
-                            <div class="card">
-  <h5 class="card-header">Order </h5>
-  <div class="card-body">
-    <h5 class="card-title">No.{{order.id}}</h5>
-    <p class="card-text">Name: {{order.full_name}}</p>
-    <p class="card-text">Email: {{order.email}}</p>
-    <p class="card-text">phone: {{order.phone}}</p>
-    <p class="card-text">Date ordered: {{order.date_ordered}}</p>
-    <p class="card-text">Amount paid: {{order.amount_paid}}</p>
-    <p class="card-text">Status: {{order.status}}</p>
-    <pre>
-    <p class="card-text">Shipping Address:</br>{{order.shipping_address}}</p>
-    </pre>
-    <br>
-   Vinyls:
-{% for item in order_items %}
-<p class="card-text">{{ item.product }} - {{ item.quantity }} - {{ item.price }}</p>
-{% endfor %}
-<br>
+            <div class="collage-order-detail-grid">
+                <section class="collage-order-detail-section">
+                    <span class="collage-kicker">CUSTOMER / 01</span>
+                    <h3>Customer Information</h3>
+                    <dl class="collage-order-definition-list">
+                        <div><dt>NAME</dt><dd>{{ order.full_name }}</dd></div>
+                        <div><dt>EMAIL</dt><dd>{{ order.email }}</dd></div>
+                        <div><dt>PHONE</dt><dd>{{ order.phone }}</dd></div>
+                        <div><dt>DATE ORDERED</dt><dd>{{ order.date_ordered }}</dd></div>
+                    </dl>
+                </section>
 
-{% if order.status == "shipped" or order.status == "delivered" %}
-<form method="POST">
-  {% csrf_token %}
-  <input type="hidden" name="shipping_status" value="pending">
-  <button type="submit" class="btn btn-danger">mark as not shipped</button>
-</form>
-{% else %}
-<form method="POST">
-  {% csrf_token %}
-  <input type="hidden" name="shipping_status" value="shipped">
-  <button type="submit" class="btn btn-success">mark as shipped</button>
-</form>
-{% endif %}
+                <section class="collage-order-detail-section collage-order-detail-section--yellow">
+                    <span class="collage-kicker">DELIVERY / 02</span>
+                    <h3>Shipping Address</h3>
+                    <div class="collage-order-address">{{ order.shipping_address|linebreaksbr }}</div>
+                </section>
 
-<a href="{% url 'vendor_dashboard' %}" class="btn btn-primary">Go somewhere</a>
-</center>
+                <section class="collage-order-detail-section">
+                    <span class="collage-kicker">PAYMENT / 03</span>
+                    <h3>Amount Paid</h3>
+                    <div class="collage-order-paid-total">${{ order.amount_paid }}</div>
+                </section>
+
+                <section class="collage-order-detail-section collage-order-detail-section--items">
+                    <span class="collage-kicker">VINYLS / 04</span>
+                    <h3>Records</h3>
+                    <div class="collage-order-item-list">
+                        {% for item in order_items %}
+                        <div class="collage-order-item-row">
+                            <div>
+                                <strong>{{ item.product }}</strong>
+                                <span>Quantity: {{ item.quantity }}</span>
+                            </div>
+                            <strong>${{ item.price }}</strong>
+                        </div>
+                        {% empty %}
+                        <p>No items found for this order.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+
+            <div class="collage-order-fulfilment">
+                <div>
+                    <span class="collage-handwritten-label">Fulfilment</span>
+                    {% if order.status == "shipped" or order.status == "delivered" %}
+                        <h3>Already shipped.</h3>
+                        <p>Move this order back to pending if it needs to be processed again.</p>
+                    {% else %}
+                        <h3>Ready to ship?</h3>
+                        <p>Mark the order as shipped once it has left the store.</p>
+                    {% endif %}
+                </div>
+
+                {% if order.status == "shipped" or order.status == "delivered" %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="shipping_status" value="pending">
+                    <button type="submit" class="collage-order-status-button collage-order-status-button--pending">MARK AS NOT SHIPPED</button>
+                </form>
+                {% else %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="shipping_status" value="shipped">
+                    <button type="submit" class="collage-order-status-button collage-order-status-button--ship">MARK AS SHIPPED</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <div class="collage-order-detail-card__footer">
+                <a href="{% url 'vendor_dashboard' %}" class="collage-outline-button">
+                    <i class="bi bi-arrow-left"></i>
+                    BACK TO DASHBOARD
+                </a>
+            </div>
+        </div>
+    </section>
 </div>
-</div>
-</section>
 {% endblock %}

@@ -1,208 +1,119 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="collage-payment-page">
 
-<!-- Header -->
-<header class="bg-dark py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Billing Information</h1>
-            <p class="lead fw-normal text-white-50 mb-0">
-                Review your order
-            </p>
+    <header class="collage-payment-hero">
+        <div class="collage-payment-hero__copy">
+            <span class="collage-kicker">VINYLS / CHECKOUT / 02</span>
+            <h1>Billing <span>information.</span></h1>
+            <p>One final review before your order is processed.</p>
         </div>
-    </div>
-</header>
+        <div class="collage-payment-hero__blank collage-header-blank" aria-hidden="true"></div>
+    </header>
 
+    <section class="collage-payment-stage">
+        <div class="collage-payment-progress" aria-label="Checkout progress">
+            <span class="is-active">01 / CART</span>
+            <span class="is-active">02 / SHIPPING</span>
+            <span class="is-active">03 / BILLING</span>
+            <span>04 / COMPLETE</span>
+        </div>
 
-<!-- Checkout Section -->
-<section class="py-5">
-    <div class="container px-4 px-lg-5">
-
-        <!-- Order Summary -->
-        <div class="checkout-card mb-4">
-
-            <div class="checkout-card-header">
-                <h5 class="mb-0">Order Summary</h5>
-            </div>
-
-            <div class="checkout-card-body">
-
-                {% for product in cart_products %}
-
-                <div class="order-product mb-3">
-
-                    <!-- Product Image -->
-                    <div class="order-product-image">
-                        {% if product.image %}
-                            <img
-                                src="{{ product.image.url }}"
-                                alt="{{ product.vinyl_name }}"
-                            >
-                        {% endif %}
+        <div class="collage-billing-layout">
+            <div class="collage-billing-summary-column">
+                <section class="collage-payment-panel">
+                    <div class="collage-payment-panel__header">
+                        <div>
+                            <span class="collage-handwritten-label">Records selected</span>
+                            <h2>Order Summary</h2>
+                        </div>
                     </div>
 
-                    <!-- Product Information -->
-                    <div class="order-product-info">
-
-                        <h5 class="fw-bold mb-1">
-                            {{ product.vinyl_name }}
-                        </h5>
-
-                        <p class="text-body-secondary mb-2">
-                            {{ product.artist_name }}
-                        </p>
-
-                        <p class="mb-1">
-                            <strong>Quantity:</strong>
-
-                            {% for key, value in quantities.items %}
-                                {% if key == product.id|slugify %}
-                                    {{ value }}
+                    <div class="collage-order-products collage-order-products--compact">
+                        {% for product in cart_products %}
+                        <article class="collage-order-product collage-order-product--compact">
+                            <div class="collage-order-product__image">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">
+                                {% else %}
+                                    <div class="collage-order-product__placeholder">VINYL</div>
                                 {% endif %}
-                            {% endfor %}
-                        </p>
-
-                        <p class="mb-1">
-                            <strong>Price:</strong>
-
-                            {% if product.on_sale %}
-                                ${{ product.sale_price }}
-                            {% else %}
-                                ${{ product.price }}
-                            {% endif %}
-                        </p>
-
-                        <p class="mb-0 text-body-secondary">
-                            <small>
-                                Store: {{ product.vendor|title }}
-                            </small>
-                        </p>
-
+                            </div>
+                            <div class="collage-order-product__info">
+                                <h3>{{ product.vinyl_name }}</h3>
+                                <p>{{ product.artist_name }}</p>
+                                <div class="collage-order-product__meta">
+                                    <span>QTY <strong>{% for key, value in quantities.items %}{% if key == product.id|slugify %}{{ value }}{% endif %}{% endfor %}</strong></span>
+                                    <span>PRICE <strong>{% if product.on_sale %}${{ product.sale_price }}{% else %}${{ product.price }}{% endif %}</strong></span>
+                                </div>
+                            </div>
+                        </article>
+                        {% empty %}
+                        <div class="collage-payment-empty">
+                            <span>ORDER / 000</span>
+                            <h3>No items found.</h3>
+                        </div>
+                        {% endfor %}
                     </div>
 
-                </div>
+                    <div class="collage-payment-total">
+                        <span>ORDER TOTAL</span>
+                        <strong>{{ totals }}</strong>
+                    </div>
 
-                {% endfor %}
+                    <a href="{% url 'cart_summary' %}" class="collage-outline-button collage-payment-secondary-action">UPDATE ITEMS</a>
+                </section>
 
+                <section class="collage-payment-panel collage-shipping-review">
+                    <div class="collage-payment-panel__header">
+                        <div>
+                            <span class="collage-handwritten-label">Delivery details</span>
+                            <h2>Shipping Information</h2>
+                        </div>
+                    </div>
 
-                <!-- Total -->
-                <div class="order-total">
-                    <span>Total</span>
-                    <strong>{{ totals }}</strong>
-                </div>
+                    <div class="collage-shipping-grid">
+                        <div><span>NAME</span><strong>{{ shipping_info.shipping_full_name }}</strong></div>
+                        <div><span>EMAIL</span><strong>{{ shipping_info.shipping_email }}</strong></div>
+                        <div><span>ADDRESS 1</span><strong>{{ shipping_info.shipping_address_1 }}</strong></div>
+                        <div><span>ADDRESS 2</span><strong>{{ shipping_info.shipping_address_2 }}</strong></div>
+                        <div><span>CITY</span><strong>{{ shipping_info.shipping_city }}</strong></div>
+                        <div><span>PROVINCE</span><strong>{{ shipping_info.shipping_province }}</strong></div>
+                        <div><span>POSTAL CODE</span><strong>{{ shipping_info.shipping_zipcode }}</strong></div>
+                        <div><span>COUNTRY</span><strong>{{ shipping_info.shipping_country }}</strong></div>
+                    </div>
 
-
-                <!-- Update Cart -->
-                <div class="mt-3">
-                    <a
-                        href="{% url 'cart_summary' %}"
-                        class="btn btn-outline-secondary"
-                    >
-                        Update Items
-                    </a>
-                </div>
-
-            </div>
-        </div>
-
-
-        <!-- Shipping Information -->
-        <div class="checkout-card mb-4">
-
-            <div class="checkout-card-header">
-                <h5 class="mb-0">Shipping Information</h5>
+                    <a href="{% url 'checkout' %}" class="collage-outline-button collage-payment-secondary-action">UPDATE SHIPPING INFORMATION</a>
+                </section>
             </div>
 
-            <div class="checkout-card-body">
-
-                <div class="shipping-details">
-
-                    <p>
-                        <strong>Name:</strong>
-                        {{ shipping_info.shipping_full_name }}
-                    </p>
-
-                    <p>
-                        <strong>Email:</strong>
-                        {{ shipping_info.shipping_email }}
-                    </p>
-
-                    <p>
-                        <strong>Address 1:</strong>
-                        {{ shipping_info.shipping_address_1 }}
-                    </p>
-
-                    <p>
-                        <strong>Address 2:</strong>
-                        {{ shipping_info.shipping_address_2 }}
-                    </p>
-
-                    <p>
-                        <strong>City:</strong>
-                        {{ shipping_info.shipping_city }}
-                    </p>
-
-                    <p>
-                        <strong>Province:</strong>
-                        {{ shipping_info.shipping_province }}
-                    </p>
-
-                    <p>
-                        <strong>Postal Code:</strong>
-                        {{ shipping_info.shipping_zipcode }}
-                    </p>
-
-                    <p>
-                        <strong>Country:</strong>
-                        {{ shipping_info.shipping_country }}
-                    </p>
-
+            <aside class="collage-payment-panel collage-payment-panel--form collage-billing-form-panel">
+                <div class="collage-payment-panel__header">
+                    <div>
+                        <span class="collage-handwritten-label">Final step</span>
+                        <h2>Billing Information</h2>
+                    </div>
+                    <span class="collage-payment-step-number">03</span>
                 </div>
 
-
-                <a
-                    href="{% url 'checkout' %}"
-                    class="btn btn-outline-secondary mt-2"
-                >
-                    Update Shipping Information
-                </a>
-
-            </div>
-        </div>
-
-
-        <!-- Billing Information -->
-        <div class="checkout-card mb-4">
-
-            <div class="checkout-card-header">
-                <h5 class="mb-0">Billing Information</h5>
-            </div>
-
-            <div class="checkout-card-body">
-
-                <form
-                    method="POST"
-                    action="{% url 'process_order' %}"
-                >
-
+                <form method="POST" action="{% url 'process_order' %}" class="collage-payment-form">
                     {% csrf_token %}
-
-                    {{ billing_form.as_p }}
-
-                    <button
-                        type="submit"
-                        class="btn btn-secondary checkout-pay-button"
-                    >
-                        Pay Now
+                    <div class="collage-payment-form__fields">
+                        {{ billing_form.as_p }}
+                    </div>
+                    <button type="submit" class="collage-primary-button collage-payment-submit">
+                        PAY NOW
+                        <i class="bi bi-arrow-up-right"></i>
                     </button>
-
                 </form>
 
-            </div>
+                <div class="collage-payment-note">
+                    <span class="collage-handwritten-label">GOOD MUSIC / SECURE CHECKOUT</span>
+                    <p>Review your billing details carefully before submitting your order.</p>
+                </div>
+            </aside>
         </div>
-
-    </div>
-</section>
-
+    </section>
+</div>
 {% endblock %}

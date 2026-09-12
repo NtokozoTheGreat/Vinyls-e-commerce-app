@@ -1,226 +1,107 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="collage-order-detail-page">
 
-<!-- Header -->
-<header class="bg-dark py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Order Details</h1>
-            <p class="lead fw-normal text-white-50 mb-0">
-                Review order information
-            </p>
+    <header class="collage-order-admin-hero">
+        <div class="collage-order-admin-hero__copy">
+            <span class="collage-kicker">VINYLS / ORDER / {{ order.id }}</span>
+            <h1>Order <span>details.</span></h1>
+            <p>Review customer information, records, payment, and shipping status.</p>
         </div>
-    </div>
-</header>
+        <div class="collage-order-admin-hero__blank collage-header-blank" aria-hidden="true"></div>
+    </header>
 
-
-<!-- Order Details -->
-<section class="py-5">
-    <div class="container px-4 px-lg-5">
-
-        <div class="order-details-card">
-
-            <!-- Card Header -->
-            <div class="order-details-header">
+    <section class="collage-order-detail-stage">
+        <div class="collage-order-detail-card">
+            <div class="collage-order-detail-card__topline">
                 <div>
-                    <h5 class="mb-1">Order #{{ order.id }}</h5>
-                    <small class="text-body-secondary">
-                        {{ order.date_ordered }}
-                    </small>
+                    <span class="collage-handwritten-label">Order #{{ order.id }}</span>
+                    <h2>{{ order.date_ordered }}</h2>
                 </div>
-
-                <span class="order-status">
-                    {{ order.status|title }}
-                </span>
+                <span class="collage-order-status-pill">{{ order.status|title }}</span>
             </div>
 
+            <div class="collage-order-detail-grid">
+                <section class="collage-order-detail-section">
+                    <span class="collage-kicker">CUSTOMER / 01</span>
+                    <h3>Customer Information</h3>
+                    <dl class="collage-order-definition-list">
+                        <div><dt>NAME</dt><dd>{{ order.full_name }}</dd></div>
+                        <div><dt>EMAIL</dt><dd>{{ order.email }}</dd></div>
+                        <div><dt>PHONE</dt><dd>{{ order.phone }}</dd></div>
+                        <div><dt>DATE ORDERED</dt><dd>{{ order.date_ordered }}</dd></div>
+                    </dl>
+                </section>
 
-            <!-- Card Body -->
-            <div class="order-details-body">
+                <section class="collage-order-detail-section collage-order-detail-section--yellow">
+                    <span class="collage-kicker">DELIVERY / 02</span>
+                    <h3>Shipping Address</h3>
+                    <div class="collage-order-address">{{ order.shipping_address|linebreaksbr }}</div>
+                </section>
 
-                <!-- Customer Information -->
-                <div class="order-section">
-
-                    <h5 class="order-section-title">
-                        Customer Information
-                    </h5>
-
-                    <div class="order-info-grid">
-
-                        <div>
-                            <span class="order-label">Name</span>
-                            <p>{{ order.full_name }}</p>
-                        </div>
-
-                        <div>
-                            <span class="order-label">Email</span>
-                            <p>{{ order.email }}</p>
-                        </div>
-
-                        <div>
-                            <span class="order-label">Phone</span>
-                            <p>{{ order.phone }}</p>
-                        </div>
-
-                        <div>
-                            <span class="order-label">Date Ordered</span>
-                            <p>{{ order.date_ordered }}</p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Shipping Address -->
-                <div class="order-section">
-
-                    <h5 class="order-section-title">
-                        Shipping Address
-                    </h5>
-
-                    <div class="shipping-address">
-                        {{ order.shipping_address|linebreaksbr }}
-                    </div>
-
-                </div>
-
-
-                <!-- Payment -->
-                <div class="order-section">
-
-                    <h5 class="order-section-title">
-                        Payment
-                    </h5>
-
-                    <div class="order-total">
-                        <span>Amount Paid</span>
+                <section class="collage-order-detail-section">
+                    <span class="collage-kicker">PAYMENT / 03</span>
+                    <h3>Payment</h3>
+                    <div class="collage-payment-total collage-payment-total--order">
+                        <span>AMOUNT PAID</span>
                         <strong>${{ order.amount_paid }}</strong>
                     </div>
+                </section>
 
-                </div>
-
-
-                <!-- Vinyls -->
-                <div class="order-section">
-
-                    <h5 class="order-section-title">
-                        Vinyls
-                    </h5>
-
-                    {% for item in order_items %}
-
-                    <div class="order-item">
-
-                        <div class="order-item-info">
-
-                            <h6>
-                                {{ item.product }}
-                            </h6>
-
-                            <small class="text-body-secondary">
-                                Quantity: {{ item.quantity }}
-                            </small>
-
+                <section class="collage-order-detail-section collage-order-detail-section--items">
+                    <span class="collage-kicker">VINYLS / 04</span>
+                    <h3>Records</h3>
+                    <div class="collage-order-item-list">
+                        {% for item in order_items %}
+                        <div class="collage-order-item-row">
+                            <div>
+                                <strong>{{ item.product }}</strong>
+                                <span>Quantity: {{ item.quantity }}</span>
+                            </div>
+                            <strong>${{ item.price }}</strong>
                         </div>
-
-                        <strong>
-                            ${{ item.price }}
-                        </strong>
-
+                        {% empty %}
+                        <p>No items found for this order.</p>
+                        {% endfor %}
                     </div>
+                </section>
+            </div>
 
-                    {% empty %}
-
-                    <p class="text-body-secondary">
-                        No items found for this order.
-                    </p>
-
-                    {% endfor %}
-
-                </div>
-
-
-                <!-- Shipping Status -->
-                <div class="order-section">
-
-                    <h5 class="order-section-title">
-                        Shipping Status
-                    </h5>
-
+            <section class="collage-order-fulfilment">
+                <div>
+                    <span class="collage-handwritten-label">Shipping status</span>
                     {% if order.status == "shipped" or order.status == "delivered" %}
-
-                        <div class="status-message">
-                            This order has been marked as shipped.
-                        </div>
-
-                        <form method="POST">
-
-                            {% csrf_token %}
-
-                            <input
-                                type="hidden"
-                                name="shipping_status"
-                                value="pending"
-                            >
-
-                            <button
-                                type="submit"
-                                class="btn btn-secondary"
-                            >
-                                Mark as Not Shipped
-                            </button>
-
-                        </form>
-
+                        <h3>This order is shipped.</h3>
+                        <p>Use the action to return it to pending if fulfilment needs to be reopened.</p>
                     {% else %}
-
-                        <div class="status-message">
-                            This order is currently waiting to be shipped.
-                        </div>
-
-                        <form method="POST">
-
-                            {% csrf_token %}
-
-                            <input
-                                type="hidden"
-                                name="shipping_status"
-                                value="shipped"
-                            >
-
-                            <button
-                                type="submit"
-                                class="btn btn-secondary"
-                            >
-                                Mark as Shipped
-                            </button>
-
-                        </form>
-
+                        <h3>Waiting to be shipped.</h3>
+                        <p>Mark it as shipped when the package has left the store.</p>
                     {% endif %}
-
                 </div>
 
-            </div>
+                {% if order.status == "shipped" or order.status == "delivered" %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="shipping_status" value="pending">
+                    <button type="submit" class="collage-order-status-button collage-order-status-button--pending">MARK AS NOT SHIPPED</button>
+                </form>
+                {% else %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="shipping_status" value="shipped">
+                    <button type="submit" class="collage-order-status-button collage-order-status-button--ship">MARK AS SHIPPED</button>
+                </form>
+                {% endif %}
+            </section>
 
-
-            <!-- Card Footer -->
-            <div class="order-details-footer">
-
-                <a
-                    href="{% url 'vendor_dashboard' %}"
-                    class="btn btn-outline-secondary"
-                >
-                    Back to Dashboard
+            <div class="collage-order-detail-card__footer">
+                <a href="{% url 'vendor_dashboard' %}" class="collage-outline-button">
+                    <i class="bi bi-arrow-left"></i>
+                    BACK TO DASHBOARD
                 </a>
-
             </div>
-
         </div>
-
-    </div>
-</section>
-
+    </section>
+</div>
 {% endblock %}

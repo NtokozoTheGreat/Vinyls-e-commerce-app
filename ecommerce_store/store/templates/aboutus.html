@@ -1,34 +1,120 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<section class="collage-about-hero">
-    <div class="collage-about-hero__copy">
-        <span class="collage-kicker">VINYLS / ABOUT / 02</span>
-        <h1>Music belongs<br><span>on vinyl.</span></h1>
-        <p>A community for collectors, creators, and music lovers. Real records. Real people. A brighter tomorrow.</p>
-    </div>
-    <div class="collage-about-hero__art collage-header-blank" aria-hidden="true"></div>
-    <div class="collage-about-hero__index"><span>EST. 2026</span><strong>02</strong></div>
+
+<section class="about-ref-page">
+    <section class="about-ref-hero"
+             style="background-image: url('{% static 'images/vinyls_collage/about-hero-final.png' %}');">
+        <div class="about-ref-hero__copy">
+            <span class="about-ref-kicker">VINYLS / ABOUT / 02</span>
+            <h1>Music belongs<br><span>on vinyl.</span></h1>
+            <p>
+                A community for collectors, creators, and music lovers.
+                Real records. Real people. A brighter tomorrow.
+            </p>
+            <i class="about-ref-copy-mark" aria-hidden="true"></i>
+        </div>
+
+        <div class="about-ref-hero__art" aria-hidden="true"></div>
+
+        <aside class="about-ref-hero__index" aria-label="Section marker">
+            <span>EST.<br>2026</span>
+            <strong>02</strong>
+        </aside>
+    </section>
+
+    <section class="about-ref-intro">
+        <div class="about-ref-intro__number">01 /</div>
+
+        <div class="about-ref-intro__title">
+            <p class="about-ref-kicker about-ref-kicker--dark">WHAT WE DO</p>
+            <h2>A marketplace for people<br><span>who care about records.</span></h2>
+        </div>
+
+        <div class="about-ref-intro__copy">
+            <p>
+                VINYLS brings together collectors, sellers, and music lovers
+                from around the world. Discover rare finds, build your collection,
+                and connect with independent record outlets who keep music culture alive.
+                It’s more than a marketplace — it’s a community that believes in the
+                lasting power of records.
+            </p>
+        </div>
+
+        <div class="about-ref-intro__doodle" aria-hidden="true">
+            <img src="{% static 'images/vinyls_collage/good_music_everywhere_globe.png' %}" alt="">
+        </div>
+
+        <i class="about-ref-intro__scribble" aria-hidden="true"></i>
+    </section>
+
+    <section class="about-ref-idea">
+        <div class="about-ref-idea__heading">
+            <span class="about-ref-idea__number">02 /</span>
+            <h2>The Idea</h2>
+        </div>
+
+        <div class="about-ref-cards">
+            <article class="about-ref-card about-ref-card--pink">
+                <span class="about-ref-card__index">01</span>
+                <img class="about-ref-card__icon"
+                     src="{% static 'images/vinyls_collage/retro_vinyl_record_sound_icon.png' %}"
+                     alt="" aria-hidden="true">
+                <h3>Discover</h3>
+                <p>
+                    Uncover new favorites, rare gems, and forgotten classics.
+                    From timeless albums to emerging artists, VINYLS helps you
+                    find music that matters.
+                </p>
+            </article>
+
+            <article class="about-ref-card about-ref-card--yellow">
+                <span class="about-ref-card__index">02</span>
+                <img class="about-ref-card__icon"
+                     src="{% static 'images/vinyls_collage/distressed_stack_of_vinyl_records.png' %}"
+                     alt="" aria-hidden="true">
+                <h3>Collect</h3>
+                <p>
+                    Build a collection that tells your story.
+                    Whether you're after your first vinyl or a long-sought grail,
+                    VINYLS makes it easy to grow your library.
+                </p>
+            </article>
+
+            <article class="about-ref-card about-ref-card--blue">
+                <span class="about-ref-card__index">03</span>
+                <img class="about-ref-card__icon"
+                     src="{% static 'images/vinyls_collage/hand_drawn_community_group_icon.png' %}"
+                     alt="" aria-hidden="true">
+                <h3>Connect</h3>
+                <p>
+                    Meet a global community of record lovers.
+                    Support independent sellers, share your passion, and be part
+                    of a culture that keeps music alive for the next generation.
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <section class="about-ref-manifesto">
+        <div class="about-ref-manifesto__panel about-ref-manifesto__panel--left" aria-hidden="true">
+            <img class="about-ref-manifesto__image" src="{% static 'images/vinyls_collage/same_music_brighter_tomorrow.png' %}" alt="">
+        </div>
+
+        <div class="about-ref-manifesto__content">
+            <span class="about-ref-manifesto__kicker">THE MANIFESTO</span>
+            <h2>BUY MUSIC.<br>SELL MUSIC.<br><strong>KEEP MUSIC ALIVE.</strong></h2>
+        </div>
+
+        <div class="about-ref-manifesto__panel about-ref-manifesto__panel--right" aria-hidden="true">
+            <img class="about-ref-manifesto__image" src="{% static 'images/vinyls_collage/retro_vinyl_corner_good_vibes.png' %}" alt="">
+        </div>
+
+        <div class="about-ref-manifesto__meta">
+            <span>VINYLS.LS</span>
+            <span>2026 — PRESENT</span>
+        </div>
+    </section>
 </section>
 
-<section class="collage-about-intro">
-    <div class="collage-about-number">01</div>
-    <div><p class="collage-kicker">WHAT WE DO</p><h2>A marketplace for people who <span>care about records.</span></h2></div>
-    <p>Vinyls is a place for collectors, sellers and music lovers to discover records, build collections and connect with independent record outlets.</p>
-</section>
-
-<section class="collage-values-section">
-    <div class="collage-section-heading"><div><span class="collage-section-number">02 /</span><h2>The Idea</h2></div></div>
-    <div class="collage-values-grid">
-        <article class="collage-value-card collage-value-card--pink"><span>01</span><h3>Discover</h3><p>Find records across different genres, artists and independent outlets.</p></article>
-        <article class="collage-value-card collage-value-card--yellow"><span>02</span><h3>Collect</h3><p>Build a collection around the music you love and discover something unexpected.</p></article>
-        <article class="collage-value-card collage-value-card--blue"><span>03</span><h3>Connect</h3><p>Give buyers and record sellers a place to interact and share their passion for music.</p></article>
-    </div>
-</section>
-
-<section class="collage-manifesto">
-    <span>THE MANIFESTO</span>
-    <h2>BUY MUSIC.<br>SELL MUSIC.<br><strong>KEEP MUSIC ALIVE.</strong></h2>
-    <div><span>VINYLS.LS</span><span>2026 — PRESENT</span></div>
-</section>
 {% endblock %}
