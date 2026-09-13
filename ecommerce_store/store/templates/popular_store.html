@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<section class="collage-directory-page">
+<section class="collage-directory-page collage-directory-page--popular">
     <header class="collage-directory-hero collage-directory-hero--popular-stores">
         <div class="collage-directory-hero__copy">
             <span class="collage-kicker">VINYLS / MARKETPLACE / CHARTS</span>
@@ -16,7 +16,9 @@
             <small>OUTLETS</small>
         </div>
 
-        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+        <div class="collage-directory-hero__blank" aria-hidden="true">
+            <img class="collage-directory-hero__image" src="{% static 'images/vinyls_collage/directory-popular-hero-art.png' %}" alt="">
+        </div>
     </header>
 
     <section class="collage-products-section collage-directory-section">
@@ -71,5 +73,12 @@
             </div>
         {% endif %}
     </section>
+    <section class="collage-directory-promo" aria-label="VINYLS community message">
+        <div class="collage-directory-promo__copy">
+            <span>GOOD MUSIC EVERYWHERE</span>
+            <h2>INDEPENDENT STORES.<br>STRONGER MUSIC.<br>A BRIGHTER TOMORROW.</h2>
+        </div>
+    </section>
+
 </section>
 {% endblock %}

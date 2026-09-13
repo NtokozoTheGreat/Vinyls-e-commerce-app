@@ -9012,3 +9012,602 @@ body.vinyls-collage-site::before {
   }
 }
 
+/* ==========================================================================
+   DIRECTORY PAGES — FULL-BLEED HEADER REFINEMENT
+   Scoped to .collage-directory-page only.
+
+   Changes in this pass:
+   - no gradient/fade over generated photos;
+   - solid page/hero backgrounds;
+   - hero starts at the top of the page so artwork runs behind the navbar;
+   - readable copy and counters are padded below the navbar;
+   - artwork remains in its own grid area and never sits behind body text.
+   ========================================================================== */
+
+.collage-directory-page {
+  --directory-nav-clearance: 104px;
+  --directory-hero-tear: 48px;
+  --directory-hero-bg: #56b28f;
+  --directory-index-bg: var(--pink);
+  --directory-promo-image: none;
+
+  position: relative;
+  width: min(100%, 1540px);
+  margin: 0 auto;
+  padding-top: 0;
+  overflow: visible;
+  background: #f4efe4;
+  color: var(--ink);
+}
+
+.collage-directory-page--popular {
+  --directory-hero-bg: #56b28f;
+  --directory-index-bg: var(--pink);
+  --directory-promo-image: url("../images/vinyls_collage/retro_teal_vinyl_banner.png");
+}
+
+.collage-directory-page--new {
+  --directory-hero-bg: #f6cf38;
+  --directory-index-bg: #f6cf38;
+  --directory-promo-image: url("../images/vinyls_collage/retro_vinyl_stack_on_golden_yellow.png");
+}
+
+.collage-directory-page--all {
+  --directory-hero-bg: #49aef0;
+  --directory-index-bg: #49aef0;
+  --directory-promo-image: url("../images/vinyls_collage/retro_coastal_city_screenprint_panorama.png");
+}
+
+/*
+   The popular-page green bottom banner needs a solid paper-color base behind
+   the generated artwork so no transparent areas fall through to the page.
+*/
+.collage-directory-page--popular .collage-directory-promo {
+  background: #56b28f;
+}
+
+/* HERO ------------------------------------------------------------------- */
+.collage-directory-page .collage-directory-hero {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns:
+    minmax(380px, .72fr)
+    minmax(620px, 1.28fr)
+    112px;
+  grid-template-areas: "copy art index";
+  align-items: stretch;
+  min-height: 430px;
+  overflow: visible;
+  border: 0;
+  background: var(--directory-hero-bg);
+  isolation: isolate;
+
+  -webkit-mask-image:
+    linear-gradient(#000 0 0),
+    url("../images/vinyls_collage/directory-hero-bottom-tear-mask.png");
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-position: left top, left bottom;
+  -webkit-mask-size:
+    100% calc(100% - var(--directory-hero-tear) + 1px),
+    100% var(--directory-hero-tear);
+
+  mask-image:
+    linear-gradient(#000 0 0),
+    url("../images/vinyls_collage/directory-hero-bottom-tear-mask.png");
+  mask-repeat: no-repeat, no-repeat;
+  mask-position: left top, left bottom;
+  mask-size:
+    100% calc(100% - var(--directory-hero-tear) + 1px),
+    100% var(--directory-hero-tear);
+
+  filter: drop-shadow(0 5px 4px rgba(17,17,15,.18));
+}
+
+.collage-directory-page .collage-directory-hero::before {
+  content: none;
+  display: none;
+}
+
+.collage-directory-page .collage-directory-hero__copy {
+  grid-area: copy;
+  position: relative;
+  z-index: 5;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:
+    calc(var(--directory-nav-clearance) + clamp(1.2rem, 2vw, 2rem))
+    clamp(1.5rem, 3.5vw, 3.3rem)
+    calc(2.2rem + var(--directory-hero-tear));
+  background: var(--directory-hero-bg);
+}
+
+.collage-directory-page .collage-directory-hero__copy::after {
+  content: none;
+  display: none;
+}
+
+.collage-directory-page .collage-directory-hero__copy .collage-kicker {
+  color: var(--pink);
+  font-size: .78rem;
+  letter-spacing: .055em;
+}
+
+.collage-directory-page .collage-directory-hero__copy h1 {
+  max-width: 100%;
+  margin: .5rem 0 .65rem;
+  color: var(--ink);
+  font: 900 clamp(4rem, 5.7vw, 5.8rem)/.79 var(--serif);
+  letter-spacing: -.055em;
+}
+
+.collage-directory-page .collage-directory-hero__copy h1 span {
+  display: inline;
+  padding: 0 .07em;
+  background:
+    linear-gradient(
+      transparent 38%,
+      var(--pink) 38%,
+      var(--pink) 92%,
+      transparent 92%
+    );
+}
+
+.collage-directory-page .collage-directory-hero__copy p {
+  max-width: 31rem;
+  margin: .2rem 0 0;
+  color: rgba(17,17,15,.96);
+  font: 600 clamp(.95rem, 1.2vw, 1.08rem)/1.35 var(--serif);
+}
+
+.collage-directory-page .collage-directory-hero__blank {
+  grid-area: art;
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  min-height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--directory-hero-bg) !important;
+  box-shadow: none !important;
+}
+
+.collage-directory-page .collage-directory-hero__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 54% 56%;
+  filter: saturate(1.03) contrast(1.04);
+
+  -webkit-mask-image: url("../images/vinyls_collage/directory-hero-side-tear-mask.png");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+
+  mask-image: url("../images/vinyls_collage/directory-hero-side-tear-mask.png");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+}
+
+.collage-directory-page .collage-directory-hero__blank::after {
+  content: none;
+  display: none;
+}
+
+.collage-directory-page .collage-directory-hero__index {
+  grid-area: index;
+  position: relative;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .65rem;
+  min-width: 0;
+  padding:
+    calc(var(--directory-nav-clearance) + 1.05rem)
+    .45rem
+    calc(1rem + var(--directory-hero-tear));
+  border: 0;
+  border-left: 1.5px solid rgba(17,17,15,.18);
+  background: var(--directory-index-bg);
+  color: var(--ink);
+  text-align: center;
+}
+
+.collage-directory-page .collage-directory-hero__index::after {
+  content: "";
+  width: 45px;
+  height: 7px;
+  margin-top: .15rem;
+  border-top: 3px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  transform: rotate(-7deg);
+}
+
+.collage-directory-page .collage-directory-hero__index span,
+.collage-directory-page .collage-directory-hero__index small {
+  color: var(--ink);
+  font: 900 .72rem/1 var(--sans);
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.collage-directory-page .collage-directory-hero__index strong {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: .1rem 0;
+  padding: .55rem 0 .45rem;
+  color: var(--ink);
+  font: 900 clamp(3rem, 3.9vw, 4.2rem)/.8 var(--serif);
+}
+
+.collage-directory-page .collage-directory-hero__index strong::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 18%;
+  left: 18%;
+  border-top: 3px solid var(--ink);
+}
+
+/* DIRECTORY BODY --------------------------------------------------------- */
+.collage-directory-page .collage-directory-section {
+  position: relative;
+  z-index: 2;
+  margin-top: calc(-1 * var(--directory-hero-tear));
+  padding:
+    calc(2.25rem + var(--directory-hero-tear))
+    clamp(1rem, 3vw, 2.5rem)
+    clamp(2.2rem, 3vw, 3rem);
+  background: #f4efe4;
+}
+
+.collage-directory-page .collage-section-heading {
+  align-items: flex-end;
+  margin-bottom: 1.35rem;
+}
+
+.collage-directory-page .collage-section-heading h2 {
+  margin: 0;
+  font: 900 clamp(2.8rem, 3.8vw, 3.8rem)/.92 var(--serif);
+  letter-spacing: -.04em;
+}
+
+.collage-directory-page .collage-section-number {
+  color: var(--pink);
+  font: 900 1rem/1 var(--sans);
+}
+
+.collage-directory-page .collage-section-meta {
+  color: var(--ink);
+  font: 900 .78rem/1 var(--sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.collage-directory-page .collage-store-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 1rem;
+}
+
+.collage-directory-page .collage-store-directory-card {
+  min-width: 0;
+  padding: .58rem;
+  background: #f7f3e9;
+  border: 1px solid rgba(17,17,15,.13);
+  box-shadow: 0 3px 9px rgba(17,17,15,.055);
+  border-radius: 5px;
+}
+
+.collage-directory-page .collage-store-directory-card__image {
+  aspect-ratio: 1.08 / 1;
+  clip-path: none;
+  border-radius: 2px;
+}
+
+.collage-directory-page .collage-store-directory-card__image img {
+  filter: saturate(.94) contrast(1.07);
+}
+
+.collage-directory-page .collage-store-directory-card__body {
+  padding: .65rem .05rem .55rem;
+}
+
+.collage-directory-page .collage-store-directory-card__body h3 {
+  margin: .28rem 0 .35rem;
+  font: 900 clamp(1.15rem, 1.5vw, 1.45rem)/.98 var(--serif);
+  letter-spacing: -.03em;
+}
+
+.collage-directory-page .collage-store-directory-card__body p {
+  min-height: 3.45em;
+  margin: 0 0 .55rem;
+  font-size: .76rem;
+  line-height: 1.42;
+}
+
+.collage-directory-page .collage-store-directory-card__action {
+  padding-top: .5rem;
+  font-size: .68rem;
+}
+
+/* LOWER TORN PROMO -------------------------------------------------------
+   The generated promo images are now CLEAN rectangles without built-in tears.
+   The torn top edge is applied here in CSS, the same way the hero tears are
+   handled elsewhere on the page. Text remains separate HTML on top of the
+   artwork so readability is preserved. */
+.collage-directory-page .collage-directory-promo {
+  --directory-promo-top-tear: 72px;
+
+  position: relative;
+  z-index: 3;
+  min-height: clamp(250px, 22.5vw, 360px);
+  margin-top: -6px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--directory-hero-bg);
+
+  -webkit-mask-image:
+    url("../images/vinyls_collage/directory-footer-top-tear.png"),
+    linear-gradient(#000 0 0);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-position: left top, left bottom;
+  -webkit-mask-size: 100% var(--directory-promo-top-tear),
+                      100% calc(100% - var(--directory-promo-top-tear) + 1px);
+
+  mask-image:
+    url("../images/vinyls_collage/directory-footer-top-tear.png"),
+    linear-gradient(#000 0 0);
+  mask-repeat: no-repeat, no-repeat;
+  mask-position: left top, left bottom;
+  mask-size: 100% var(--directory-promo-top-tear),
+             100% calc(100% - var(--directory-promo-top-tear) + 1px);
+
+  filter: drop-shadow(0 -4px 3px rgba(17,17,15,.15));
+}
+
+.collage-directory-page .collage-directory-promo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--directory-promo-image);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: cover;
+}
+
+.collage-directory-page .collage-directory-promo::after {
+  content: none;
+  display: none;
+}
+
+.collage-directory-page .collage-directory-promo__copy {
+  position: relative;
+  z-index: 2;
+  width: min(58%, 790px);
+  margin-left: auto;
+  padding:
+    clamp(4.35rem, 5.9vw, 6.25rem)
+    clamp(1.5rem, 4.2vw, 3.8rem)
+    1.9rem 1rem;
+  color: var(--ink);
+}
+
+.collage-directory-page .collage-directory-promo__copy span {
+  display: block;
+  margin-bottom: .4rem;
+  font: 900 .72rem/1 var(--sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.collage-directory-page .collage-directory-promo__copy h2 {
+  margin: 0;
+  font: 900 clamp(1.85rem, 2.75vw, 2.95rem)/.94 var(--marker);
+  font-style: italic;
+  letter-spacing: -.015em;
+  text-transform: uppercase;
+}
+
+.collage-directory-page--popular .collage-directory-promo__copy {
+  width: min(57%, 780px);
+  padding-top: clamp(4.2rem, 5.6vw, 6rem);
+}
+
+.collage-directory-page--new .collage-directory-promo__copy {
+  width: min(56%, 760px);
+  padding-top: clamp(4.3rem, 5.7vw, 6.1rem);
+}
+
+.collage-directory-page--all .collage-directory-promo__copy {
+  width: min(50%, 680px);
+  padding-top: clamp(4.45rem, 5.85vw, 6.25rem);
+}
+
+/* TABLET ----------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .collage-directory-page {
+    --directory-nav-clearance: 92px;
+    --directory-hero-tear: 42px;
+  }
+
+  .collage-directory-page .collage-directory-hero {
+    grid-template-columns: minmax(0,1fr) 100px;
+    grid-template-areas:
+      "copy index"
+      "art  art";
+    min-height: 0;
+  }
+
+  .collage-directory-page .collage-directory-hero__copy {
+    padding:
+      calc(var(--directory-nav-clearance) + 1.25rem)
+      1.4rem
+      2rem;
+  }
+
+  .collage-directory-page .collage-directory-hero__copy h1 {
+    font-size: clamp(3.6rem, 9vw, 5.25rem);
+  }
+
+  .collage-directory-page .collage-directory-hero__index {
+    min-height: 260px;
+    padding:
+      calc(var(--directory-nav-clearance) + .75rem)
+      .4rem
+      1.2rem;
+  }
+
+  .collage-directory-page .collage-directory-hero__blank {
+    min-height: 310px;
+  }
+
+  .collage-directory-page .collage-directory-hero__image {
+    object-position: center 56%;
+  }
+
+  .collage-directory-page .collage-store-directory-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+
+  .collage-directory-page .collage-directory-promo {
+    --directory-promo-top-tear: 62px;
+    min-height: 265px;
+    margin-top: -6px;
+  }
+
+  .collage-directory-page .collage-directory-promo__copy {
+    width: 61%;
+    padding-top: 4.55rem;
+  }
+
+  .collage-directory-page--all .collage-directory-promo__copy {
+    width: 55%;
+    padding-top: 4.65rem;
+  }
+}
+
+/* MOBILE ----------------------------------------------------------------- */
+@media (max-width: 767.98px) {
+  .collage-directory-page {
+    --directory-nav-clearance: 84px;
+    --directory-hero-tear: 34px;
+  }
+
+  .collage-directory-page .collage-directory-hero {
+    grid-template-columns: minmax(0,1fr) 82px;
+  }
+
+  .collage-directory-page .collage-directory-hero__copy {
+    padding:
+      calc(var(--directory-nav-clearance) + .9rem)
+      .95rem
+      1.55rem;
+  }
+
+  .collage-directory-page .collage-directory-hero__copy h1 {
+    margin-top: .4rem;
+    font-size: clamp(3rem, 13vw, 4.25rem);
+  }
+
+  .collage-directory-page .collage-directory-hero__copy p {
+    max-width: 22rem;
+    font-size: .92rem;
+  }
+
+  .collage-directory-page .collage-directory-hero__index {
+    min-height: 235px;
+    gap: .45rem;
+    padding:
+      calc(var(--directory-nav-clearance) + .65rem)
+      .25rem
+      1rem;
+  }
+
+  .collage-directory-page .collage-directory-hero__index strong {
+    font-size: 2.55rem;
+  }
+
+  .collage-directory-page .collage-directory-hero__blank {
+    min-height: 235px;
+  }
+
+  .collage-directory-page .collage-directory-section {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .collage-directory-page .collage-section-heading {
+    align-items: flex-start;
+  }
+
+  .collage-directory-page .collage-section-heading h2 {
+    font-size: clamp(2.25rem, 9vw, 3rem);
+  }
+
+  .collage-directory-page .collage-section-meta {
+    max-width: 9rem;
+    text-align: right;
+    font-size: .68rem;
+  }
+
+  .collage-directory-page .collage-directory-promo {
+    --directory-promo-top-tear: 54px;
+    min-height: 228px;
+    margin-top: -4px;
+  }
+
+  .collage-directory-page .collage-directory-promo::before {
+    background-size: auto 100%;
+    background-position: 27% bottom;
+  }
+
+  .collage-directory-page .collage-directory-promo__copy {
+    width: 64%;
+    padding: 3.8rem .85rem 1.35rem;
+  }
+
+  .collage-directory-page--all .collage-directory-promo__copy {
+    width: 58%;
+    padding: 3.95rem .85rem 1.35rem;
+  }
+
+  .collage-directory-page .collage-directory-promo__copy h2 {
+    font-size: clamp(1.35rem, 5vw, 1.8rem);
+  }
+}
+
+@media (max-width: 479.98px) {
+  .collage-directory-page .collage-store-directory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .collage-directory-page .collage-directory-promo {
+    --directory-promo-top-tear: 48px;
+    min-height: 206px;
+    margin-top: -3px;
+  }
+
+  .collage-directory-page .collage-directory-promo__copy {
+    width: 68%;
+    padding-top: 3.3rem;
+  }
+
+  .collage-directory-page--all .collage-directory-promo__copy {
+    width: 62%;
+    padding-top: 3.4rem;
+  }
+}

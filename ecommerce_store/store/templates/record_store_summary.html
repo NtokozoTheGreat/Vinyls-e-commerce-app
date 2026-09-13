@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<section class="collage-directory-page">
+<section class="collage-directory-page collage-directory-page--all">
     <header class="collage-directory-hero collage-directory-hero--stores">
         <div class="collage-directory-hero__copy">
             <span class="collage-kicker">VINYLS / OUTLETS /</span>
@@ -16,7 +16,9 @@
             <small>DISCOVER</small>
         </div>
 
-        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+        <div class="collage-directory-hero__blank" aria-hidden="true">
+            <img class="collage-directory-hero__image" src="{% static 'images/vinyls_collage/directory-all-hero-art.png' %}" alt="">
+        </div>
     </header>
 
     <section class="collage-products-section collage-directory-section">
@@ -63,5 +65,12 @@
             </div>
         {% endif %}
     </section>
+    <section class="collage-directory-promo" aria-label="VINYLS community message">
+        <div class="collage-directory-promo__copy">
+            <span>VINYLS / OUTLETS</span>
+            <h2>GOOD MUSIC.<br>REAL PEOPLE.<br>LOCAL EVERYWHERE.</h2>
+        </div>
+    </section>
+
 </section>
 {% endblock %}
