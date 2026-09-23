@@ -1,86 +1,384 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="collage-store-page">
-    <header class="collage-store-hero">
-        <div class="collage-store-hero__title">
+
+<div class="collage-store-page store-reference-layout store-reference-assets">
+
+    <section class="store-reference-stage">
+        <div class="store-reference-stage__art" aria-hidden="true">
+            <img
+                class="store-reference-stage__background-image"
+                src="{% static 'images/vinyls_collage/neon_moonlight_record_store_by_the_bay.png' %}"
+                alt="">
+        </div>
+
+        <img
+            class="store-reference-half-vinyl"
+            src="{% static 'images/vinyls_collage/gritty_neon_half_disc_vinyl_record.png' %}"
+            alt=""
+            aria-hidden="true">
+
+        <header class="store-reference-title-card">
             <span class="collage-kicker">RECORD STORE / {{ stores.id|stringformat:"02d" }}</span>
-            <h1>{{ stores.store_name }}</h1>
+            <h1 class="store-reference-board-name" data-store-board-name>{{ stores.store_name }}</h1>
             <p>VINYL MARKETPLACE / {{ stores.products.count }} RECORDS</p>
-        </div>
-        <div class="collage-store-hero__art collage-header-blank" aria-hidden="true"></div>
-    </header>
+        </header>
+</section>
 
-    <section class="collage-store-profile">
-        <div class="collage-store-profile__image">
-            {% if stores.image %}
-                <img src="{{ stores.image.url }}" alt="{{ stores.store_name }}">
-            {% else %}
-                <img src="{% static 'images/vinyls_collage/store-interior-collage.jpg' %}" alt="Record store interior collage">
-            {% endif %}
-            <div class="collage-sticker collage-sticker--pink collage-sticker--store-photo">MUSIC<br>SOUNDS<br>BETTER<br>HERE</div>
-        </div>
+    <section class="store-reference-about-horizontal">
+        <div class="store-reference-about-horizontal__inner">
 
-        <div class="collage-store-profile__content">
-            <div class="collage-section-heading collage-section-heading--compact"><div><h2>About the Store</h2></div></div>
-            <p class="collage-store-description">{{ description }}</p>
-
-            <div class="collage-contact-list">
-                <div><i class="bi bi-envelope"></i><span>{{ stores.email }}</span></div>
-                <div><i class="bi bi-telephone"></i><span>{{ stores.phone_number }}</span></div>
-            </div>
-
-            <div class="collage-rating-badge">
-                {% if stores.ratings_count > 0 %}
-                    <strong>{{ stores.average_rating }}★</strong>
-                    <span>{{ stores.ratings_count }} review{{ stores.ratings_count|pluralize }}</span>
+            <div class="store-reference-about-horizontal__image">
+                {% if stores.image %}
+                    <img src="{{ stores.image.url }}" alt="{{ stores.store_name }}">
                 {% else %}
-                    <strong>—</strong><span>No reviews yet</span>
+                    <img src="{% static 'images/vinyls_collage/store-interior-collage.jpg' %}" alt="{{ stores.store_name }}">
                 {% endif %}
             </div>
 
-            <div class="collage-actions collage-actions--store">
-                {% if user.is_authenticated %}
-                    {% if already_reviewed %}
-                        <span class="collage-status-note">You've already reviewed this store.</span>
-                    {% elif user_can_review %}
-                        <a href="{% url 'rate_vendor' stores.id %}" class="collage-primary-button">Write a Review <span>→</span></a>
+            <div class="store-reference-about-horizontal__copy">
+                <span class="store-reference-about-horizontal__kicker">ABOUT STORE</span>
+                <h2>About the Store</h2>
+
+                <p class="store-reference-about-horizontal__description">
+                    {{ description }}
+                </p>
+
+                <div class="store-reference-about-horizontal__heart" aria-hidden="true">♡</div>
+            </div>
+
+            <div class="store-reference-about-horizontal__details">
+                <div class="store-reference-about-horizontal__detail">
+                    <i class="bi bi-star"></i>
+                    <div>
+                        {% if stores.ratings_count > 0 %}
+                            <strong>{{ stores.average_rating }}</strong>
+                            <span>Customer Rating</span>
+                            <small>{{ stores.ratings_count }} review{{ stores.ratings_count|pluralize }}</small>
+                        {% else %}
+                            <strong>—</strong>
+                            <span>Customer Rating</span>
+                            <small>No reviews yet</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="store-reference-about-horizontal__detail">
+                    <i class="bi bi-envelope"></i>
+                    <div>
+                        <strong>Email</strong>
+                        <span>{{ stores.email }}</span>
+                    </div>
+                </div>
+
+                <div class="store-reference-about-horizontal__detail">
+                    <i class="bi bi-telephone"></i>
+                    <div>
+                        <strong>Contact</strong>
+                        <span>{{ stores.phone_number }}</span>
+                    </div>
+                </div>
+
+                <div class="store-reference-about-horizontal__actions">
+                    {% if user.is_authenticated %}
+                        {% if already_reviewed %}
+                            <span class="collage-status-note">You've already reviewed this store.</span>
+                        {% elif user_can_review %}
+                            <a href="{% url 'rate_vendor' stores.id %}" class="collage-primary-button">
+                                Write a Review <span>→</span>
+                            </a>
+                        {% else %}
+                            <span class="collage-status-note">
+                                You can review this store once you've made a purchase.
+                            </span>
+                        {% endif %}
+
+                        <a href="{% url 'start_conversation' stores.id %}" class="collage-outline-button">
+                            Message {{ stores.store_name }}
+                        </a>
                     {% else %}
-                        <span class="collage-status-note">You can review this store once you've made a purchase.</span>
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="collage-primary-button">
+                            Log in to review <span>→</span>
+                        </a>
                     {% endif %}
-                    <a href="{% url 'start_conversation' stores.id %}" class="collage-outline-button">Message {{ stores.store_name }}</a>
-                {% else %}
-                    <a href="{% url 'login' %}?next={{ request.path }}" class="collage-primary-button">Log in to review <span>→</span></a>
-                {% endif %}
+                </div>
             </div>
+
         </div>
     </section>
 
-    <section class="collage-products-section collage-products-section--store">
-        <div class="collage-section-heading">
-            <div><span class="collage-section-number">01</span><h2>Vinyls</h2></div>
-            <span class="collage-section-meta">{{ stores.products.count }} RECORDS</span>
+    <section class="store-vinyls-section" data-store-vinyl-browser>
+        <div class="store-vinyls-section__heading">
+            <div class="store-vinyls-section__title">
+                <h2>Vinyls</h2>
+                <span class="store-vinyls-section__underline" aria-hidden="true"></span>
+            </div>
+
+            <span class="store-vinyls-section__count" data-record-count>
+                {{ stores.products.count }} RECORDS FOUND
+            </span>
         </div>
 
-        <div class="collage-product-grid collage-product-grid--dense">
-            {% for product in stores.products.all %}
-                <article class="store-product-card collage-mini-record-card">
-                    <a class="store-product-image" href="{% url 'productdetail' product.id %}">
-                        {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">{% else %}<img src="{% static 'images/placeholder.png' %}" alt="No image available">{% endif %}
-                        <span class="vinyl-disc-edge" aria-hidden="true"></span>
-                    </a>
-                    <div class="store-product-info">
-                        <span>{{ product.category|default:"RECORD" }}</span>
-                        <h3>{{ product.vinyl_name }}</h3>
-                        <p>{{ product.artist_name }}</p>
-                        <strong>${{ product.price }}</strong>
-                        <a class="store-product-link" href="{% url 'productdetail' product.id %}">View record <i class="bi bi-arrow-up-right"></i></a>
+        <div class="store-vinyls-layout">
+            <aside class="store-vinyls-genres" aria-label="Browse records by genre">
+                <h3>Browse by Genre</h3>
+
+                <div class="store-vinyls-genres__list">
+                    <button type="button" class="store-vinyls-genre is-active" data-genre-filter="all">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-grid"></i></span>
+                        <span>All Genres</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="all">{{ stores.products.count }}</span>
+                    </button>
+
+                    <button type="button" class="store-vinyls-genre" data-genre-filter="rock">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-music-note-beamed"></i></span>
+                        <span>Rock</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="rock">0</span>
+                    </button>
+
+                    <button type="button" class="store-vinyls-genre" data-genre-filter="pop">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-music-note"></i></span>
+                        <span>Pop</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="pop">0</span>
+                    </button>
+
+                    <button type="button" class="store-vinyls-genre" data-genre-filter="jazz">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-vinyl"></i></span>
+                        <span>Jazz</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="jazz">0</span>
+                    </button>
+
+                    <button type="button" class="store-vinyls-genre" data-genre-filter="hip hop">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-boombox"></i></span>
+                        <span>Hip Hop</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="hip hop">0</span>
+                    </button>
+
+                    <button type="button" class="store-vinyls-genre" data-genre-filter="electronic">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-soundwave"></i></span>
+                        <span>Electronic</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="electronic">0</span>
+                    </button>
+
+                    <button type="button" class="store-vinyls-genre" data-genre-filter="indie">
+                        <span class="store-vinyls-genre__icon"><i class="bi bi-triangle"></i></span>
+                        <span>Indie</span>
+                        <span class="store-vinyls-genre__count" data-genre-count="indie">0</span>
+                    </button>
+                </div>
+
+                <div class="store-vinyls-genres__image store-vinyls-genres__image--reference">
+                    <img src="{% static 'images/vinyls_collage/neon_palms_and_better_people.png' %}" alt="Good music better people">
+                </div>
+            </aside>
+
+            <div class="store-vinyls-results">
+                <div class="store-vinyls-toolbar">
+                    <div class="store-vinyls-tabs" role="group" aria-label="Record view">
+                        <button type="button" class="store-vinyls-tab is-active" data-vinyl-view="latest">
+                            Latest Vinyls
+                        </button>
+                        <button type="button" class="store-vinyls-tab" data-vinyl-view="all">
+                            All Records
+                        </button>
                     </div>
-                </article>
-            {% empty %}
-                <div class="collage-empty-state"><span>00</span><h3>No records listed.</h3></div>
-            {% endfor %}
+
+                    <label class="store-vinyls-sort">
+                        <span>Sort By:</span>
+                        <select data-vinyl-sort aria-label="Sort vinyl records">
+                            <option value="latest">Newest Arrivals</option>
+                            <option value="name-asc">Name A–Z</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="store-vinyls-grid" data-vinyl-grid>
+                    {% for product in stores.products.all %}
+                        <article
+                            class="store-product-card collage-mini-record-card store-reference-product-card"
+                            data-vinyl-card
+                            data-index="{{ forloop.counter0 }}"
+                            data-genre="{{ product.category|default:'record'|lower|escape }}"
+                            data-name="{{ product.vinyl_name|lower|escape }}"
+                            data-price="{{ product.price }}"
+                        >
+                            <a class="store-product-image" href="{% url 'productdetail' product.id %}">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                                {% endif %}
+                                <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                            </a>
+
+                            <div class="store-product-info">
+                                <span>{{ product.category|default:"RECORD" }}</span>
+                                <h3>{{ product.vinyl_name }}</h3>
+                                <p>{{ product.artist_name }}</p>
+                                <strong>${{ product.price }}</strong>
+                                <a class="store-product-link" href="{% url 'productdetail' product.id %}">
+                                    View record <i class="bi bi-arrow-up-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <div class="store-vinyls-empty store-vinyls-empty--server">
+                            <h3>No records listed.</h3>
+                            <p>This store has not added any vinyl yet.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="store-vinyls-empty" data-vinyl-empty hidden>
+                    <h3>No matching records.</h3>
+                    <p>Try another genre or switch to All Records.</p>
+                </div>
+            </div>
         </div>
     </section>
 </div>
+
+<script>
+(function () {
+    function fitStoreBoardName() {
+        const el = document.querySelector('[data-store-board-name]');
+        if (!el) return;
+
+        if (window.innerWidth < 992) {
+            el.style.removeProperty('font-size');
+            return;
+        }
+
+        let size = 34;
+        const minimum = 13;
+
+        el.style.setProperty('font-size', size + 'px', 'important');
+
+        while (
+            (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) &&
+            size > minimum
+        ) {
+            size -= 1;
+            el.style.setProperty('font-size', size + 'px', 'important');
+        }
+    }
+
+    window.addEventListener('load', fitStoreBoardName);
+    window.addEventListener('resize', fitStoreBoardName);
+
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(fitStoreBoardName);
+    }
+})();
+</script>
+
+<script>
+(function () {
+    const browser = document.querySelector('[data-store-vinyl-browser]');
+    if (!browser) return;
+
+    const grid = browser.querySelector('[data-vinyl-grid]');
+    const cards = Array.from(browser.querySelectorAll('[data-vinyl-card]'));
+    const genreButtons = Array.from(browser.querySelectorAll('[data-genre-filter]'));
+    const viewButtons = Array.from(browser.querySelectorAll('[data-vinyl-view]'));
+    const sortSelect = browser.querySelector('[data-vinyl-sort]');
+    const resultCount = browser.querySelector('[data-record-count]');
+    const emptyState = browser.querySelector('[data-vinyl-empty]');
+
+    const latestLimit = 8;
+    let activeGenre = 'all';
+    let activeView = 'latest';
+
+    function cardGenre(card) {
+        return (card.dataset.genre || '').trim().toLowerCase();
+    }
+
+    function matchesGenre(card, genre) {
+        if (genre === 'all') return true;
+        return cardGenre(card).includes(genre);
+    }
+
+    function updateGenreCounts() {
+        browser.querySelectorAll('[data-genre-count]').forEach(function (count) {
+            const genre = count.dataset.genreCount;
+            const total = genre === 'all'
+                ? cards.length
+                : cards.filter(card => matchesGenre(card, genre)).length;
+            count.textContent = total;
+        });
+    }
+
+    function sortedCards(items) {
+        const mode = sortSelect ? sortSelect.value : 'latest';
+
+        return items.slice().sort(function (a, b) {
+            if (mode === 'name-asc') {
+                return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+            }
+
+            if (mode === 'price-asc' || mode === 'price-desc') {
+                const aPrice = parseFloat(a.dataset.price || '0');
+                const bPrice = parseFloat(b.dataset.price || '0');
+                return mode === 'price-asc' ? aPrice - bPrice : bPrice - aPrice;
+            }
+
+            return Number(a.dataset.index || 0) - Number(b.dataset.index || 0);
+        });
+    }
+
+    function render() {
+        let matches = cards.filter(card => matchesGenre(card, activeGenre));
+        matches = sortedCards(matches);
+
+        const visible = activeView === 'latest'
+            ? matches.slice(0, latestLimit)
+            : matches;
+
+        cards.forEach(card => {
+            card.hidden = true;
+        });
+
+        visible.forEach(card => {
+            card.hidden = false;
+            grid.appendChild(card);
+        });
+
+        if (resultCount) {
+            resultCount.textContent = visible.length + (visible.length === 1 ? ' RECORD FOUND' : ' RECORDS FOUND');
+        }
+
+        if (emptyState) {
+            emptyState.hidden = visible.length !== 0 || cards.length === 0;
+        }
+    }
+
+    genreButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            activeGenre = button.dataset.genreFilter || 'all';
+
+            genreButtons.forEach(item => item.classList.toggle('is-active', item === button));
+            render();
+        });
+    });
+
+    viewButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            activeView = button.dataset.vinylView || 'latest';
+
+            viewButtons.forEach(item => item.classList.toggle('is-active', item === button));
+            render();
+        });
+    });
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', render);
+    }
+
+    updateGenreCounts();
+    render();
+})();
+</script>
+
 {% endblock %}

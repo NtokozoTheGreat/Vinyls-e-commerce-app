@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<section class="collage-directory-page">
+<section class="collage-directory-page collage-record-catalog-page collage-directory-page--popular-records">
     <header class="collage-directory-hero collage-directory-hero--popular-records">
         <div class="collage-directory-hero__copy">
             <span class="collage-kicker">VINYLS / CHARTS /</span>
@@ -15,7 +16,11 @@
             <small>NOW</small>
         </div>
 
-        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+        <div class="collage-directory-hero__blank" aria-hidden="true">
+            <img class="collage-directory-hero__image"
+                 src="{% static 'images/vinyls_collage/record-popular-hero.png' %}"
+                 alt="">
+        </div>
     </header>
 
     <section class="collage-products-section collage-directory-section">
@@ -73,5 +78,14 @@
             </div>
         {% endif %}
     </section>
+
+    <section class="collage-directory-promo collage-record-catalog-promo"
+             aria-label="POPULAR RECORDS">
+        <div class="collage-directory-promo__copy">
+            <span>POPULAR RECORDS</span>
+            <h2>INDEPENDENT RECORDS.<br>STRONGER MUSIC.<br>A BRIGHTER TOMORROW.</h2>
+        </div>
+    </section>
+
 </section>
 {% endblock %}

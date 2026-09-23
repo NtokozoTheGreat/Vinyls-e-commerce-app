@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<section class="collage-directory-page">
+<section class="collage-directory-page collage-genre-page collage-directory-page--genres">
     <header class="collage-directory-hero collage-directory-hero--genre">
         <div class="collage-directory-hero__copy">
             <span class="collage-kicker">VINYLS / GENRES /</span>
@@ -16,7 +16,11 @@
             <small>EXPLORE</small>
         </div>
 
-        <div class="collage-directory-hero__blank" aria-hidden="true"></div>
+        <div class="collage-directory-hero__blank" aria-hidden="true">
+            <img class="collage-directory-hero__image"
+                 src="{% static 'images/vinyls_collage/genre-hero-listening-nook.png' %}"
+                 alt="">
+        </div>
     </header>
 
     <section class="collage-products-section collage-directory-section">
@@ -54,5 +58,15 @@
             {% endfor %}
         </div>
     </section>
+
+    <section class="collage-directory-promo collage-genre-promo"
+             aria-label="VINYLS genres community message">
+        <div class="collage-directory-promo__copy">
+            <span>VINYLS / GENRES</span>
+            <h2>ALL SOUNDS.<br><mark>ALL PEOPLE.</mark></h2>
+            <p>VINYL BRINGS US TOGETHER.</p>
+        </div>
+    </section>
+
 </section>
 {% endblock %}

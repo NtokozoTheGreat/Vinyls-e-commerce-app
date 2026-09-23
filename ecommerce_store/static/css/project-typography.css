@@ -1,0 +1,119 @@
+/* VINYLS global typography system
+   The project only includes black/display cuts for TheNeue and Gotham,
+   so paragraph/form copy intentionally stays on a clean system sans for readability. */
+
+:root {
+  --font-display: 'TheNeue-Black', 'Gotham-Black', 'Arial Black', sans-serif;
+  --font-ui: 'Gotham-Black', 'TheNeue-Black', 'Arial Black', sans-serif;
+  --font-wide: 'Akira-Expanded-Bold', 'Gotham-Black', sans-serif;
+  --font-hand: 'Barber-Complete', 'Trebuchet MS', cursive;
+  --font-body: Arial, Helvetica, sans-serif;
+
+  /* Make the legacy collage stylesheet inherit the new project type system. */
+  --serif: var(--font-display);
+  --sans: var(--font-body);
+  --marker: var(--font-hand);
+}
+
+html,
+body,
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+}
+
+/* Large page and section headlines. */
+h1,
+h2,
+.display-heading,
+.collage-hero h1,
+.collage-directory-hero h1,
+.collage-search-hero h1,
+.about-ref-hero h1,
+.about-ref-intro h2,
+.about-ref-manifesto h2,
+.collage-section-heading h2,
+.collage-empty-state h2,
+.home-ref-hero__copy h1,
+.home-ref-section__header h2,
+.home-ref-community-card__content h2,
+.home-ref-sell-card__content h2,
+.site-footer__brand {
+  font-family: var(--font-display) !important;
+  font-weight: 900;
+}
+
+/* Navigation, buttons, cards and compact interface headings. */
+h3,
+h4,
+h5,
+h6,
+button,
+.btn,
+.collage-brand,
+.collage-nav-panel,
+.collage-mobile-nav,
+.collage-primary-button,
+.collage-outline-button,
+.collage-black-button,
+.collage-auth-submit,
+.vendor-view-button,
+.vinyl-view-button,
+.store-product-link,
+.vinyl-title,
+.product-title,
+.collage-store-card h3,
+.collage-store-directory-card h3,
+.collage-genre-card h3,
+.collage-card-rating,
+.regular-price,
+.sale-price,
+.site-footer__links h4,
+.site-footer__newsletter h4,
+.home-ref-btn,
+.home-ref-record-card__body h3,
+.home-ref-record-card__price strong,
+.home-ref-store-card__top h3,
+.home-ref-store-card__action,
+.genre-tile span {
+  font-family: var(--font-ui) !important;
+}
+
+/* Small editorial labels and taxonomy. */
+.collage-kicker,
+.collage-section-meta,
+.collage-section-number,
+.product-category,
+.product-type,
+.vinyl-category,
+.collage-store-label,
+.collage-store-new,
+.home-ref-label,
+.home-ref-record-card__category,
+.home-ref-record-card__index,
+.home-ref-record-card__badge,
+.sale-label {
+  font-family: var(--font-wide) !important;
+  font-weight: 800;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+/* Handwritten / zine accents. */
+.collage-handwritten-label,
+.collage-handwritten-strip,
+.collage-handwritten-badge,
+.collage-sticker,
+.site-footer__taglines,
+.font-handwritten {
+  font-family: var(--font-hand) !important;
+  font-weight: 400;
+}
+
+/* Reusable classes for future templates. */
+.font-display { font-family: var(--font-display) !important; }
+.font-ui { font-family: var(--font-ui) !important; }
+.font-wide { font-family: var(--font-wide) !important; }
+.font-hand { font-family: var(--font-hand) !important; }
+.font-body { font-family: var(--font-body) !important; }

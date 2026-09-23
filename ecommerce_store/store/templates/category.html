@@ -1,51 +1,124 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
-<section class="collage-category-hero">
-    <div class="collage-category-hero__copy">
-        <span class="collage-kicker">VINYLS / CATALOGUE /</span>
-        <h1>{{ category }}</h1>
-        <p>Timeless sounds. Bold expressions. Explore records that move, inspire, and endure.</p>
-        <a href="#category-records" class="collage-primary-button">Browse {{ category }} Records <span>→</span></a>
-    </div>
-    <div class="collage-category-hero__index"><span>GENRE</span><strong>03</strong></div>
-    <div class="collage-category-hero__art collage-header-blank" aria-hidden="true"></div>
-</section>
+<section class="collage-directory-page collage-genre-detail collage-genre-detail--{{ category.slug }}">
+    <header class="collage-directory-hero collage-genre-detail__hero">
+        <div class="collage-directory-hero__copy">
+            <span class="collage-kicker">VINYLS / GENRES / {{ category.name|upper }}</span>
 
-<section id="category-records" class="collage-products-section">
-    <div class="collage-category-toolbar">
-        <div><span>Current Selection</span><strong>{{ category }}</strong></div>
-        <span class="collage-section-meta">RECORDS</span>
-    </div>
+            <h1>
+                Explore<br>
+                <span>{{ category.name }}.</span>
+            </h1>
 
-    <div class="collage-product-grid">
-        {% for product in products %}
-            <article class="vinyl-card">
-                <a class="vinyl-image-wrapper" href="{% url 'productdetail' product.id %}">
-                    <span class="vinyl-index">{{ forloop.counter|stringformat:"02d" }}</span>
-                    {% if product.image %}<img class="vinyl-image" src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">{% endif %}
-                    <span class="vinyl-disc-edge" aria-hidden="true"></span>
+            <p>
+                Discover {{ category.name }} records from across the marketplace.
+                Dig through new releases, classics and collector favourites.
+            </p>
+        </div>
+
+        <div class="collage-directory-hero__index">
+            <span>{{ category.name|upper }}</span>
+            <strong>{{ products|length|stringformat:"02d" }}</strong>
+            <small>RECORDS</small>
+        </div>
+
+        <div class="collage-directory-hero__blank" aria-hidden="true">
+            {% if category.image %}
+                <img class="collage-directory-hero__image"
+                     src="{{ category.image.url }}"
+                     alt="">
+            {% else %}
+                <img class="collage-directory-hero__image"
+                     src="{% static 'images/vinyls_collage/genre-hero-listening-nook.png' %}"
+                     alt="">
+            {% endif %}
+        </div>
+    </header>
+
+    <section id="category-records" class="collage-products-section collage-directory-section">
+        <div class="collage-section-heading">
+            <div>
+                <span class="collage-section-number">01 /</span>
+                <h2>{{ category.name }} Records</h2>
+            </div>
+            <span class="collage-section-meta">{{ products|length }} RECORDS</span>
+        </div>
+
+        {% if products %}
+            <div class="collage-product-grid">
+                {% for product in products %}
+                    <article class="vinyl-card">
+                        <a class="vinyl-image-wrapper" href="{% url 'productdetail' product.id %}">
+                            <span class="vinyl-index">{{ forloop.counter|stringformat:"02d" }}</span>
+
+                            {% if product.image %}
+                                <img class="vinyl-image"
+                                     src="{{ product.image.url }}"
+                                     alt="{{ product.vinyl_name }}">
+                            {% else %}
+                                <img class="vinyl-image"
+                                     src="{% static 'images/placeholder.png' %}"
+                                     alt="No image available">
+                            {% endif %}
+
+                            <span class="vinyl-disc-edge" aria-hidden="true"></span>
+                        </a>
+
+                        <div class="vinyl-info">
+                            <span class="vinyl-category">{{ category.name|upper }}</span>
+                            <h3 class="vinyl-title">{{ product.vinyl_name }}</h3>
+                            <p class="vinyl-artist">{{ product.artist_name }}</p>
+
+                            <div class="vinyl-price">
+                                {% if product.on_sale %}
+                                    <span class="sale-label">SALE</span>
+                                    <span class="old-price">${{ product.price }}</span>
+                                    <span class="sale-price">${{ product.sale_price }}</span>
+                                {% else %}
+                                    <span class="regular-price">${{ product.price }}</span>
+                                {% endif %}
+                            </div>
+
+                            {% if product.ratings_count > 0 %}
+                                <div class="collage-card-rating">
+                                    <span>{{ product.average_rating }}★</span>
+                                    <small>({{ product.ratings_count }})</small>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="vinyl-action">
+                            <a class="vinyl-view-button" href="{% url 'productdetail' product.id %}">
+                                View record <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="collage-empty-state collage-empty-state--wide">
+                <span>00 / EMPTY</span>
+                <h2>No {{ category.name }} records yet.</h2>
+                <p>There are currently no records available in this genre.</p>
+                <a href="{% url 'genre_summary' %}" class="collage-primary-button">
+                    Back to genres <span>←</span>
                 </a>
-                <div class="vinyl-info">
-                    <span class="vinyl-category">{{ product.category|default:"RECORD" }}</span>
-                    <h3 class="vinyl-title">{{ product.vinyl_name }}</h3>
-                    <p class="vinyl-artist">{{ product.artist_name }}</p>
-                    <div class="vinyl-price">
-                        {% if product.on_sale %}
-                            <span class="sale-label">SALE</span>
-                            <span class="old-price">${{ product.price }}</span>
-                            <span class="sale-price">${{ product.sale_price }}</span>
-                        {% else %}
-                            <span class="regular-price">${{ product.price }}</span>
-                        {% endif %}
-                    </div>
-                    {% if product.ratings_count > 0 %}<div class="collage-card-rating"><span>{{ product.average_rating }}★</span><small>({{ product.ratings_count }})</small></div>{% endif %}
-                </div>
-                <div class="vinyl-action"><a class="vinyl-view-button" href="{% url 'productdetail' product.id %}">View record <i class="bi bi-arrow-up-right"></i></a></div>
-            </article>
-        {% empty %}
-            <div class="collage-empty-state collage-empty-state--wide"><span>404</span><h2>No records found.</h2><p>There are currently no records available in this category.</p><a href="{% url 'home' %}" class="collage-primary-button">Back to catalogue <span>←</span></a></div>
-        {% endfor %}
-    </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="collage-directory-promo collage-genre-detail__promo"
+             aria-label="{{ category.name }} genre message">
+        <div class="collage-directory-promo__copy">
+            <span>VINYLS / {{ category.name|upper }}</span>
+            <h2>
+                DIFFERENT SOUND.<br>
+                <mark>SAME LOVE.</mark>
+            </h2>
+            <p>KEEP DIGGING. KEEP LISTENING.</p>
+        </div>
+    </section>
 </section>
 {% endblock %}

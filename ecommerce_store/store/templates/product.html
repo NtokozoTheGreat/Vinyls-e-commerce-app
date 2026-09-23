@@ -1,127 +1,502 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
-<section class="collage-product-page">
-    <div class="collage-product-topline">
-        <span>VINYLS / RECORD / {{ product.id|stringformat:"03d" }}</span>
-        <span class="collage-highlight-label">AVAILABLE NOW</span>
-    </div>
 
-    <div class="collage-product-main">
-        <div class="collage-product-art">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.vinyl_name }}">
-            {% endif %}
-            <div class="collage-sticker collage-sticker--pink collage-sticker--product-left">MUSIC<br>CONNECTS<br>US ALL ♡</div>
-            <div class="collage-sticker collage-sticker--yellow collage-sticker--product-bottom">GOOD MUSIC<br>BETTER DAYS</div>
+{% block content %}
+<section class="product-reference-page product-reference-page--reference-only">
+
+    <section class="product-reference-showcase">
+
+        <aside class="product-reference-side-art" aria-hidden="true">
+            <img
+                src="{% static 'images/vinyls_collage/desert_sunset_music_poster.png' %}"
+                alt=""
+            >
+        </aside>
+
+        <div class="product-reference-main-grid">
+
+            <div class="product-reference-top-row">
+
+                <section class="product-reference-product-panel" aria-label="Product artwork">
+                    <div class="product-reference-product-panel__inner">
+                        {% if product.image %}
+                            <img
+                                id="product-preview-image"
+                                class="product-reference-product-image"
+                                src="{{ product.image.url }}"
+                                alt="{{ product.vinyl_name }} by {{ product.artist_name }}"
+                            >
+                        {% else %}
+                            <div class="product-reference-product-image product-reference-product-image--empty">
+                                RECORD ART
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <section class="product-reference-info-panel">
+
+                    <nav class="product-reference-breadcrumb" aria-label="Breadcrumb">
+                        <a href="{% url 'home' %}">Home</a>
+                        <span>›</span>
+                        <span>{{ product.category|default:"Record" }}</span>
+                        <span>›</span>
+                        <strong>{{ product.vinyl_name }}</strong>
+                    </nav>
+
+                    <span class="product-reference-eyebrow">
+                        Some places only exist in songs.
+                    </span>
+
+                    <div class="product-reference-info-panel__titleline">
+                        <div>
+                            <h1>{{ product.vinyl_name }}</h1>
+                            <p class="product-reference-artist">{{ product.artist_name }}</p>
+                        </div>
+                        <div class="product-reference-price">${{ product.price }}</div>
+                    </div>
+
+                    <div class="product-reference-rating">
+                        <span class="product-reference-stars" aria-hidden="true">★★★★★</span>
+                        {% if product.ratings_count > 0 %}
+                            <strong>{{ product.average_rating }}</strong>
+                            <span>({{ product.ratings_count }} review{{ product.ratings_count|pluralize }})</span>
+                        {% else %}
+                            <span>No reviews yet</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="product-reference-description">
+                        {{ product.description }}
+                    </p>
+
+                    <div class="product-reference-info-panel__lower">
+
+                        <dl class="product-reference-product-info">
+                            <div>
+                                <dt>Genre</dt>
+                                <dd>{{ product.category|default:"Record" }}</dd>
+                            </div>
+                            <div>
+                                <dt>Store</dt>
+                                <dd>{{ product.vendor|title }}</dd>
+                            </div>
+                            <div>
+                                <dt>Condition</dt>
+                                <dd>{{ product.condition|default:"New" }}</dd>
+                            </div>
+                            <div>
+                                <dt>Format</dt>
+                                <dd>{{ product.format|default:'12&quot; Vinyl' }}</dd>
+                            </div>
+                        </dl>
+
+                        <div class="product-reference-actions">
+                            <div class="product-reference-purchase">
+                                <div class="product-reference-quantity" aria-label="Quantity selector">
+                                    <button type="button" class="collage-outline-button product-reference-qty-button" id="qty-minus" aria-label="Decrease quantity">−</button>
+                                    <span class="product-reference-quantity-value" id="qty-display" aria-live="polite">1</span>
+                                    <input type="hidden" id="qty-cart" value="1">
+                                    <button type="button" class="collage-outline-button product-reference-qty-button" id="qty-plus" aria-label="Increase quantity">+</button>
+                                </div>
+
+                                <button type="button" value="{{ product.id }}" id="add-cart" class="collage-primary-button product-reference-add-cart">
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                            <button type="button" id="product-wishlist-toggle" class="collage-outline-button product-reference-wishlist" aria-pressed="false">
+                                <span class="product-reference-wishlist__heart" aria-hidden="true">♡</span>
+                                <span class="product-reference-wishlist__label">Add to Wishlist</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="product-reference-seller">
+                        <div class="product-reference-seller__mark" aria-hidden="true">
+                            {% if product.vendor.image %}
+                                <img src="{{ product.vendor.image.url }}" alt="">
+                            {% else %}
+                                <span></span>
+                            {% endif %}
+                        </div>
+
+                        <div class="product-reference-seller__identity">
+                            <small>Sold by</small>
+                            <strong>{{ product.vendor|title }}</strong>
+                            <span>Independent record store</span>
+                        </div>
+
+                        <div class="product-reference-seller__action">
+                            {% if user.is_authenticated %}
+                                {% if user != product.vendor.user %}
+                                    <a class="collage-outline-button product-reference-message-button" href="{% url 'start_conversation_product' product.vendor.id product.id %}">
+                                        Message Store →
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <a class="collage-outline-button product-reference-message-button" href="{% url 'login' %}?next={{ request.path }}">
+                                    Message Store →
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+            <div class="product-reference-bottom-row">
+
+                <section class="product-reference-track-panel">
+                    <div class="product-reference-section-heading">
+                        <h2>Track List</h2>
+                        <span>{{ tracklist|length }} tracks</span>
+                    </div>
+
+                    <ol class="product-reference-track-list product-reference-track-list--primary">
+                        {% for track in tracklist %}
+                            {% if forloop.counter <= 15 %}
+                                <li>
+                                    <span class="product-reference-track-number">
+                                        {{ forloop.counter|stringformat:"02d" }}
+                                    </span>
+                                    <span class="product-reference-track-name">
+                                        {{ track }}
+                                    </span>
+                                </li>
+                            {% endif %}
+                        {% empty %}
+                            <li>
+                                <span>No tracklist available yet.</span>
+                            </li>
+                        {% endfor %}
+                    </ol>
+
+                    {% if tracklist|length > 15 %}
+                        <div
+                            class="product-reference-track-more"
+                            id="tracklist-extra"
+                            aria-hidden="true"
+                        >
+                            <ol class="product-reference-track-list product-reference-track-list--extra">
+                                {% for track in tracklist %}
+                                    {% if forloop.counter > 15 %}
+                                        <li>
+                                            <span class="product-reference-track-number">
+                                                {{ forloop.counter|stringformat:"02d" }}
+                                            </span>
+                                            <span class="product-reference-track-name">
+                                                {{ track }}
+                                            </span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="collage-outline-button product-reference-track-toggle"
+                            id="tracklist-toggle"
+                            aria-expanded="false"
+                            aria-controls="tracklist-extra"
+                        >
+                            <span class="product-reference-track-toggle__label">Show remaining tracks</span>
+                            <span class="product-reference-track-toggle__icon" aria-hidden="true">↓</span>
+                        </button>
+                    {% endif %}
+
+                    <button
+                        type="button"
+                        class="product-reference-sample"
+                        aria-label="Listen to a sample"
+                    >
+                        <span aria-hidden="true">▶</span>
+                        Listen to a sample
+                    </button>
+                </section>
+
+                <section
+                    class="product-reference-scene-panel"
+                    aria-label="Decorative record-store scene"
+                >
+                    <img
+                        src="{% static 'images/vinyls_collage/desert_sunset_record_store.png' %}"
+                        alt=""
+                        aria-hidden="true"
+                    >
+                </section>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="product-reference-related">
+
+        <div class="product-reference-related__heading">
+            <h2>You May Also Like</h2>
+            <a
+                href="{% url 'record_collection_summary' %}"
+                class="collage-outline-button product-reference-related__more-button"
+            >
+                More Like This →
+            </a>
         </div>
 
-        <div class="collage-product-information">
-            <span class="product-category">{{ product.category }}</span>
-            <h1>{{ product.vinyl_name }}</h1>
-            <p class="product-artist">{{ product.artist_name }}</p>
+        <div class="product-reference-related__grid">
+            {% for related in product.vendor.products.all|slice:":7" %}
+                {% if related.id != product.id %}
+                    <article class="product-reference-related-card">
 
-            <div class="product-rating collage-inline-rating">
-                {% if product.ratings_count > 0 %}
-                    <strong>{{ product.average_rating }}★</strong>
-                    <span>{{ product.ratings_count }} review{{ product.ratings_count|pluralize }}</span>
-                {% else %}
-                    <span>NO REVIEWS YET</span>
+                        <a
+                            class="product-reference-related-card__image"
+                            href="{% url 'productdetail' related.id %}"
+                        >
+                            {% if related.image %}
+                                <img
+                                    src="{{ related.image.url }}"
+                                    alt="{{ related.vinyl_name }}"
+                                >
+                            {% else %}
+                                <span>VINYL</span>
+                            {% endif %}
+                        </a>
+
+                        <div class="product-reference-related-card__copy">
+                            <h3>
+                                <a href="{% url 'productdetail' related.id %}">
+                                    {{ related.vinyl_name }}
+                                </a>
+                            </h3>
+                            <p>{{ related.artist_name }}</p>
+                            <strong>${{ related.price }}</strong>
+                        </div>
+
+                    </article>
                 {% endif %}
-            </div>
-
-            <div class="collage-product-description">
-                <div class="collage-section-heading collage-section-heading--compact"><div><h2>About the Record</h2></div></div>
-                <p>{{ product.description }}</p>
-            </div>
-
-            <div class="collage-product-purchase-row">
-                <div class="collage-product-price"><strong>${{ product.price }}</strong></div>
-                <div class="quantity-control">
-                    <label for="qty-cart">Qty</label>
-                    <select class="product-quantity" id="qty-cart">
-                        <option selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
-                    </select>
+            {% empty %}
+                <div class="product-reference-related__empty">
+                    More records from this store will appear here.
                 </div>
-                <button href="{% url 'cart_add' %}" type="button" value="{{ product.id }}" id="add-cart" class="collage-primary-button collage-add-cart">Add to Cart <span>→</span></button>
-            </div>
+            {% endfor %}
+        </div>
 
-            <div class="collage-product-meta-row">
-                <div class="collage-vendor-mark"><span class="collage-vendor-avatar">V</span><span><small>Sold by</small><strong>{{ product.vendor|title }}</strong></span></div>
-                <div class="product-contact">
+    </section>
+
+    <section class="product-reference-reviews">
+        <div class="product-reference-reviews__inner">
+
+            <div class="product-reference-section-heading product-reference-reviews__heading">
+                <h2>Reviews ({{ reviews.count }})</h2>
+
+                <div class="product-reference-review-action">
                     {% if user.is_authenticated %}
-                        {% if user != product.vendor.user %}
-                            <a href="{% url 'start_conversation_product' product.vendor.id product.id %}"><i class="bi bi-chat-left-text"></i> Ask About This Record <span>→</span></a>
+                        {% if already_reviewed %}
+                            <span>Already reviewed</span>
+                        {% elif user_can_review %}
+                            <a href="{% url 'rate_product' product.id %}">
+                                Write a Review
+                            </a>
+                        {% else %}
+                            <span>Review after delivery</span>
                         {% endif %}
                     {% else %}
-                        <a href="{% url 'login' %}?next={{ request.path }}"><i class="bi bi-chat-left-text"></i> Log in to contact seller <span>→</span></a>
+                        <a href="{% url 'login' %}?next={{ request.path }}">
+                            Write a Review
+                        </a>
                     {% endif %}
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="collage-product-lower">
-        <section class="product-tracklist">
-            <div class="collage-section-heading"><div><h2>Record / Tracklist</h2></div><span class="collage-section-meta">{{ tracklist|length|stringformat:"02d" }}</span></div>
-            <div class="tracklist-content">
-                {% for track in tracklist %}
-                    <div class="track"><span class="track-number">{{ forloop.counter|stringformat:"02d" }}</span><span class="track-name">{{ track }}</span></div>
-                {% empty %}
-                    <div class="track-empty">NO TRACKLIST AVAILABLE</div>
-                {% endfor %}
-            </div>
-        </section>
-
-        <section class="product-reviews">
-            <div class="collage-section-heading"><div><h2>Community / Feedback</h2></div><span class="collage-section-meta">{{ reviews.count|stringformat:"02d" }}</span></div>
-            <div class="review-action">
-                {% if user.is_authenticated %}
-                    {% if already_reviewed %}
-                        <span class="collage-status-note">YOU'VE ALREADY REVIEWED THIS RECORD.</span>
-                    {% elif user_can_review %}
-                        <a href="{% url 'rate_product' product.id %}" class="collage-primary-button">Write a Review <span>→</span></a>
-                    {% else %}
-                        <span class="collage-status-note">YOU CAN REVIEW THIS RECORD ONCE YOUR ORDER HAS BEEN DELIVERED.</span>
-                    {% endif %}
-                {% else %}
-                    <span class="collage-status-note"><a href="{% url 'login' %}?next={{ request.path }}">LOG IN</a> TO WRITE A REVIEW.</span>
-                {% endif %}
-            </div>
-
-            <div class="reviews-list collage-review-grid">
+            <div class="product-reference-review-list">
                 {% for review in reviews %}
-                    <article class="review-item collage-review-card">
-                        <div class="review-meta"><span>{{ review.created_at|date:"M d, Y" }}</span><strong>{{ review.score }}★</strong></div>
-                        <div class="review-content"><h3>{{ review.title }}</h3><p>{{ review.review }}</p><small>BY {{ review.user.username|upper }}</small></div>
+                    <article class="product-reference-review">
+
+                        <div class="product-reference-review__avatar" aria-hidden="true">
+                            {{ review.user.username|first|upper }}
+                        </div>
+
+                        <div class="product-reference-review__content">
+                            <div class="product-reference-review__topline">
+                                <strong>{{ review.user.username }}</strong>
+                                <time datetime="{{ review.created_at|date:'Y-m-d' }}">
+                                    {{ review.created_at|date:"M d, Y" }}
+                                </time>
+                            </div>
+
+                            <div
+                                class="product-reference-review__stars"
+                                aria-label="{{ review.score }} out of 5 stars"
+                            >
+                                ★★★★★
+                            </div>
+
+                            <h3>{{ review.title }}</h3>
+                            <p>{{ review.review }}</p>
+                        </div>
+
                     </article>
                 {% empty %}
-                    <div class="collage-empty-state"><span>404 / EMPTY</span><h3>No reviews yet.</h3></div>
+                    <div class="product-reference-empty-review">
+                        No reviews yet. Be the first to share your thoughts.
+                    </div>
                 {% endfor %}
             </div>
-        </section>
-    </div>
+
+        </div>
+    </section>
+
 </section>
 
 <script>
-$(document).on("click", "#add-cart", function(e){
-    e.preventDefault();
-    $.ajax({
-        type: "POST",
-        url: '{% url "cart_add" %}',
-        data: {
-            product_id: $(this).val(),
-            product_qty: $('#qty-cart option:selected').text(),
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            action: "post"
-        },
-        success: function(json){
-            document.getElementById("cart_quantity").textContent = json.qty;
-            var mobileCount = document.getElementById("mobile_cart_quantity");
-            if (mobileCount) mobileCount.textContent = json.qty;
-        },
-        error: function(xhr, errmsg, err){ console.log(errmsg); }
+(function () {
+    const qty = document.getElementById('qty-cart');
+    const minus = document.getElementById('qty-minus');
+    const plus = document.getElementById('qty-plus');
+    const qtyDisplay = document.getElementById('qty-display');
+    const addCart = document.getElementById('add-cart');
+    const wishlist = document.getElementById('product-wishlist-toggle');
+
+    function setQuantity(next) {
+        if (!qty) return;
+        const min = 1;
+        const max = 5;
+        const clamped = Math.max(min, Math.min(max, next));
+        qty.value = String(clamped);
+        if (qtyDisplay) qtyDisplay.textContent = String(clamped);
+    }
+
+    minus?.addEventListener('click', () => setQuantity(Number(qty.value || 1) - 1));
+    plus?.addEventListener('click', () => setQuantity(Number(qty.value || 1) + 1));
+
+    if (wishlist) {
+        const storageKey = 'vinyls-wishlist-product-{{ product.id }}';
+        const label = wishlist.querySelector('.product-reference-wishlist__label');
+        const heart = wishlist.querySelector('.product-reference-wishlist__heart');
+
+        const syncWishlist = (saved) => {
+            wishlist.setAttribute('aria-pressed', saved ? 'true' : 'false');
+            wishlist.classList.toggle('is-saved', saved);
+            if (label) label.textContent = saved ? 'Saved to Wishlist' : 'Add to Wishlist';
+            if (heart) heart.textContent = saved ? '♥' : '♡';
+        };
+
+        let saved = false;
+        try {
+            saved = localStorage.getItem(storageKey) === '1';
+        } catch (e) {}
+
+        syncWishlist(saved);
+
+        wishlist.addEventListener('click', () => {
+            saved = !saved;
+            try {
+                localStorage.setItem(storageKey, saved ? '1' : '0');
+            } catch (e) {}
+            syncWishlist(saved);
+        });
+    }
+
+    addCart?.addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        if (addCart.dataset.loading === 'true') return;
+
+        addCart.dataset.loading = 'true';
+
+        const originalText = addCart.textContent;
+        addCart.textContent = 'Adding…';
+
+        const data = new URLSearchParams();
+        data.set('product_id', addCart.value);
+        data.set('product_qty', qty ? qty.value : '1');
+        data.set('csrfmiddlewaretoken', '{{ csrf_token }}');
+        data.set('action', 'post');
+
+        try {
+            const response = await fetch('{% url "cart_add" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: data.toString(),
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) throw new Error('Cart request failed');
+
+            const json = await response.json();
+
+            const desktopCount = document.getElementById('cart_quantity');
+            const mobileCount = document.getElementById('mobile_cart_quantity');
+
+            if (desktopCount && json.qty !== undefined) {
+                desktopCount.textContent = json.qty;
+            }
+
+            if (mobileCount && json.qty !== undefined) {
+                mobileCount.textContent = json.qty;
+            }
+
+            addCart.textContent = 'Added ✓';
+
+            window.setTimeout(() => {
+                addCart.textContent = originalText;
+            }, 1200);
+
+        } catch (error) {
+            console.error(error);
+
+            addCart.textContent = 'Try Again';
+
+            window.setTimeout(() => {
+                addCart.textContent = originalText;
+            }, 1600);
+
+        } finally {
+            addCart.dataset.loading = 'false';
+        }
     });
-});
+
+    const trackToggle = document.getElementById('tracklist-toggle');
+    const trackExtra = document.getElementById('tracklist-extra');
+
+    if (trackToggle && trackExtra) {
+        const trackToggleLabel = trackToggle.querySelector('.product-reference-track-toggle__label');
+        const trackToggleIcon = trackToggle.querySelector('.product-reference-track-toggle__icon');
+
+        const setTracklistExpanded = (expanded) => {
+            trackToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            trackExtra.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+            trackExtra.classList.toggle('is-open', expanded);
+
+            if (expanded) {
+                trackExtra.style.maxHeight = trackExtra.scrollHeight + 'px';
+                if (trackToggleLabel) trackToggleLabel.textContent = 'Hide remaining tracks';
+                if (trackToggleIcon) trackToggleIcon.textContent = '↑';
+            } else {
+                trackExtra.style.maxHeight = '0px';
+                if (trackToggleLabel) trackToggleLabel.textContent = 'Show remaining tracks';
+                if (trackToggleIcon) trackToggleIcon.textContent = '↓';
+            }
+        };
+
+        setTracklistExpanded(false);
+
+        trackToggle.addEventListener('click', () => {
+            const expanded = trackToggle.getAttribute('aria-expanded') === 'true';
+            setTracklistExpanded(!expanded);
+        });
+
+        window.addEventListener('resize', () => {
+            if (trackToggle.getAttribute('aria-expanded') === 'true') {
+                trackExtra.style.maxHeight = trackExtra.scrollHeight + 'px';
+            }
+        });
+    }
+
+})();
 </script>
 {% endblock %}

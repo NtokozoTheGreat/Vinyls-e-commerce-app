@@ -1,0 +1,45 @@
+STORE SIGN BOARD MEASUREMENTS
+=============================
+
+Background image:
+  neon_moonlight_record_store_by_the_bay.png
+  1942 × 809 px
+
+OUTER BOARD / FASCIA
+--------------------
+Top-left:     (1215, 326)
+Top-right:    (1744, 371)
+Bottom-right: (1751, 438)
+Bottom-left:  (1224, 402)
+
+Top width:     530.9 px
+Bottom width:  528.2 px
+Left height:    76.5 px
+Right height:   67.4 px
+Average size: ~529.6 × 71.9 px
+Top-edge angle: 4.86°
+
+Normalized to the full artwork:
+  left:   62.56%
+  top:    40.30%
+  right:  90.16%
+  bottom: 54.14%
+
+SAFE TEXT REGION
+----------------
+Top-left:     (1245, 342)
+Top-right:    (1711, 382)
+Bottom-right: (1714, 420)
+Bottom-left:  (1249, 388)
+
+Safe top width:    467.7 px
+Safe bottom width: 466.1 px
+Safe left height:   46.2 px
+Safe right height:  38.1 px
+Approx safe size:  ~466.9 × 42.1 px
+Safe angle:          4.91°
+
+Recommended next step:
+  Position the real {{ stores.store_name }} over the safe region,
+  rotate approximately 4.9 degrees, and dynamically shrink the
+  font until the rendered name fits inside ~467 × 42 source pixels.
