@@ -138,17 +138,15 @@
                     </div>
 
 
-                    <button
-                        href="{% url 'cart_add' %}"
-                        type="button"
-                        value="{{ product.id }}"
-                        id="add-cart"
-                        class="product-cart-button"
-                    >
-                        ADD TO CART
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-
+                        <button
+                            type="button"
+                            value="{{ product.id }}"
+                            id="add-cart"
+                            class="product-cart-button"
+                        >
+                            ADD TO CART
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
                 </div>
 
 
@@ -384,46 +382,61 @@
 
 </section>
 
+
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const button = document.getElementById("add-cart");
 
-$(document).on("click", "#add-cart", function(e){
+    if (!button) return;
 
-    e.preventDefault();
+    button.addEventListener("click", async function () {
+        const productId = button.value;
+        const quantity = document.getElementById("qty-cart").value;
 
-    $.ajax({
+        const csrfToken = document.querySelector(
+            "[name=csrfmiddlewaretoken]"
+        )?.value || "{{ csrf_token }}";
 
-        type: "POST",
+        const data = new URLSearchParams({
+            product_id: productId,
+            product_qty: quantity,
+            action: "post"
+        });
 
-        url: '{% url "cart_add" %}',
+        button.disabled = true;
 
-        data: {
+        try {
+            const response = await fetch('{% url "cart_add" %}', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": csrfToken
+                },
+                body: data,
+                credentials: "same-origin"
+            });
 
-            product_id: $(this).val(),
+            if (!response.ok) {
+                throw new Error(`Request failed: ${response.status}`);
+            }
 
-            product_qty: $('#qty-cart option:selected').text(),
+            const json = await response.json();
 
-            csrfmiddlewaretoken: '{{ csrf_token }}',
+            const cartQuantity = document.getElementById("cart_quantity");
 
-            action: "post",
+            if (cartQuantity) {
+                cartQuantity.textContent = json.qty;
+            }
 
-        },
+            console.log("Product added successfully:", json);
 
-        success: function(json){
-
-            document.getElementById("cart_quantity").textContent = json.qty;
-
-        },
-
-        error: function(xhr, errmsg, err){
-
-            console.log(errmsg);
-
+        } catch (error) {
+            console.error("Add to Cart failed:", error);
+        } finally {
+            button.disabled = false;
         }
-
     });
-
 });
-
 </script>
 
 {% endblock %}
